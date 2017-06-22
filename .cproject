@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
+	<storageModule moduleId="org.eclipse.cdt.core.settings">
+		<cconfiguration id="com.renesas.cdt.rxc.debug.win32.configuration.Id.1706597973.674015199">
+			<storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="com.renesas.cdt.rxc.debug.win32.configuration.Id.1706597973.674015199" moduleId="org.eclipse.cdt.core.settings" name="MT01_build">
+				<externalSettings/>
+				<extensions>
+					<extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
+					<extension id="com.renesas.cdt.core.KPITGCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.renesas.cdt.core.KPITGASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.renesas.cdt.core.KPITMakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.renesas.cdt.core.KPITGLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+					<extension id="com.renesas.cdt.core.CCRXErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+				</extensions>
+			</storageModule>
+			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+				<configuration artifactExtension="mot" artifactName="MT01_proj" buildArtefactType="com.renesas.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=com.renesas.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf *.sni *.dbg *.lst *.lis *.lpp *.map *.x *.lbp src/*.src src/*.p src/*.pp *.bls *.libelf *.lbk *.abs *.fsy" description="MT01 project" errorParsers="com.renesas.cdt.core.KPITGCCErrorParser;com.renesas.cdt.core.KPITMakeErrorParser;com.renesas.cdt.core.KPITGASErrorParser;com.renesas.cdt.core.KPITGLDErrorParser;com.renesas.cdt.core.CCRXErrorParser" id="com.renesas.cdt.rxc.debug.win32.configuration.Id.1706597973.674015199" name="MT01_build" parent="com.renesas.cdt.rxc.debug.win32.configuration.Id">
+					<folderInfo id="com.renesas.cdt.rxc.debug.win32.configuration.Id.1706597973.674015199." name="/" resourcePath="">
+						<toolChain id="com.renesas.cdt.rxc.debug.win32.toolChain.Id.895222575" name="Renesas RXC Toolchain" superClass="com.renesas.cdt.rxc.debug.win32.toolChain.Id" targetTool="com.renesas.cdt.rxc.debug.win32.tool.convertor.Id">
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.PE" id="com.renesas.cdt.rxc.debug.win32.targetPlatform.Id.969536761" isAbstract="false" osList="win32" superClass="com.renesas.cdt.rxc.debug.win32.targetPlatform.Id"/>
+							<builder buildPath="${workspace_loc:/HmscFw}/Debug" id="com.renesas.cdt.rxc.debug.win32.builder.Id.1053924150" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="SHC Make Builder" parallelBuildOn="true" parallelizationNumber="optimal" superClass="com.renesas.cdt.rxc.debug.win32.builder.Id">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="MT01_build"/>
+								</outputEntries>
+							</builder>
+							<tool id="com.renesas.cdt.rxc.debug.win32.tool.compiler.Id.1071803900" name="Compiler" superClass="com.renesas.cdt.rxc.debug.win32.tool.compiler.Id">
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.defines.750835203" name="Defines" superClass="com.renesas.cdt.renesas.Compiler.option.defines" valueType="stringList">
+									<listOptionValue builtIn="false" value="__RX"/>
+									<listOptionValue builtIn="false" value="COMPACTAXP=0"/>
+									<listOptionValue builtIn="false" value="EASYMAK=1"/>
+									<listOptionValue builtIn="false" value="MOBILE=0"/>
+									<listOptionValue builtIn="false" value="FREE_RTOS_PP"/>
+								</option>
+								<option id="com.renesas.cdt.renesas.Compiler.option.device.1080162511" name="Device" superClass="com.renesas.cdt.renesas.Compiler.option.device" value="R5F563NB" valueType="string"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.deviceShortName.1547840045" name="DeviceShortName" superClass="com.renesas.cdt.renesas.Compiler.option.deviceShortName" value="R5F563NBDxFP" valueType="string"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.incFileDirectories.935043365" name="Include file directories" superClass="com.renesas.cdt.renesas.Compiler.option.incFileDirectories" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_bsp}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/include/r_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/portable/Renesas/RX600}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_config}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/fsystem}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_usb_basic}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_usb_basic/src/driver/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_usb_basic/src/HW/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_usb_hmsc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/include/r_usb_hmsc/src/inc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/src/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/cnc}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/cnc/macros}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_flash_loader_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_flash_loader_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/fsystem_spi}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/spiffs}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Nextion}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/menu}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/machine_iif}&quot;"/>
+								</option>
+								<option defaultValue="true" id="com.renesas.cdt.renesas.Compiler.option.GenDebugInfo.43333536" name="Generate debug information" superClass="com.renesas.cdt.renesas.Compiler.option.GenDebugInfo" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.rxc.Debug.Compiler.option.isa.1687489296" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.Debug.Compiler.option.isa" value="com.renesas.cdt.rxc.Debug.Compiler.option.isa.rxv1" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.Debug.Compiler.option.floatIns.261754486" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.rxc.Debug.Compiler.option.floatIns" value="Enable" valueType="enumerated"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.CPUSeries.1184789605" name="Cpu Series" superClass="com.renesas.cdt.renesas.Compiler.option.CPUSeries" value="RX63N" valueType="string"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.C.1810527841" name="C :" superClass="com.renesas.cdt.renesas.Compiler.option.C" value="com.renesas.cdt.renesas.Compiler.option.C99" valueType="enumerated"/>
+								<option command="-show=source,conditionals,definitions,expansions -listfile=&quot;$(dir $@)\$(basename $(notdir $&lt;)).lst&quot;" id="com.renesas.cdt.renesas.Compiler.option.generateListfile.1361445513" name="Generate list file" superClass="com.renesas.cdt.renesas.Compiler.option.generateListfile" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.objectList.188220172" name="Object list" superClass="com.renesas.cdt.renesas.Compiler.option.objectList" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.statistics.571959840" name="Statistics" superClass="com.renesas.cdt.renesas.Compiler.option.statistics" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.sourceCodeListing.1377347041" name="Source code listing" superClass="com.renesas.cdt.renesas.Compiler.option.sourceCodeListing" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.includeExpansion.2083409244" name="After include expansion" superClass="com.renesas.cdt.renesas.Compiler.option.includeExpansion" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.macroExpansion.1907521268" name="After macro expansion" superClass="com.renesas.cdt.renesas.Compiler.option.macroExpansion" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.sourceCode.1691696611" name="C/C++ source code" superClass="com.renesas.cdt.renesas.Compiler.option.sourceCode" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.falseLine.351521472" name="False line in conditional assemble" superClass="com.renesas.cdt.renesas.Compiler.option.falseLine" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.beforeDEFINEReplacement.1229415052" name="Before .DEFINE replacement " superClass="com.renesas.cdt.renesas.Compiler.option.beforeDEFINEReplacement" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Compiler.option.afterMacroExpansion.1854133978" name="After macro expansion" superClass="com.renesas.cdt.renesas.Compiler.option.afterMacroExpansion" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.UserDef.1087061257" name="User-defined options (after)" superClass="com.renesas.cdt.renesas.Compiler.option.UserDef" valueType="stringList">
+									<listOptionValue builtIn="false" value="-nologo"/>
+									<listOptionValue builtIn="false" value="-nomessage"/>
+								</option>
+								<option id="com.renesas.cdt.rxc.Debug.Compiler.option.optimizeLevel.187753694" name="Optimize level" superClass="com.renesas.cdt.rxc.Debug.Compiler.option.optimizeLevel" value="com.renesas.cdt.rxc.Debug.Compiler.option.optimizeLevel.0" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.Debug.Compiler.option.optimizationType.1677829321" name="Optimization type" superClass="com.renesas.cdt.rxc.Debug.Compiler.option.optimizationType" value="Optimize for size" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.compilerDefinedSymbols.2086976527" name="Compiler Defined Symbols" superClass="com.renesas.cdt.renesas.Compiler.option.compilerDefinedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__STDC_HOSTED__=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=0x02030000"/>
+									<listOptionValue builtIn="false" value="COMPACTAXP=0"/>
+									<listOptionValue builtIn="false" value="__RX=1"/>
+									<listOptionValue builtIn="false" value="__UCHAR=1"/>
+									<listOptionValue builtIn="false" value="__STDC_VERSION__=199901L"/>
+									<listOptionValue builtIn="false" value="__RON=1"/>
+									<listOptionValue builtIn="false" value="__CCRX__=1"/>
+									<listOptionValue builtIn="false" value="__FPU=1"/>
+									<listOptionValue builtIn="false" value="__DBL4=1"/>
+									<listOptionValue builtIn="false" value="__LIT=1"/>
+									<listOptionValue builtIn="false" value="EASYMAK=1"/>
+									<listOptionValue builtIn="false" value="__BITRIGHT=1"/>
+									<listOptionValue builtIn="false" value="__RXV1=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=0x02060000"/>
+									<listOptionValue builtIn="false" value="MOBILE=0"/>
+									<listOptionValue builtIn="false" value="__UBIT=1"/>
+									<listOptionValue builtIn="false" value="__DOFF=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS__=1"/>
+									<listOptionValue builtIn="false" value="FREE_RTOS_PP"/>
+									<listOptionValue builtIn="false" value="__INTRINSIC_LIB=1"/>
+								</option>
+								<option id="com.renesas.cdt.rxc.Debug.Compiler.option.aliasEnum.1813661725" name="Performs optimization considering the type of the data indicated by the pointer" superClass="com.renesas.cdt.rxc.Debug.Compiler.option.aliasEnum" value="com.renesas.cdt.rxc.Debug.Compiler.option.aliasEnum.no" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.allSymbols.1368255475" name="All Defined Symbols" superClass="com.renesas.cdt.renesas.Compiler.option.allSymbols" valueType="stringList">
+									<listOptionValue builtIn="false" value="__STDC_VERSION__=199901L"/>
+									<listOptionValue builtIn="false" value="__STDC_HOSTED__=1"/>
+									<listOptionValue builtIn="false" value="__RXV1=1"/>
+									<listOptionValue builtIn="false" value="__LIT=1"/>
+									<listOptionValue builtIn="false" value="__DBL4=1"/>
+									<listOptionValue builtIn="false" value="__UCHAR=1"/>
+									<listOptionValue builtIn="false" value="__UBIT=1"/>
+									<listOptionValue builtIn="false" value="__RON=1"/>
+									<listOptionValue builtIn="false" value="__DOFF=1"/>
+									<listOptionValue builtIn="false" value="__BITRIGHT=1"/>
+									<listOptionValue builtIn="false" value="__INTRINSIC_LIB=1"/>
+									<listOptionValue builtIn="false" value="__FPU=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS__=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=0x02060000"/>
+									<listOptionValue builtIn="false" value="__CCRX__=1"/>
+								</option>
+								<inputType id="%Base.Compiler.Shc.C.Input.Id.600338584" name="C Input" superClass="%Base.Compiler.Shc.C.Input.Id"/>
+								<inputType id="%Base.Compiler.Shc.C.Input1.Id.679192305" name="C++ Input" superClass="%Base.Compiler.Shc.C.Input1.Id"/>
+							</tool>
+							<tool id="com.renesas.cdt.rxc.debug.win32.tool.assembler.Id.1426161808" name="Assembler" outputFlag="" superClass="com.renesas.cdt.rxc.debug.win32.tool.assembler.Id">
+								<option id="com.renesas.cdt.rxc.Debug.Assembler.option.address.49397528" name="Address" superClass="com.renesas.cdt.rxc.Debug.Assembler.option.address" value="00000000" valueType="string"/>
+								<option id="com.renesas.cdt.rxc.Debug.Assembler.option.isa.1995040842" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.Debug.Assembler.option.isa" value="RXv1 architecture" valueType="enumerated"/>
+								<option command="-show=conditionals,definitions,expansions -listfile=&quot;$(basename $(notdir $&lt;)).lst&quot;" id="com.renesas.cdt.renesas.Assembler.option.generateListFile.25279867" name="Generate list file" superClass="com.renesas.cdt.renesas.Assembler.option.generateListFile" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Assembler.option.falseInline.1359322587" name="False line in conditional assemble" superClass="com.renesas.cdt.renesas.Assembler.option.falseInline" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Assembler.option.beforeDefine.1452594175" name="Before .DEFINE replacement " superClass="com.renesas.cdt.renesas.Assembler.option.beforeDefine" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Assembler.option.afterMacro.330696619" name="After macro expansion" superClass="com.renesas.cdt.renesas.Assembler.option.afterMacro" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Assembler.option.userDefine.1334025140" name="User-defined options (after)" superClass="com.renesas.cdt.renesas.Assembler.option.userDefine" valueType="stringList">
+									<listOptionValue builtIn="false" value="-nologo"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.renesas.Assembler.option.incFileDirectories.1206444700" name="Include file directories" superClass="com.renesas.cdt.renesas.Assembler.option.incFileDirectories" valueType="includePath"/>
+								<option id="com.renesas.cdt.rxc.Debug.Assembler.option.fpu.423794588" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.rxc.Debug.Assembler.option.fpu" value="Enable" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Assembler.option.assemblerDefinedSymbols.233484933" name="Assembler Defined Symbols" superClass="com.renesas.cdt.renesas.Assembler.option.assemblerDefinedSymbols" valueType="definedSymbols">
+									<listOptionValue builtIn="false" value="__RENESAS__=.DEFINE 1"/>
+									<listOptionValue builtIn="false" value="__RXV1=.DEFINE 1"/>
+									<listOptionValue builtIn="false" value="__LITTLE=.DEFINE 1"/>
+									<listOptionValue builtIn="false" value="__ASRX__=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=002060000H"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=.DEFINE 002030000H"/>
+									<listOptionValue builtIn="false" value="__RXV1=1"/>
+									<listOptionValue builtIn="false" value="__LITTLE=1"/>
+									<listOptionValue builtIn="false" value="__ASRX__=.DEFINE 1"/>
+									<listOptionValue builtIn="false" value="__RENESAS__=1"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Assembler.option.allSymbols.419383848" name="All Defined Symbols" superClass="com.renesas.cdt.renesas.Assembler.option.allSymbols" valueType="stringList">
+									<listOptionValue builtIn="false" value="__LITTLE=1"/>
+									<listOptionValue builtIn="false" value="__RXV1=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS_VERSION__=002060000H"/>
+									<listOptionValue builtIn="false" value="__ASRX__=1"/>
+									<listOptionValue builtIn="false" value="__RENESAS__=1"/>
+								</option>
+								<inputType id="%Base.Assembler.shcInputType.Id.1468294727" name="Assembler InputType" superClass="%Base.Assembler.shcInputType.Id"/>
+							</tool>
+							<tool command="rlink" id="com.renesas.cdt.rxc.debug.win32.tool.linker.Id.1878009329" name="Linker" superClass="com.renesas.cdt.rxc.debug.win32.tool.linker.Id">
+								<option defaultValue="In output load module" id="com.renesas.cdt.renesas.Linker.option.debugInformation.1166182830" name="Debug information" superClass="com.renesas.cdt.renesas.Linker.option.debugInformation" value="com.renesas.cdt.renesas.Linker.option.debugInformation.outputLoadModule" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Linker.option.linkOrderList.2136291202" name="" superClass="com.renesas.cdt.renesas.Linker.option.linkOrderList" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;.\src\main.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\hardware.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\canonical_machine.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\config.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\config_app.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\controller.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\cycle_homing.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\cycle_jogging.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\cycle_probing.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\encoder.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\gcode_parser.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\gpio.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\help.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\json_parser.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\kinematics.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\network.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\persistence.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\plan_arc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\plan_exec.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\plan_line.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\plan_zoid.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\planner.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\pwm.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\report.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\spindle.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\stepper.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\switch.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\system.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\test.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\text_parser.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\util.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\xio.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\xio\xio_FsFat.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\maincnc_task.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\keyboard\keyboard.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\config_kernel.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\r_usb_hmsc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\Display\lcd.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\Display\lcd_menu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\.metadata\.plugins\org.eclipse.cdt.make.core\specs.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\MT01_proj.lib&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\interpreter_if.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\xio\xio_Command.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\interpreter_fileRunning_if.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\interpreter_jog_if.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\eeprom\eeprom.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\macros\macros.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\plasma.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/config\interpreter_delocar.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\config\interpreter_line_selection.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_flash_loader_rx\src\r_fl_app_header.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_flash_loader_rx\src\r_fl_downloader.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_flash_loader_rx\src\r_fl_utilities.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_flash_loader_rx\src\memory\r_fl_memory_spi_flash.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\fsystem_spi\fsystem_spi.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\xio\xio_SPIFFS.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_cache.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_check.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_gc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_hw.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_hydrogen.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\spiffs\spiffs_nucleus.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\cnc\cycle_waiting_switch.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/menu\menu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/menu\screen.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/menu\widget.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src/Nextion\nextion.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\rx63n\cpu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\rx63n\locking.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\rx63n\mcu_init.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\rx63n\mcu_interrupts.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\rx63n\mcu_locks.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\mcu\all\r_bsp_common.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\dbsct.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\hwsetup.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\lowlvl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\lowsrc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\resetprg.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\sbrk.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\r_bsp\board\MT01\vecttbl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/FreeRTOS_lib.lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/HAL_lib.lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Display/u8g_mt01.lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\file.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\timer_screen.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\main_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\selFiles_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\config_maquina.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\config_menu_ox.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\config_menu_pl.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\config_par_maquina.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\config_thc_maquina.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\state_functions.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_choose_file.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_auto.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_jog.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_manual.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_maq_thc.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_maquina.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_menu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_par_maq.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_config_var.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_line_selection.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_main_menu.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_maq_model.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_move.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_splash.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_state_warning.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_states_map.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\states\ut_states_task.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\machine_iif\machine_com.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\auto_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\cutting_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\desloca_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\emergencia_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\jog_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\sim_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\splash_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\warning_page.obj&quot;"/>
+								</option>
+								<option command="-nooptimize" id="com.renesas.cdt.renesas.Linker.option.linkerOptimizeCommand.1415094410" name="Dummy option for Linker Optimize command" superClass="com.renesas.cdt.renesas.Linker.option.linkerOptimizeCommand" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Linker.option.rom.1481982857" name="ROM to RAM mapped section" superClass="com.renesas.cdt.renesas.Linker.option.rom" valueType="stringList">
+									<listOptionValue builtIn="false" value="D=R"/>
+									<listOptionValue builtIn="false" value="D_1=R_1"/>
+									<listOptionValue builtIn="false" value="D_2=R_2"/>
+								</option>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="true" id="com.renesas.cdt.renesas.Linker.option.linkOrder.565590958" name="%option.name.179" superClass="com.renesas.cdt.renesas.Linker.option.linkOrder" valueType="stringList"/>
+								<option command="-list=&quot;MT01_proj.map&quot; -show=symbol,reference,total_size" id="com.renesas.cdt.renesas.Linker.option.generateListFile.1357653310" name="Generate list file" superClass="com.renesas.cdt.renesas.Linker.option.generateListFile" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.listOutputMethod.1510889004" name="Output method:" superClass="com.renesas.cdt.renesas.Linker.option.listOutputMethod" value="com.renesas.cdt.renesas.Linker.option.listOutputMethod.custom" valueType="enumerated"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showSymbol.1938367286" name="Show symbol" superClass="com.renesas.cdt.renesas.Linker.option.showSymbol" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showReference.749477169" name="Show reference" superClass="com.renesas.cdt.renesas.Linker.option.showReference" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showCrossReference.486827985" name="Show cross-reference" superClass="com.renesas.cdt.renesas.Linker.option.showCrossReference" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showTotalSectionSize.345528909" name="Show total section size" superClass="com.renesas.cdt.renesas.Linker.option.showTotalSectionSize" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showVector.1971352333" name="Show vector" superClass="com.renesas.cdt.renesas.Linker.option.showVector" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.showSection.1600926895" name="Show section" superClass="com.renesas.cdt.renesas.Linker.option.showSection" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.typeOfOutputFileOption.1063150650" name="Type of output file:" superClass="com.renesas.cdt.renesas.Linker.option.typeOfOutputFileOption" value="com.renesas.cdt.renesas.Linker.option.typeOfOutputFileOption.stypeViaAbsolute" valueType="enumerated"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.prelinkerControl.1330554202" name="Prelinker control" superClass="com.renesas.cdt.renesas.Linker.option.prelinkerControl" value="com.renesas.cdt.renesas.Linker.option.prelinkerControl.auto" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Linker.option.userDefined.1552899851" name="User-defined options (after)" superClass="com.renesas.cdt.renesas.Linker.option.userDefined" valueType="stringList">
+									<listOptionValue builtIn="false" value="-nologo"/>
+									<listOptionValue builtIn="false" value="-nomessage"/>
+								</option>
+								<option id="com.renesas.cdt.renesas.Linker.option.linkOrderUsed.1903941807" name="Use custom linkage order" superClass="com.renesas.cdt.renesas.Linker.option.linkOrderUsed" value="true" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.rxc.Debug.Linker.option.relocatableFiles.2104586457" name="Relocatable files, object files and library files" superClass="com.renesas.cdt.rxc.Debug.Linker.option.relocatableFiles" valueType="stringList">
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/FreeRtos_USB_hmsc_lib/FreeRTOS_lib.lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/HAL_lib.lib}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/src/Display/u8g_mt01.lib}&quot;"/>
+								</option>
+								<option id="com.renesas.cdt.renesas.Linker.option.outputFilePath.459910216" name="Output file path" superClass="com.renesas.cdt.renesas.Linker.option.outputFilePath" value="${CONFIGDIR:/${ProjName}}.mot" valueType="string"/>
+								<option id="com.renesas.cdt.renesas.Linker.option.createUnfilledArea.2047843351" name="Output no data to unfilled area" superClass="com.renesas.cdt.renesas.Linker.option.createUnfilledArea" value="false" valueType="boolean"/>
+							</tool>
+							<tool id="%com.renesas.cdt.rxc.debug.win32.tool.libgen.Id.1092284173" name="Standard Library" superClass="%com.renesas.cdt.rxc.debug.win32.tool.libgen.Id">
+								<option id="com.renesas.cdt.rxc.Debug.StandardLibrary.option.address.1588057251" name="Address" superClass="com.renesas.cdt.rxc.Debug.StandardLibrary.option.address" value="00000000" valueType="string"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary.2015530998" name="User-specified library file" superClass="com.renesas.cdt.renesas.StandardLibrary.option.userSpecifiedLibrary" value="C:\WORKSP~1\e2studio\git\MT01_G~1\MT01_B~2\MT01_P~1.LIB" valueType="string"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.libConfiguration.1403174040" name="Library configuration" superClass="com.renesas.cdt.renesas.StandardLibrary.option.libConfiguration" value="C99" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.Debug.StandardLibrary.option.isa.1368237098" name="Instruction set architecture" superClass="com.renesas.cdt.rxc.Debug.StandardLibrary.option.isa" value="RXv1 architecture" valueType="enumerated"/>
+								<option id="com.renesas.cdt.rxc.Debug.StandardLibrary.option.floatIns.260880862" name="Use floating point arithmetic instructions" superClass="com.renesas.cdt.rxc.Debug.StandardLibrary.option.floatIns" value="Enable" valueType="enumerated"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mode.203399400" name="Mode" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mode" value="com.renesas.cdt.renesas.StandardLibrary.option.mode.buildOnlyWhenOptionsChanged" valueType="enumerated"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.runtime.1514206133" name="runtime: Runtime routines (checked and disabled by default)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.runtime" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.newCPP.1529767891" name="new (EC++): Memory allocation and deallocation routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.newCPP" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.ctype.1743082877" name="ctype.h: Character classification routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.ctype" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.math.469742385" name="math.h: Mathematical/trigonometric operations (double-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.math" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mathf.607715449" name="mathf.h: Mathematical/trigonometric operations (single-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mathf" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdarg.1569980922" name="stdarg.h: Variable argument functions" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdarg" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdio.1986612012" name="stddio.h: Input/Output" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdio" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdlib.11394020" name="stdlib.h: General purpose library features" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdlib" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.string.441198693" name="string.h: String handling operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.string" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.iosCPP.245694110" name="ios (EC++): Input/Output streams" superClass="com.renesas.cdt.renesas.StandardLibrary.option.iosCPP" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.complexCPP.1821508008" name="complex (EC++): Complex number operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.complexCPP" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stringCPP.12140481" name="string (EC++): String manipulation operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stringCPP" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.ctypec89.205809663" name="ctype.h (C89/C99): Character classification routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.ctypec89" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mathc89.1817543422" name="math.h (C89/C99): Mathematical/trigonometric operations (double-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mathc89" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.mathfc89.1864675514" name="mathf.h (C89/C99): Mathematical/trigonometric operations (single-precision)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.mathfc89" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdargc89.1883113034" name="stdarg.h (C89/C99): Variable argument functions" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdargc89" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdioc89.517232671" name="stdio.h (C89/C99): Input/Output" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdioc89" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stdlibc89.968120395" name="stdlib.h (C89/C99): General purpose library features" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stdlibc89" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.stringc89.1928056300" name="string.h (C89/C99): String handling operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.stringc89" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.rxciosCPP.386964056" name="ios (EC++): Input/Output streams" superClass="com.renesas.cdt.renesas.StandardLibrary.option.rxciosCPP" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.rxcnewCPP.2094909974" name="new (EC++): Memory allocation and deallocation routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.rxcnewCPP" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.rxccomplexCPP.882005679" name="complex.h (EC++): Complex number operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.rxccomplexCPP" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.rxcstringCPP.1963240492" name="string (EC++): String manipulation operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.rxcstringCPP" value="true" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.complexC99.741987186" name="complex.h (C99): Complex number operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.complexC99" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.fenvC99.107521305" name="fenv.h (C99): Floating point operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.fenvC99" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.inttypesC99.1042237817" name="inttypes.h (C99): Integer type format operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.inttypesC99" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.wcharC99.303182034" name="wchar.h (C99): Wide character operations" superClass="com.renesas.cdt.renesas.StandardLibrary.option.wcharC99" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.wctypeC99.1248716333" name="wctype.h (C99): Wide character classification routines" superClass="com.renesas.cdt.renesas.StandardLibrary.option.wctypeC99" value="false" valueType="boolean"/>
+								<option id="com.renesas.cdt.renesas.StandardLibrary.option.enableAll.1918388417" name="Enable all" superClass="com.renesas.cdt.renesas.StandardLibrary.option.enableAll" value="false" valueType="boolean"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.StandardLibrary.option.UserDef.218140768" name="User-defined options (after)" superClass="com.renesas.cdt.renesas.StandardLibrary.option.UserDef" valueType="stringList">
+									<listOptionValue builtIn="false" value="-nologo"/>
+								</option>
+							</tool>
+							<tool command="rlink" id="com.renesas.cdt.rxc.debug.win32.tool.convertor.Id.8051189" name="Converter" superClass="com.renesas.cdt.rxc.debug.win32.tool.convertor.Id">
+								<option id="com.renesas.cdt.renesas.Convertor.option.typeOfOutputFile.120772152" name="Type of output file" superClass="com.renesas.cdt.renesas.Convertor.option.typeOfOutputFile" value="Stype via absolute" valueType="enumerated"/>
+								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Converter.option.userDefined.2056450244" name="User-defined options (after)" superClass="com.renesas.cdt.renesas.Converter.option.userDefined" valueType="stringList">
+									<listOptionValue builtIn="false" value="-crc=FFFFFE05=FFF00000-FFFFFE04,FFFFFE07-FFFFFFFF:little"/>
+								</option>
+							</tool>
+							<tool id="com.renesas.cdt.rxc.debug.win32.tool.dsp.Id.1264692259" name="DSP Assembler" superClass="com.renesas.cdt.rxc.debug.win32.tool.dsp.Id"/>
+							<tool id="com.renesas.cdt.rxc.debug.win32.tool.config.Id.653889121" name="RTOS Configurator" superClass="com.renesas.cdt.rxc.debug.win32.tool.config.Id"/>
+						</toolChain>
+					</folderInfo>
+					<sourceEntries>
+						<entry excluding="FreeRtos_USB_hmsc_lib|HAL|fsystem_spi|r_bsp|r_flash_loader_rx|spiffs|src" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="FreeRtos_USB_hmsc_lib"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="HAL"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="fsystem_spi"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="r_bsp"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="r_flash_loader_rx"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="spiffs"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src"/>
+					</sourceEntries>
+				</configuration>
+			</storageModule>
+			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
+		</cconfiguration>
+	</storageModule>
+	<storageModule moduleId="cdtBuildSystem" version="4.0.0">
+		<project id="HmscFw.com.renesas.cdt.rxc.projectType.win32.Id.1184194857" name="Executable (Renesas)" projectType="com.renesas.cdt.rxc.projectType.win32.Id"/>
+	</storageModule>
+	<storageModule moduleId="scannerConfiguration">
+		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
+	<storageModule moduleId="refreshScope" versionNumber="2">
+		<configuration configurationName="EasyMak_build">
+			<resource resourceType="PROJECT" workspacePath="/MT01_proj"/>
+		</configuration>
+		<configuration configurationName="MT01_build"/>
+		<configuration configurationName="DefaultBuild">
+			<resource resourceType="PROJECT" workspacePath="/MT01_proj"/>
+		</configuration>
+		<configuration configurationName="CompactaXP_build">
+			<resource resourceType="PROJECT" workspacePath="/MT01_proj"/>
+		</configuration>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+</cproject>
