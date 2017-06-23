@@ -59,8 +59,8 @@ Includes   <System Includes> , "Project Includes"
 #include <string.h>
 #include <stdio.h>
 
-const char proj_name[] = "MT01_proj.bin";
-const char proj_programmed[] = "MT01_done.bin";
+const char proj_name[] = "MT02_proj.bin";
+const char proj_programmed[] = "MT02_done.bin";
 
 #define CRC_ADDRESS (((uint32_t)__sectop("APPHEADER_1"))-0xFFF00000)
 extern bool drivemountFlag;
