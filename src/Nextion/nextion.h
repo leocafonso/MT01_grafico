@@ -192,4 +192,10 @@ bool NexWidget_touchable(const char *str,nt_enable_t event);
 
 bool NexTouch_recv(nt_touch_t *buf, uint32_t timeout);
 
+bool NexUpload_checkFile(char* p_file_name);
+
+bool NexUpload_setDownloadBaudrate(uint32_t baudrate);
+
+bool NexUpload_downloadTftFile(void);
+
 #endif /* NEXTION_NEXTION_H_ */

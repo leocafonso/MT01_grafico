@@ -16,6 +16,7 @@
 #include "platform.h"
 #include "r_sci_async_rx_if.h"
 #include "nextion.h"
+#include "ff.h"
 
 #define NEX_RET_TIMEOUT       			(500Ul)
 
@@ -25,12 +26,13 @@ static bool sendCommand(const char* cmd);
 static bool recvRetCommandFinished(uint32_t timeout);
 static bool recvRetNumber(uint32_t *number, uint32_t timeout);
 static uint16_t recvRetString(char *buffer, uint16_t len, uint32_t timeout);
+static uint16_t NexUpload_recvRetString(char *buffer, uint32_t timeout,bool recv_flag);
 
 /* Static variables and const */
 static bool recvRetOk = false, recvOk = false;
-uint8_t recvBuffer[20];
+static uint8_t recvBuffer[20];
 static sci_hdl_t console;
-const sci_uart_t config = {
+static const sci_uart_t config = {
 	    .baud_rate = 9600,     // ie 9600, 19200, 115200
 		.clk_src = SCI_CLK_INT,
 		.data_size = SCI_DATA_8BIT,
@@ -39,9 +41,10 @@ const sci_uart_t config = {
 		.stop_bits =SCI_STOPBITS_1,
 	    .int_priority = 4,   // txi, tei, rxi INT priority; 1=low, 15=high
 };
-
+static FIL         fileNextion;
+static uint32_t _undownloadByte;
 /* extern variables */
-
+extern bool drivemountFlag;
 
 
 /************************** Static functions *********************************************/
@@ -156,6 +159,39 @@ static uint16_t recvRetString(char *buffer, uint16_t len, uint32_t timeout)
 //    }
 //    memset(temp,0x00,sizeof(temp));
     return ret;
+}
+
+static uint16_t NexUpload_recvRetString(char *buffer, uint32_t timeout,bool recv_flag)
+{
+	uint16_t ret = 0;
+	uint8_t c = 0;
+	bool exit_flag = false;
+	uint32_t start;
+	start = xTaskGetTickCount();
+	while(xTaskGetTickCount() - start <= timeout)
+	{
+		while (R_SCI_Receive(console,&c,1) == SCI_SUCCESS)
+		{
+			if (c == 0)
+			{
+				continue;
+			}
+			snprintf(buffer,50,"%s%s",buffer,c);
+			if(recv_flag)
+			{
+				if(strstr(buffer,"\x05") != NULL)
+				{
+					exit_flag = true;
+				}
+			}
+		}
+		if(exit_flag)
+		{
+			break;
+		}
+	}
+	ret = strlen(buffer);
+	return ret;
 }
 
 /************************** Public functions *********************************************/
@@ -351,5 +387,96 @@ bool NexTouch_recv(nt_touch_t *buf, uint32_t timeout)
 		}
     }
     return ret;
+}
+
+bool NexUpload_checkFile(char* p_file_name)
+{
+	bool ret = false;
+	FILINFO     file_info;
+	if(drivemountFlag){
+		if (f_open(&fileNextion, p_file_name, FA_READ) != FR_OK)
+		{
+			//TODO File open error
+		}
+		if (f_stat(p_file_name, &file_info) != FR_OK)
+		{
+			//TODO File open error
+		}
+		_undownloadByte = file_info.fsize;
+		ret = true;
+	}
+	else
+	{
+		//TODO USB not enumerated
+	}
+	return ret;
+}
+
+bool NexUpload_searchBaudrate(uint32_t baudrate)
+{
+	char string[50] = "";
+    sendCommand("");
+    sendCommand("connect");
+    NexUpload_recvRetString(string, 100,false);
+    if(strstr(string,"comok") != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+bool NexUpload_setDownloadBaudrate(uint32_t baudrate)
+{
+    char string[50] = "";
+    char cmd[50] = "";
+    snprintf(cmd,50,"whmi-wri %d,%d,0",_undownloadByte,baudrate);
+
+    sendCommand("");
+    sendCommand(cmd);
+	vTaskDelay(50/portTICK_PERIOD_MS);
+    //nexSerial.begin(baudrate);
+    NexUpload_recvRetString(string, 500,false);
+	if(strstr(string,"\x05") != NULL)
+    {
+        return 1;
+    }
+    return 0;
+}
+
+bool NexUpload_downloadTftFile(void)
+{
+	void *temp = NULL;
+	uint32_t remain;
+    char string[50] = "";
+	temp = pvPortMalloc( 4096 );
+	while(!f_eof(&fileNextion))
+	{
+		f_read (&fileNextion, temp, 4096, (UINT *)&remain);			/* Read data from the file */
+		if (remain == 0)
+		{
+			for (uint16_t i = 0; i < 4096; i++)
+			{
+				while(R_SCI_Send(console,(uint8_t *)temp,1) != SCI_SUCCESS);
+			}
+		}
+		else
+		{
+			for (uint16_t i = 0; i < remain; i++)
+			{
+				while(R_SCI_Send(console,(uint8_t *)temp,1) != SCI_SUCCESS);
+			}
+		}
+	    NexUpload_recvRetString(string,500,true);
+		if(strstr(string,"\x05") != NULL)
+	    {
+	    	strcpy(string,"");
+	    }
+	    else
+	    {
+	    	break;
+	    }
+	}
+	vPortFree(temp);
+	return 0;
 }
 

@@ -88,12 +88,22 @@ void page_detach (void *p_arg)
 
 void page_handler (void *p_arg)
 {
+	bool ret;
 	char str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
 		get_fileName(str);
 		changeTxt(&txt_version,str);
+		ret = NexUpload_checkFile("MT01_5in_regular.tft");
+		if(ret)
+		{
+			ret = NexUpload_setDownloadBaudrate(9600);
+			if (ret)
+			{
+				NexUpload_downloadTftFile();
+			}
+		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sim.id, EVENT_CLICK))
 	{
