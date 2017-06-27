@@ -14,14 +14,14 @@ extern uint32_t LineM5;
 extern float selecionarLinhas;
 
 uint32_t selecionarlinhasMax(void);
-void selecionarlinhas(void);
+void selecionarlinhas(uint32_t *p_lineEntry,uint32_t *p_linepositionEntry);
 char** selecionarLinhatexto(void);
 void linhaSelecionada(uint32_t flag);
 
 void zerar_maquina(void *var);
 void zerar_peca(void *var);
 void homming_eixos(void *var);
-void testar_peca(void *var);
+bool testar_peca(void);
 void mem_format(void *var);
 uint32_t delay_esc(uint32_t timems);
 uint32_t delay_esc_enter(uint32_t timems);

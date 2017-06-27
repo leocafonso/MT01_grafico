@@ -10,6 +10,7 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "load_page.h"
 
 /* Includes */
 #include "platform.h"
@@ -54,6 +55,8 @@ static void page_detach (void *p_arg);
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
 /* Global variables and const */
+uint8_t loadfilesNum = 0;
+
 mn_screen_t load_page = {.id = SC_PAGE11,
 					.wt_selected = 0,
 					.name        = "Load",
@@ -93,29 +96,40 @@ void page_handler (void *p_arg)
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-		get_fileName(str);
-		changeTxt(&txt_version,str);
-		ret = NexUpload_checkFile("MT01_5in_regular.tft");
-		if(ret)
+		if ((loadfilesNum & MCU_FILE) == MCU_FILE)
 		{
-			ret = NexUpload_setDownloadBaudrate(9600);
-			if (ret)
-			{
-				NexUpload_downloadTftFile();
-			}
+			get_fileName(str);
 		}
+		changeTxt(&txt_version,str);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sim.id, EVENT_CLICK))
 	{
 		uint8_t progress_val;
-		widgetVisible(&btn_sim, NT_HIDE);
-		widgetVisible(&btn_nao, NT_HIDE);
-		widgetVisible(&txt_info, NT_HIDE);
-		widgetVisible(&load_bar, NT_SHOW);
-		while((progress_val = R_loader_progress()) < 16)
+		if ((loadfilesNum & MCU_FILE) == MCU_FILE)
 		{
-			widgetProgressBar(&load_bar,(progress_val*100)/16);
+			widgetVisible(&btn_sim, NT_HIDE);
+			widgetVisible(&btn_nao, NT_HIDE);
+			widgetVisible(&txt_info, NT_HIDE);
+			widgetVisible(&load_bar, NT_SHOW);
+			while((progress_val = R_loader_progress()) < 16)
+			{
+				widgetProgressBar(&load_bar,(progress_val*100)/16);
+			}
 		}
+		if ((loadfilesNum & NEXTION_FILE) == NEXTION_FILE)
+		{
+			ret = NexUpload_checkFile("MT01_5in_regular.tft");
+			if(ret)
+			{
+				ret = NexUpload_setDownloadBaudrate(1500000);
+				if (ret)
+				{
+					NexUpload_downloadTftFile();
+					ret = NexUpload_waitingReset(10000);
+				}
+			}
+		}
+		RESET
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_nao.id, EVENT_CLICK))
 	{

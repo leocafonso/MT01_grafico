@@ -198,4 +198,6 @@ bool NexUpload_setDownloadBaudrate(uint32_t baudrate);
 
 bool NexUpload_downloadTftFile(void);
 
+bool NexUpload_waitingReset(uint16_t timeout);
+
 #endif /* NEXTION_NEXTION_H_ */

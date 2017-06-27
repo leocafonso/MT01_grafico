@@ -320,7 +320,7 @@ void config_int(ut_config_var* var)
 					reset_flag = true;
 					break;
 				case STATE_CONFIG_AUTO_MODE:
-					selecionarlinhas();
+					//selecionarlinhas();
 					break;
 
 			}

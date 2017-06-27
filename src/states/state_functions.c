@@ -54,8 +54,7 @@ uint32_t selecionarlinhasMax(void)
 	s32_t res;
 	s32_t i;
 	char s;
-	ut_lcd_output_warning("LENDO ARQUIVO\n");
-//	iif_bind_line_selection();
+//	ut_lcd_output_warning("LENDO ARQUIVO\n");
 	choosedLinePosition = 0;
 	choosedLine = 0;
 	currentLineSel = 0;
@@ -97,10 +96,10 @@ uint32_t selecionarlinhasMax(void)
 	return currentLineSel;
 }
 
-void selecionarlinhas(void)
+void selecionarlinhas(uint32_t *p_lineEntry,uint32_t *p_linepositionEntry)
 {
 	stat_t status;
-	ut_lcd_output_warning("LENDO ARQUIVO\n");
+//	ut_lcd_output_warning("LENDO ARQUIVO\n");
 //	iif_bind_line_selection();
 	choosedLinePosition = 0;
 	choosedLine = 0;
@@ -121,16 +120,18 @@ void selecionarlinhas(void)
 		}
 		if (gc_gcode_parser(cs.bufp) == STAT_COMPLETE)
 		{
-			lineEntries[1] = LineM5;
-			LinePositionEntries[1] = actualLine - (actualLine - previousLine);
+			//lineEntries[1] = LineM5;
+			p_lineEntry[1] = LineM5;
+			p_linepositionEntry[1] = actualLine - (actualLine - previousLine);
 			configsVar->type = UT_CONFIG_BOOL;
 			xio_close(cs.primary_src);
 			break;
 		}
 		if (gc_gcode_parser(cs.bufp) == STAT_OK)
 		{
-			lineEntries[0] = LineM5;
-			LinePositionEntries[0] = actualLine - (actualLine - previousLine);
+			//lineEntries[0] = LineM5;
+			p_lineEntry[0] = LineM5;
+			p_linepositionEntry[0] = actualLine - (actualLine - previousLine);
 		}
 	}
 
@@ -206,7 +207,7 @@ void homming_eixos(void *var)
 	}
 }
 
-void testar_peca(void *var)
+bool testar_peca(void)
 {
 	uint16_t i = 0;
 	char s;
@@ -214,46 +215,42 @@ void testar_peca(void *var)
 	char num[50];
 	float numf;
 
-	ut_config_var *lvar = var;
-	bool *value = lvar->value;
-	if(*value)
-	{
-		macro_func_ptr = command_idle;
-		xio_close(cs.primary_src);
-		xio_open(cs.primary_src,0,0);
-		while (true) {
-			SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, &s, 1);
-			i++;
-			if (i > 1000)
-			{
-				xio_close(cs.primary_src);
-				ut_lcd_output_warning("ARQUIVO\nSEM INFO\nDE LIMITES\n");
-				vTaskDelay(2000 / portTICK_PERIOD_MS);
-				*value = false;
-				return;
-			}
-			if (s == 'M')
-			{
-				SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, num, 2);
-				numf = strtof(num,&str);
-				if (numf == 98.0f)
-				{
-					break;
-				}
-			}
+	macro_func_ptr = command_idle;
+	xio_close(cs.primary_src);
+	xio_open(cs.primary_src,0,0);
+	while (true) {
+		SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, &s, 1);
+		i++;
+		if (i > 1000)
+		{
+			xio_close(cs.primary_src);
+			//ut_lcd_output_warning("ARQUIVO\nSEM INFO\nDE LIMITES\n");
+			//vTaskDelay(2000 / portTICK_PERIOD_MS);
+			//*value = false;
+			return false;
 		}
-		while (true) {
-			SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, &s, 1);
-			if (s == '(')
+		if (s == 'M')
+		{
+			SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, num, 2);
+			numf = strtof(num,&str);
+			if (numf == 98.0f)
 			{
-				SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, num, 50);
-				Xcord = strtof(num,&str);
-				Ycord = strtof(++str,NULL);
-				xio_close(cs.primary_src);
-				//xTaskNotifyGive(xCncTaskHandle);
-				macro_func_ptr = limit_test;
 				break;
 			}
+		}
+	}
+	while (true) {
+		SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, &s, 1);
+		if (s == '(')
+		{
+			SPIFFS_read(&uspiffs[0].gSPIFFS, uspiffs[0].f, num, 50);
+			Xcord = strtof(num,&str);
+			Ycord = strtof(++str,NULL);
+			xio_close(cs.primary_src);
+			//xTaskNotifyGive(xCncTaskHandle);
+			macro_func_ptr = limit_test;
+			return true;
+			break;
 		}
 	}
 }

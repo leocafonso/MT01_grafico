@@ -27,6 +27,7 @@
 #include "config.h"				// #2
 #include "controller.h"
 #include "xio.h"
+#include "macros.h"
 #include "keyboard.h"
 #include "keypad_page.h"
 
@@ -36,7 +37,7 @@
 
 #define WIDGET_NUM 18
 
-#define TIMER_POS 202
+#define TIMER_POS 204
 
 /* Static functions */
 static void page_handler (void *p_arg);
@@ -53,6 +54,10 @@ static void jog_key_release (void *p_arg);
 static void jog_key_zdown (void *p_arg);
 static void jog_key_zup (void *p_arg);
 
+static void warning_zerarpeca_callback(warn_btn_t btn_type);
+static void warning_zerarmaquina_callback(warn_btn_t btn_type);
+static void warning_semzeromaquina_callback(warn_btn_t btn_type);
+
 /* Static variables and const */
 static mn_widget_t btn_cima = {.name = "b0", .selectable = true};
 static mn_widget_t btn_baixo = {.name = "b1", .selectable = true};
@@ -62,8 +67,8 @@ static mn_widget_t btn_zup = {.name = "b7", .selectable = true};
 static mn_widget_t btn_zdown = {.name = "b8", .selectable = true};
 static mn_widget_t btn_tocha = {.name = "p0", .selectable = true};
 static mn_widget_t btn_voltar = {.name = "b4", .selectable = true};
-static mn_widget_t btn_zpeca = {.name = "b5", .selectable = true};
-static mn_widget_t btn_zmaq = {.name = "b6", .selectable = true};
+static mn_widget_t btn_zmaq = {.name = "b5", .selectable = true};
+static mn_widget_t btn_zpeca = {.name = "b6", .selectable = true};
 
 static mn_widget_t posx_txt = {.name = "t0", .selectable = false};
 static mn_widget_t posy_txt = {.name = "t1", .selectable = false};
@@ -77,6 +82,22 @@ static mn_widget_t ohm_Led = {.name = "p3", .selectable = false};
 static mn_screen_event_t jog;
 
 static mn_keypad_t jog_keypad_args;
+
+static mn_warning_t warn_zerarpeca_args = { .buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_ZERO_PECA,
+											.msg_count = 1,
+											.func_callback = warning_zerarpeca_callback
+										   };
+static mn_warning_t warn_zerarmaquina_args = { .buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_ZERO_MAQ,
+											.msg_count = 1,
+											.func_callback = warning_zerarmaquina_callback
+										   };
+static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_SEM_ZERO_MAQ,
+											.msg_count = 1,
+											.func_callback = warning_semzeromaquina_callback
+										   };
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -308,15 +329,25 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zpeca.id,EVENT_CLICK))
 	{
-		machine_zerar_peca();
+		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+		{
+			warning_page.p_args = &warn_zerarpeca_args;
+		}
+		else
+		{
+			warning_page.p_args = &warn_semzeromaquina_args;
+		}
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zmaq.id,EVENT_CLICK))
 	{
-		machine_zerar_maquina();
+		warning_page.p_args = &warn_zerarmaquina_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(vel_txt.id,EVENT_CLICK))
 	{
 		jog_keypad_args.p_var = &configVarJog[JOG_RAPIDO];
+		jog_keypad_args.key_var = KEY_CONFIG_JOG;
 		jog_keypad_args.step = 1;
 		jog_keypad_args.min = 10;
 		jog_keypad_args.max = 10000;
@@ -357,4 +388,28 @@ void page_handler (void *p_arg)
 			else
 				widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
 		}
+}
+
+static void warning_zerarpeca_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM: machine_zerar_peca(); break;
+		case BTN_PRESSED_NAO: break;
+	}
+	mn_screen_change(&jog_page,EVENT_SHOW);
+}
+static void warning_zerarmaquina_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM: machine_zerar_maquina(); break;
+		case BTN_PRESSED_NAO: break;
+	}
+	mn_screen_change(&jog_page,EVENT_SHOW);
+}
+
+static void warning_semzeromaquina_callback(warn_btn_t btn_type)
+{
+	mn_screen_change(&jog_page,EVENT_SHOW);
 }
