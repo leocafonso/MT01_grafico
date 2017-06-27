@@ -289,8 +289,6 @@ uint8_t R_loader_progress(void)
 	if (f_eof(&file))
 	{
 			f_rename(proj_name, proj_programmed);
-			res = f_close(&file);
-			RESET
 	}
 	res = f_close(&file);
 	return (address / 0x10000);

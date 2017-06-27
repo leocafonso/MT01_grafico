@@ -10,6 +10,8 @@
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
+#include "config_menu_ox.h"
+#include "eeprom.h"
 
 /* Includes */
 #include "platform.h"
@@ -27,11 +29,12 @@
 #include "xio.h"
 /* Defines */
 
-#define TIMER_NUM 1
+#define TIMER_NUM 2
 
 #define WIDGET_NUM 15
 
 #define TIMER_POS 202
+#define TIMER_THC 203
 
 /* Static functions */
 static void page_handler (void *p_arg);
@@ -60,6 +63,8 @@ static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
 static uint32_t event_args;
+static uint32_t btn_id_tch;
+static mn_screen_event_t cutting;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -69,9 +74,10 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
+static mn_timer_t timer_thc = {.id = TIMER_THC, .name = "tthc"};
 
 #if (TIMER_NUM > 0)
-static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
+static mn_timer_t *p_timer[TIMER_NUM] = {&timer0, &timer_thc};
 #endif
 /* Global variables and const */
 mn_screen_t cutting_page = {.id 		 = SC_PAGE6,
@@ -91,11 +97,41 @@ mn_screen_t cutting_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void cutting_key_zdown (void *p_arg)
+{
+	widgetClick(&btn_thcm, NT_PRESS);
+	cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &cutting, 0 );
+}
 
+static void cutting_key_zup (void *p_arg)
+{
+	widgetClick(&btn_thcp, NT_PRESS);
+	cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &cutting, 0 );
+}
+
+static void cutting_key_release (void *p_arg)
+{
+	if (btn_thcm.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcm, NT_RELEASE);
+		cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
+	}
+	else if (btn_thcp.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcp, NT_RELEASE);
+		cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
+	}
+	xQueueSend( menu.qEvent, &cutting, 0 );
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	cutting_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;
+	cutting_page.iif_func[SC_KEY_ZUP] = cutting_key_zup;
+	cutting_page.iif_func[SC_KEY_RELEASE] = cutting_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -121,7 +157,7 @@ void page_handler (void *p_arg)
 		spiffs_stat fileStat;
 		xio_open(cs.primary_src,0,0);
 		SPIFFS_fstat(&uspiffs[0].gSPIFFS, uspiffs[0].f, &fileStat);
-		changeTxt(&file_txt,fileStat.name);
+		changeTxt(&file_txt,(const char *)fileStat.name);
 		xio_close(cs.primary_src);
 		play_pause = false;
 		machine_start();
@@ -159,6 +195,29 @@ void page_handler (void *p_arg)
 		}
 
 	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_PRESSED))
+	{
+		btn_id_tch = btn_thcp.id;
+		mn_screen_create_timer(&timer_thc,500);
+		mn_screen_start_timer(&timer_thc);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_CLICK))
+	{
+		btn_id_tch = 0;
+		mn_screen_stop_timer(&timer_thc);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_PRESSED))
+	{
+		btn_id_tch = btn_thcm.id;
+		mn_screen_create_timer(&timer_thc,500);
+		mn_screen_start_timer(&timer_thc);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_CLICK))
+	{
+		btn_id_tch = 0;
+		mn_screen_stop_timer(&timer_thc);
+	}
+
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id,EVENT_CLICK))
 	{
 		if (!programEnd)
@@ -243,6 +302,21 @@ void page_handler (void *p_arg)
 			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
 		else
 			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(timer_thc.id,EVENT_TIMER))
+	{
+		if (btn_id_tch == btn_thcp.id)
+		{
+			configVarPl[PL_CONFIG_TENSAO_THC] += 1;
+			if(configVarPl[PL_CONFIG_TENSAO_THC] > THC_VMAX)
+				configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMAX;
+		}
+		else if (btn_id_tch == btn_thcm.id)
+		{
+			configVarPl[PL_CONFIG_TENSAO_THC] -= 1;
+			if(configVarPl[PL_CONFIG_TENSAO_THC] < THC_VMIN)
+			  configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMIN;
+		}
 	}
 
 }

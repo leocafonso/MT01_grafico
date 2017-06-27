@@ -45,9 +45,6 @@ static mn_widget_t t4 = {.name = "t4", .selectable = true};
 static mn_widget_t t5 = {.name = "t5", .selectable = true};
 static mn_widget_t t6 = {.name = "t6", .selectable = true};
 static mn_widget_t t7 = {.name = "t7", .selectable = true};
-static mn_widget_t t8 = {.name = "t8", .selectable = true};
-static mn_widget_t t9 = {.name = "t9", .selectable = true};
-static mn_widget_t t10 = {.name = "t10", .selectable = true};
 
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
@@ -60,9 +57,6 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 		&t5,
 		&t6,
 		&t7,
-		&t8,
-		&t9,
-		&t10,
 		&bfolder,
 		&bvolta
 };
@@ -86,6 +80,7 @@ mn_screen_t selFiles_page = {.id 		 = SC_PAGE5,
 										[SC_DETACH] = page_detach
 									}};
 /* extern variables */
+
 
 /************************** Static functions *********************************************/
 bool showFileDir(mn_file_t *p_file, const char *path)
@@ -141,7 +136,8 @@ void page_handler (void *p_arg)
 			 p_page_hdl->event == EVENT_SIGNAL(t3.id,EVENT_CLICK) ||
 			 p_page_hdl->event == EVENT_SIGNAL(t4.id,EVENT_CLICK) ||
 			 p_page_hdl->event == EVENT_SIGNAL(t5.id,EVENT_CLICK) ||
-			 p_page_hdl->event == EVENT_SIGNAL(t6.id,EVENT_CLICK)
+			 p_page_hdl->event == EVENT_SIGNAL(t6.id,EVENT_CLICK) ||
+			 p_page_hdl->event == EVENT_SIGNAL(t7.id,EVENT_CLICK)
 	)
 	{
 		uint16_t lineSel = selFiles_page.wt_selected;

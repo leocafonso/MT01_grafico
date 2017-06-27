@@ -9,6 +9,9 @@
 #ifndef MENU_WIDGET_H_
 #define MENU_WIDGET_H_
 
+#define SELECT_COLOR       0
+#define DESELECT_COLOR     65535
+
 /**
  * @brief Defines the type of widget
  *
@@ -25,6 +28,8 @@ enum{
 	IMG_CONTINUAR = 61,
 	IMG_CUIDADO = 61,
 	IMG_FINALIZADO = 63,
+	IMG_BTN_OK = 33,
+	IMG_BTN_OK_PRESS = 32,
 	IMG_BTN_PAUSE = 37,
 	IMG_BTN_PAUSE_PRESS = 36,
 	IMG_BTN_PLAY = 39,
@@ -35,6 +40,10 @@ enum{
 	IMG_TOCHA_ON = 52,
 	IMG_PLASMA_NAO_TRANSF = 69,
 	IMG_OHMICO = 70,
+	IMG_ZERO_MAQ = 99,
+	IMG_ZERO_MAQ_INIT = 100,
+	IMG_ZERO_PECA = 101,
+	IMG_SEM_ZERO_MAQ = 102,
 	NO_IMG = 0xFFFF
 };
 
@@ -73,5 +82,6 @@ void widgetProgressBar(mn_widget_t *wg, uint8_t val);
 void widgetGetPos(mn_widget_t *wg);
 void widgetVisible(mn_widget_t *wg, nt_vis_event_t event);
 void widgetTouchable(mn_widget_t *wg, nt_enable_t event);
+void widgetSelRec(mn_widget_t *wg, uint8_t thickness, uint16_t color);
 
 #endif /* MENU_WIDGET_H_ */

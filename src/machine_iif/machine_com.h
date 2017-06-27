@@ -49,6 +49,7 @@ void machine_jog_stop(void) ;
 void machine_zerar_maquina(void);
 void machine_zerar_peca(void);
 void machine_homming_eixos(void);
+void machine_limite_eixos(void);
 void machine_info_update(uint8_t axis, char * textstr);
 bool machine_alarms_get(uint8_t info);
 

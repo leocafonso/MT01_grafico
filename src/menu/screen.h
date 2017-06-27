@@ -28,6 +28,9 @@ typedef enum{
 	SC_PAGE9,		/*!<page5 screen */
 	SC_PAGE10,		/*!<page5 screen */
 	SC_PAGE11,		/*!<page5 screen */
+	SC_PAGE12,		/*!<page5 screen */
+	SC_PAGE13,		/*!<page5 screen */
+	SC_PAGE14,		/*!<page5 screen */
 	SC_TOTAL
 }mn_sc_id_t;
 
@@ -80,6 +83,9 @@ extern mn_screen_t cutting_page;
 extern mn_screen_t keypad_page;
 extern mn_screen_t cfgCorte_page;
 extern mn_screen_t load_page;
+extern mn_screen_t selLines_page;
+extern mn_screen_t limite_page;
+extern mn_screen_t fileInfo_page;
 
 extern void (*mn_func[SC_KEY_TOTAL])(void *p_arg);
 

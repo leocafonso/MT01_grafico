@@ -29,6 +29,8 @@ static float vel_corte;
 static float tempo_perfuracao;
 static float tempo_aquecimento;
 
+uint32_t zero_flags = 0;
+
 float *velocidadeJog;
 float Xcord,Ycord;
 ut_config_name_ox tempoDwell;
@@ -365,13 +367,15 @@ stat_t ZerarMaquina_Macro(void)
 	memset(&cm.gn, 0, sizeof(GCodeInput_t));		// clear all next-state values
 	cm.gn.motion_mode = cm_get_motion_mode(MODEL);	// get motion mode from previous block
 	intepreterRunning = true;
+	zero_flags = ZERO_MAQ_FLAG;
 	switch (state)
 	{
-		case 0: SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
-				SET_NON_MODAL_MACRO(target[AXIS_X], 0);
-				SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-				SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
-				state++; break;
+
+		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
+					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
+					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
+					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
+					state++; break;
 		default:state = 0; 	intepreterRunning = false; macro_func_ptr = command_idle; return (STAT_OK);
 	}
 	_execute_gcode_block();
@@ -386,13 +390,14 @@ stat_t ZerarPeca_Macro(void)
 	memset(&cm.gn, 0, sizeof(GCodeInput_t));		// clear all next-state values
 	cm.gn.motion_mode = cm_get_motion_mode(MODEL);	// get motion mode from previous block
 	intepreterRunning = true;
+	zero_flags |= ZERO_PECA_FLAG;
 	switch (state)
 	{
-		case 0: SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
-				SET_NON_MODAL_MACRO(target[AXIS_X], zeroPiece[AXIS_X]);
-				SET_NON_MODAL_MACRO(target[AXIS_Y], zeroPiece[AXIS_Y]);
-				SET_NON_MODAL_MACRO(target[AXIS_Z], zeroPiece[AXIS_Z]);
-				state++; break;
+		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
+					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
+					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
+					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
+					state++; break;
 		default:state = 0; 	intepreterRunning = false; macro_func_ptr = command_idle; return (STAT_OK);
 	}
 	_execute_gcode_block();
@@ -441,18 +446,25 @@ stat_t homming_Macro(void)
 				SET_NON_MODAL_MACRO(target[AXIS_Z], altura_deslocamento);
 				state++; break;
 
-		case 4: SET_MODAL_MACRO (MODAL_GROUP_G1, motion_mode, MOTION_MODE_STRAIGHT_TRAVERSE);
-				SET_NON_MODAL_MACRO(target[AXIS_X], zeroPiece[AXIS_X]);
-				SET_NON_MODAL_MACRO(target[AXIS_Y], zeroPiece[AXIS_Y]);
+		case 4:
+				SET_MODAL_MACRO (MODAL_GROUP_G1, motion_mode, MOTION_MODE_STRAIGHT_TRAVERSE);
+				if ((zero_flags & ZERO_PECA_FLAG) ==  ZERO_PECA_FLAG)
+				{
+					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
+					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
+				}
+				else
+				{
+					zero_flags |= ZERO_PECA_FLAG;
+					eepromReadConfig(ZEROPIECE);
+					SET_NON_MODAL_MACRO(target[AXIS_X], zeroPiece[AXIS_X]);
+					SET_NON_MODAL_MACRO(target[AXIS_Y], zeroPiece[AXIS_Y]);
+				}
 				state++; break;
 
 		case 5: SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
 				SET_NON_MODAL_MACRO(target[AXIS_X], 0);
 				SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-				zeroPiecebuffer[AXIS_X] = zeroPiece[AXIS_X];
-				zeroPiecebuffer[AXIS_Y] = zeroPiece[AXIS_Y];
-				zeroPiece[AXIS_X] = 0;
-				zeroPiece[AXIS_Y] = 0;
 //				SET_NON_MODAL_MACRO(target[AXIS_Z], zeroPiece[AXIS_Z]);
 				state++; break;
 

@@ -24,19 +24,22 @@
 #include "spiffs.h"
 #include "tinyg.h"
 #include "xio.h"
+
+#include "state_functions.h"
 /* Defines */
 
 #define TIMER_NUM 1
 
 #define WIDGET_NUM 15
 
-#define TIMER_POS 203
+#define TIMER_POS 205
 
 /* Static functions */
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_callback(warn_btn_t btn_type);
+static void warning_wrongfile_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t btn_play = {.name = "b1", .selectable = true};
@@ -58,6 +61,11 @@ static mn_widget_t arcook_Led = {.name = "p1", .selectable = false};
 static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
+static mn_warning_t warn_wrongfile_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_FINALIZADO,
+											.msg_count = 1,
+											.func_callback = warning_wrongfile_callback
+										   };
 static uint32_t event_args;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
@@ -73,7 +81,7 @@ static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
 /* Global variables and const */
-mn_screen_t desloca_page = {.id 		 = SC_PAGE6,
+mn_screen_t limite_page = {.id 		 = SC_PAGE6,
 					.wt_selected = 0,
 					.name        = "cutting",
 					.p_widget = p_widget,
@@ -112,10 +120,18 @@ void page_handler (void *p_arg)
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-		machine_homming_eixos();
-		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-		mn_screen_create_timer(&timer0,200);
-		mn_screen_start_timer(&timer0);
+		if (testar_peca() == false)
+		{
+			warning_page.p_args = &warn_wrongfile_args;
+			mn_screen_change(&warning_page,EVENT_SHOW);
+		}
+		else
+		{
+			machine_limite_eixos();
+			widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
+			mn_screen_create_timer(&timer0,200);
+			mn_screen_start_timer(&timer0);
+		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
 	{
@@ -194,4 +210,10 @@ static void warning_callback(warn_btn_t btn_type)
 	{
 		mn_screen_change(&auto_page,EVENT_SHOW);
 	}
+}
+
+static void warning_wrongfile_callback(warn_btn_t btn_type)
+{
+
+	mn_screen_change(&auto_page,EVENT_SHOW);
 }

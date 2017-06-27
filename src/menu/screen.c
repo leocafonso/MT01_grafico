@@ -22,8 +22,7 @@
 #include "keyboard.h"
 #include "interpreter_if.h"
 /* Defines */
-#define SELECT_COLOR       0
-#define DESELECT_COLOR     65535
+
 /* Static functions */
 static void page_key_up (void *p_arg);
 static void page_key_down (void *p_arg);
@@ -77,9 +76,9 @@ static void page_key_right (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 	}
 }
 
@@ -119,9 +118,9 @@ static void page_key_left (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 	}
 }
 
@@ -161,9 +160,9 @@ static void page_key_up (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 	}
 }
 
@@ -203,9 +202,9 @@ static void page_key_down (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		NexDraw_rec(page->p_widget[page->wt_selected]->position,SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 	}
 }
 

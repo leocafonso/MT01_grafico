@@ -75,6 +75,7 @@ mn_screen_t warning_page = {.id 		 = SC_PAGE1,
 
 void page_attach (void *p_arg)
 {
+
 }
 
 void page_detach (void *p_arg)
@@ -97,6 +98,7 @@ void page_handler (void *p_arg)
 		switch (p_warning->buttonUseInit)
 		{
 			case BTN_OK:
+				widgetChangePic(&btn_ok, IMG_BTN_OK,IMG_BTN_OK_PRESS);
 				widgetTouchable(&btn_sim, NT_DISABLE);
 				widgetTouchable(&btn_nao, NT_DISABLE);
 				widgetTouchable(&btn_ok, NT_ENABLE);
@@ -127,14 +129,17 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_ok.id, EVENT_CLICK))
 	{
+		//widgetVisible(&msg_pic, NT_HIDE);
 		p_warning->func_callback(BTN_PRESSED_OK);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sim.id, EVENT_CLICK))
 	{
+		//widgetVisible(&msg_pic, NT_HIDE);
 		p_warning->func_callback(BTN_PRESSED_SIM);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_nao.id, EVENT_CLICK))
 	{
+		//widgetVisible(&msg_pic, NT_HIDE);
 		p_warning->func_callback(BTN_PRESSED_NAO);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(TIMER_WARNING, EVENT_TIMER))

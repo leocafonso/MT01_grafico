@@ -31,7 +31,7 @@
 
 #define WIDGET_NUM 16
 
-#define TIMER_POS 202
+#define TIMER_POS 206
 
 /* Static functions */
 static void page_handler (void *p_arg);

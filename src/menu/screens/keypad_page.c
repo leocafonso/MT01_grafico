@@ -174,16 +174,21 @@ void page_handler (void *p_arg)
 			*p_keypad->p_var = atof(result_str);
 			if (*p_keypad->p_var <= p_keypad->min)
 				*p_keypad->p_var = p_keypad->min;
-			if (p_previous_page == &cfgCorte_page)
+			switch (p_keypad->key_var)
 			{
-				eepromWriteConfig(CONFIGVAR_PL);
-			}
-			if (p_previous_page == &jog_page)
-			{
-				eepromWriteConfig(CONFIGVAR_JOG);
+				case KEY_CONFIG_PL:
+					eepromWriteConfig(CONFIGVAR_PL);
+					mn_screen_change(p_previous_page,EVENT_SHOW);
+					break;
+				case KEY_CONFIG_JOG:
+					eepromWriteConfig(CONFIGVAR_JOG);
+					mn_screen_change(p_previous_page,EVENT_SHOW);
+					break;
+				case KEY_LINES:
+					mn_screen_change(&selLines_page,EVENT_SHOW);
+				break;
 			}
 		}
-		mn_screen_change(p_previous_page,EVENT_SHOW);
 	}
 	else
 	{

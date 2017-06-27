@@ -284,29 +284,28 @@ void machine_jog_stop(void)
 
 void machine_zerar_maquina(void)
 {
-	zeroPiecebuffer[AXIS_X] = 0;
-	zeroPiecebuffer[AXIS_Y] = 0;
-	zeroPiecebuffer[AXIS_Z] = 0;
-	eepromReadConfig(ZEROPIECE);
 	xTaskNotifyGive(xCncTaskHandle);
 	macro_func_ptr = ZerarMaquina_Macro;
 }
 
 void machine_zerar_peca(void)
 {
-	zeroPiecebuffer[AXIS_X] += mp_get_runtime_absolute_position(AXIS_X);
-	zeroPiecebuffer[AXIS_Y] += mp_get_runtime_absolute_position(AXIS_Y);
-	zeroPiecebuffer[AXIS_Z] = 0;
-
-	zeroPiece[AXIS_X] = zeroPiecebuffer[AXIS_X];
-	zeroPiece[AXIS_Y] = zeroPiecebuffer[AXIS_Y];
-	zeroPiece[AXIS_Z] = 0;
+	if ((zero_flags & ZERO_PECA_FLAG) ==  ZERO_PECA_FLAG)
+	{
+		eepromReadConfig(ZEROPIECE);
+		zeroPiece[AXIS_X] += mp_get_runtime_absolute_position(AXIS_X);
+		zeroPiece[AXIS_Y] += mp_get_runtime_absolute_position(AXIS_Y);
+		zeroPiece[AXIS_Z] = 0;
+	}
+	else
+	{
+		zeroPiece[AXIS_X] = mp_get_runtime_absolute_position(AXIS_X);
+		zeroPiece[AXIS_Y] = mp_get_runtime_absolute_position(AXIS_Y);
+		zeroPiece[AXIS_Z] = 0;
+	}
 	eepromWriteConfig(ZEROPIECE);
 	xTaskNotifyGive(xCncTaskHandle);
-	macro_func_ptr = ZerarMaquina_Macro;
-	zeroPiece[AXIS_X] = 0;
-	zeroPiece[AXIS_Y] = 0;
-	zeroPiece[AXIS_Z] = 0;
+	macro_func_ptr = ZerarPeca_Macro;
 }
 
 void machine_homming_eixos(void)
@@ -316,6 +315,14 @@ void machine_homming_eixos(void)
 	xTaskNotifyGive(xCncTaskHandle);
 	intepreterRunning = true;
 
+}
+
+void machine_limite_eixos(void)
+{
+	restart_stepper();
+	//macro_func_ptr = homming_Macro;
+	xTaskNotifyGive(xCncTaskHandle);
+	intepreterRunning = true;
 }
 
 void machine_info_update(uint8_t info, char * textstr)

@@ -22,6 +22,7 @@
 #include "interpreter_if.h"
 #include "spiffs_hw.h"
 #include "r_flash_loader_rx_if.h"
+#include "screens/load_page.h"
 /* Defines */
 
 /* Static functions */
@@ -58,6 +59,9 @@ void menu_task(void)
 	mn_screen_bind_keyboard(&keypad_page);
 	mn_screen_bind_keyboard(&cfgCorte_page);
 	mn_screen_bind_keyboard(&load_page);
+	mn_screen_bind_keyboard(&selLines_page);
+	mn_screen_bind_keyboard(&limite_page);
+	mn_screen_bind_keyboard(&fileInfo_page);
 
 	screenGetWidgetsInfo(&splash_page);
 	screenGetWidgetsInfo(&warning_page);
@@ -72,7 +76,20 @@ void menu_task(void)
 	screenGetWidgetsInfo(&keypad_page);
 	screenGetWidgetsInfo(&cfgCorte_page);
 	screenGetWidgetsInfo(&load_page);
+	screenGetWidgetsInfo(&selLines_page);
+	screenGetWidgetsInfo(&limite_page);
+	screenGetWidgetsInfo(&fileInfo_page);
+
+	vTaskDelay(500/portTICK_PERIOD_MS);
 	if(R_IsFileLoaderAvailable())
+	{
+		loadfilesNum |= MCU_FILE;
+	}
+	if (NexUpload_checkFile("MT01_5in_regular.tft"))
+	{
+		loadfilesNum |= NEXTION_FILE;
+	}
+	if(loadfilesNum > 0)
 	{
 		mn_screen_change(&load_page,EVENT_SHOW);
 	}

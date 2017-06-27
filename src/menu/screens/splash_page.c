@@ -41,11 +41,17 @@ static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 
 static void warning_callback(warn_btn_t btn_type);
+static void warning_zeromaqinit_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t txt_version = {.name =  "t0", .selectable = false};
 static mn_timer_t timer0 = {.id = TIMER_SPLASH, .name = "tspl"};
 static mn_warning_t warn_args;
+static mn_warning_t warn_zeromaq_args = { 	.buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_ZERO_MAQ_INIT,
+											.msg_count = 1,
+											.func_callback = warning_zeromaqinit_callback
+										   };
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
@@ -123,11 +129,21 @@ static void warning_callback(warn_btn_t btn_type)
 {
 	switch (btn_type)
 	{
-		case BTN_PRESSED_SIM: break;
+		case BTN_PRESSED_SIM:
+			warning_page.p_args = &warn_zeromaq_args;
+			mn_screen_change(&warning_page,EVENT_SHOW);
+			break;
 		case BTN_PRESSED_NAO:
 			machine_enable();
 			mn_screen_change(&main_page,EVENT_SHOW);
 			break;
 		break;
 	}
+}
+
+static void warning_zeromaqinit_callback(warn_btn_t btn_type)
+{
+	machine_enable();
+	machine_zerar_maquina();
+	mn_screen_change(&main_page,EVENT_SHOW);
 }
