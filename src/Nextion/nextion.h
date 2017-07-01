@@ -196,7 +196,7 @@ bool NexUpload_checkFile(char* p_file_name);
 
 bool NexUpload_setDownloadBaudrate(uint32_t baudrate);
 
-bool NexUpload_downloadTftFile(void);
+bool NexUpload_downloadTftFile(char* p_file_name);
 
 bool NexUpload_waitingReset(uint16_t timeout);
 

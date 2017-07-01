@@ -118,16 +118,16 @@ void page_handler (void *p_arg)
 		}
 		if ((loadfilesNum & NEXTION_FILE) == NEXTION_FILE)
 		{
-			ret = NexUpload_checkFile("MT01_5in_regular.tft");
-			if(ret)
-			{
+			//ret = NexUpload_checkFile("MT01_5in_regular.tft");
+			//if(ret)
+			//{
 				ret = NexUpload_setDownloadBaudrate(1500000);
-				if (ret)
-				{
-					NexUpload_downloadTftFile();
+				//if (ret)
+				//{
+					NexUpload_downloadTftFile("MT01_5in_regular.tft");
 					ret = NexUpload_waitingReset(10000);
-				}
-			}
+				//}
+			//}
 		}
 		RESET
 	}

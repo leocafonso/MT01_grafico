@@ -43,6 +43,8 @@ static const sci_uart_t config = {
 };
 static FIL         fileNextion;
 static uint32_t _undownloadByte;
+char *cmd;
+char *string;
 /* extern variables */
 extern bool drivemountFlag;
 
@@ -179,7 +181,7 @@ static uint16_t NexUpload_recvRetString(char *buffer, uint32_t timeout,bool recv
 			{
 				continue;
 			}
-			snprintf(buffer,50,"%s%s",buffer,c);
+			snprintf(buffer,50,"%s%s",buffer,&c);
 			if(recv_flag)
 			{
 				if(strstr(buffer,"\x05") != NULL)
@@ -222,7 +224,7 @@ bool nexInit(void)
 bool Nex_sendXY(nt_enable_t event)
 {
 	bool ret = false;
-    char *cmd;
+ //   char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"sendxy=%d",event);
 	sendCommand(cmd);
@@ -234,7 +236,7 @@ bool Nex_sendXY(nt_enable_t event)
 bool NexPage_ChangePic(const char *str,uint16_t pic)
 {
 	bool ret = false;
-    char *cmd;
+	 // char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"%s.pic=%d",str,pic);
 	sendCommand(cmd);
@@ -246,7 +248,7 @@ bool NexPage_ChangePic(const char *str,uint16_t pic)
 bool NexPage_show(const char *str)
 {
 	bool ret = false;
-    char *cmd;
+   // char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"page %s",str);
 	sendCommand(cmd);
@@ -259,7 +261,7 @@ bool NexPage_show(const char *str)
 bool NexPic_show(uint16_t x,uint16_t y,nt_img_t img_number)
 {
 	bool ret = false;
-    char *cmd;
+   // char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"pic %d,%d,%d",x,y,img_number);
 	sendCommand(cmd);
@@ -273,7 +275,7 @@ bool NexStr_show(uint16_t x,uint16_t y,uint16_t w,uint16_t h, uint8_t fontID, ui
 		uint8_t xcenter,uint8_t ycenter, uint8_t sta, const char *str)
 {
 	bool ret = false;
-    char *cmd;
+//    char *cmd;
     cmd = pvPortMalloc( 100 );
 	snprintf(cmd,100,"xstr %d,%d,%d,%d,%d,%d,%d,%d,%d,%d,\"%s\"",x,y,w,h,fontID,fcolor,bcolor,xcenter,ycenter,sta,str);
 	sendCommand(cmd);
@@ -286,7 +288,7 @@ bool NexStr_show(uint16_t x,uint16_t y,uint16_t w,uint16_t h, uint8_t fontID, ui
 bool NexGet_num(const char *str,uint32_t *number)
 {
 	bool ret = false;
-    char *cmd;
+ //   char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"get %s",str);
 	sendCommand(cmd);
@@ -298,7 +300,7 @@ bool NexGet_num(const char *str,uint32_t *number)
 bool NexDraw_rec(nt_pos_t pos,uint16_t color)
 {
 	bool ret = false;
-    char *cmd;
+ //   char *cmd;
     cmd = pvPortMalloc( 50 );
 	uint16_t x2, y2;
 	x2 = pos.x + pos.w;
@@ -313,7 +315,7 @@ bool NexDraw_rec(nt_pos_t pos,uint16_t color)
 bool NexWidget_click(const char *str, nt_touch_event_t event)
 {
 	bool ret = false;
-    char *cmd;
+ //   char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"click %s,%d",str,event);
 	sendCommand(cmd);
@@ -325,7 +327,7 @@ bool NexWidget_click(const char *str, nt_touch_event_t event)
 bool NexWidget_ChangePic(const char *str,uint16_t pic)
 {
 	bool ret = false;
-    char *cmd;
+//    char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"%s.pic=%d",str,pic);
 	sendCommand(cmd);
@@ -337,7 +339,7 @@ bool NexWidget_ChangePic(const char *str,uint16_t pic)
 bool NexWidget_ChangePic2(const char *str,uint16_t pic)
 {
 	bool ret = false;
-    char *cmd;
+//    char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"%s.pic2=%d",str,pic);
 	sendCommand(cmd);
@@ -349,7 +351,7 @@ bool NexWidget_ChangePic2(const char *str,uint16_t pic)
 bool NexWidget_ProgressBar(const char *str,uint8_t val)
 {
 	bool ret = false;
-    char *cmd;
+    char *//char *cmd;;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"%s.val=%d",str,val);
 	sendCommand(cmd);
@@ -362,7 +364,7 @@ bool NexWidget_ProgressBar(const char *str,uint8_t val)
 bool NexWidget_txt(const char *str,const char *txt)
 {
 	bool ret = false;
-    char *cmd;
+    //char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"%s.txt=\"%s\"",str,txt);
 	sendCommand(cmd);
@@ -374,7 +376,7 @@ bool NexWidget_txt(const char *str,const char *txt)
 bool NexWidget_visible(const char *str,nt_vis_event_t event)
 {
 	bool ret = false;
-    char *cmd;
+    //char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"vis %s,%d",str,event);
 	sendCommand(cmd);
@@ -386,7 +388,7 @@ bool NexWidget_visible(const char *str,nt_vis_event_t event)
 bool NexWidget_touchable(const char *str,nt_enable_t event)
 {
 	bool ret = false;
-    char *cmd;
+    //char *cmd;
     cmd = pvPortMalloc( 50 );
 	snprintf(cmd,50,"tsw %s,%d",str,event);
 	sendCommand(cmd);
@@ -440,6 +442,10 @@ bool NexUpload_checkFile(char* p_file_name)
 		{
 			return ret;
 		}
+		if (f_close(&fileNextion) != FR_OK)
+		{
+			return ret;
+		}
 		_undownloadByte = file_info.fsize;
 		ret = true;
 	}
@@ -467,10 +473,12 @@ bool NexUpload_setDownloadBaudrate(uint32_t baudrate)
 {
 	bool ret = false;
 	sci_baud_t baud;
-    char *string;
-    char *cmd;
+    //char *string;
+    //char *cmd;
     string = pvPortMalloc( 50 );
     cmd = pvPortMalloc( 50 );
+	memset(string,'\0',50);
+	memset(cmd,'\0',50);
     snprintf(cmd,50,"whmi-wri %d,%d,0",_undownloadByte,baudrate);
     sendCommand("");
     sendCommand(cmd);
@@ -491,12 +499,16 @@ bool NexUpload_setDownloadBaudrate(uint32_t baudrate)
     return ret;
 }
 
-bool NexUpload_downloadTftFile(void)
+bool NexUpload_downloadTftFile(char* p_file_name)
 {
 	uint8_t *temp = NULL;
 	uint32_t remain;
-    char string[50] = "";
+    //char *string;
+    string = pvPortMalloc( 50 );
 	temp = pvPortMalloc( 4096 );
+	memset(string,'\0',50);
+	memset(temp,'\0',4096);
+	f_open(&fileNextion, p_file_name, FA_READ);
 	while(!f_eof(&fileNextion))
 	{
 		f_read (&fileNextion, temp, 4096, (UINT *)&remain);			/* Read data from the file */
@@ -521,9 +533,10 @@ bool NexUpload_downloadTftFile(void)
 	    }
 	    else
 	    {
-	    	break;
+	    	//break;
 	    }
 	}
+	f_close(&fileNextion);
 	vPortFree(temp);
 	return 0;
 }
