@@ -335,6 +335,9 @@ void machine_info_update(uint8_t info, char * textstr)
 		case AXIS_Z_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_absolute_position(AXIS_Z));		break;
 		case LINE_INFO:   	sprintf(textstr, "%d",  cm_get_linenum(RUNTIME));					break;
 		case THC_REAL_INFO: sprintf(textstr, "%.0f",  THC_realGet());						break;
+		case THC_MANUAL_INFO: 	pl_thc_read();
+								sprintf(textstr, "%.0f",  THC_realGet());
+			break;
 		case THC_SET_INFO: 	sprintf(textstr, "%.0f",  configVarPl[PL_CONFIG_TENSAO_THC]); 	break;
 		case VELOCIDADE_INFO:
 			vel = cm_get_feed_rate(RUNTIME);
@@ -357,6 +360,7 @@ bool machine_alarms_get(uint8_t info)
 	switch (info)
 	{
 		case ARCOOK_INFO:    alarm = (arcoOkGet() ? (1) : (0));		break;
+		case ARCOOK_MANUAL_INFO:    alarm = (ARCO_OK ? (0) : (1));		break;
 		case MATERIAL_INFO: alarm = (MATERIAL ? (1) : (0)); 		break;
 		case TORCH_INFO:   alarm = (TORCH ? (0) : (1));		   break;
 	}

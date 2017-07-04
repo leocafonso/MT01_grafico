@@ -32,6 +32,11 @@
 #define TIMER_WARNING 200
 
 /* Static functions */
+static void warning_key_right (void *p_arg);
+static void warning_key_left (void *p_arg);
+static void warning_key_enter (void *p_arg);
+static void warning_key_release (void *p_arg);
+
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
@@ -46,7 +51,7 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 {
 		&btn_sim,&btn_ok,&btn_nao,&msg_pic
 };
-
+static mn_screen_event_t warning;
 static mn_timer_t timer_warning = {.id = TIMER_WARNING, .name = "twar"};
 
 #if (TIMER_NUM > 0)
@@ -70,6 +75,100 @@ mn_screen_t warning_page = {.id 		 = SC_PAGE1,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void warning_key_right (void *p_arg)
+{
+	if (warning_page.wt_selected == 0)
+	{
+		widgetSelRec(warning_page.p_widget[0], 3, DESELECT_COLOR);
+		warning_page.wt_selected = 2;
+		widgetSelRec(warning_page.p_widget[2], 3, SELECT_COLOR);
+	}
+}
+static void warning_key_left (void *p_arg)
+{
+	if (warning_page.wt_selected == 2)
+	{
+		widgetSelRec(warning_page.p_widget[2], 3, DESELECT_COLOR);
+		warning_page.wt_selected = 0;
+		widgetSelRec(warning_page.p_widget[0], 3, SELECT_COLOR);
+	}
+}
+static void warning_key_enter (void *p_arg)
+{
+	if (warning_page.wt_selected == 0)
+	{
+		widgetClick(&btn_sim, NT_PRESS);
+	}
+	else if (warning_page.wt_selected == 1)
+	{
+		widgetClick(&btn_ok, NT_PRESS);
+	}
+	else if (warning_page.wt_selected == 2)
+	{
+		widgetClick(&btn_nao, NT_PRESS);
+	}
+}
+static void warning_key_release (void *p_arg)
+{
+	if (btn_sim.click == NT_PRESS)
+	{
+		widgetClick(&btn_sim, NT_RELEASE);
+		warning.event = EVENT_SIGNAL(btn_sim.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &warning, 0 );
+	}
+	else if (btn_ok.click == NT_PRESS)
+	{
+		widgetClick(&btn_ok, NT_RELEASE);
+		warning.event = EVENT_SIGNAL(btn_ok.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &warning, 0 );
+	}
+	else if (btn_nao.click == NT_PRESS)
+	{
+		widgetClick(&btn_nao, NT_RELEASE);
+		warning.event = EVENT_SIGNAL(btn_nao.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &warning, 0 );
+	}
+
+}
+
+static void warning_key_keyborad_bind (uint8_t buttonUsage)
+{
+	switch (buttonUsage)
+	{
+		case BTN_OK:
+			warning_page.wt_selected = 1;
+			for (uint8_t i = SC_KEY_ENTER; i < SC_KEY_TOTAL; i++)
+			{
+				switch (i)
+				{
+					case SC_KEY_ENTER: warning_page.iif_func[i] = &warning_key_enter; 	break;
+					case SC_KEY_RELEASE: warning_page.iif_func[i] = &warning_key_release; 	break;
+					default: warning_page.iif_func[i] = &mn_screen_idle;
+				}
+			}
+			break;
+		case BTN_ASK:
+			warning_page.wt_selected = 2;
+			for (uint8_t i = SC_KEY_ENTER; i < SC_KEY_TOTAL; i++)
+			{
+				switch (i)
+				{
+					case SC_KEY_RIGHT: warning_page.iif_func[i] = &warning_key_right; 	break;
+					case SC_KEY_LEFT:  warning_page.iif_func[i] = &warning_key_left; 	break;
+					case SC_KEY_ENTER: warning_page.iif_func[i] = &warning_key_enter; 	break;
+					case SC_KEY_RELEASE: warning_page.iif_func[i] = &warning_key_release; 	break;
+					default: warning_page.iif_func[i] = &mn_screen_idle;
+				}
+			}
+			break;
+		case BTN_NO_USE:
+			for (uint8_t i = SC_KEY_ENTER; i < SC_KEY_TOTAL; i++)
+			{
+				warning_page.iif_func[i] = &mn_screen_idle;
+			}
+			break;
+	}
+}
 
 /************************** Public functions *********************************************/
 
@@ -95,6 +194,7 @@ void page_handler (void *p_arg)
 	{
 		widgetVisible(&msg_pic, NT_SHOW);
 		widgetChangePic(&msg_pic, p_warning->img_txt[0],NO_IMG);
+		warning_key_keyborad_bind (p_warning->buttonUseInit);
 		switch (p_warning->buttonUseInit)
 		{
 			case BTN_OK:
@@ -150,6 +250,7 @@ void page_handler (void *p_arg)
 		{
 			msg_counter = 0;
 			mn_screen_stop_timer(&timer_warning);
+			warning_key_keyborad_bind (p_warning->buttonUseEnd);
 			switch (p_warning->buttonUseEnd)
 			{
 				case BTN_OK:

@@ -111,7 +111,7 @@ void pl_thc_read(void)
 	uint16_t u16thc_read;
 	uint32_t u16thc_sum = 0;
 	uint16_t u16thc_value;
-	for(uint8_t i = 0; i < 50;i++){
+	for(uint8_t i = 0; i < 5;i++){
 		/* CAUSE SOFTWARE TRIGGER */
 		R_ADC_Control(ADC_CMD_SCAN_NOW, NULL);
 		/* WAIT FOR SCAN TO COMPLETE */
@@ -121,7 +121,7 @@ void pl_thc_read(void)
 		R_ADC_Read(ADC_REG_CH3, &u16thc_read);
 		u16thc_sum += (uint32_t)u16thc_read;
 	}
-	u16thc_value = (uint16_t)(u16thc_sum/50);
+	u16thc_value = (uint16_t)(u16thc_sum/5);
 	THC_real = (float)(((float)300/4095)*u16thc_value);
 }
 

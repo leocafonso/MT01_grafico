@@ -143,7 +143,7 @@ void page_handler (void *p_arg)
 		{
 			xio_close(cs.primary_src);
 			warn_args.buttonUseInit = BTN_ASK;
-			warn_args.img_txt[0] = IMG_CUIDADO;
+			warn_args.img_txt[0] = IMG_CONTINUAR;
 			warn_args.msg_count = 1;
 			warn_args.func_callback = warning_desloca_callback;
 			warning_page.p_args = &warn_args;

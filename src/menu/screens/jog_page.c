@@ -368,7 +368,7 @@ void page_handler (void *p_arg)
 			changeTxt(&posy_txt,textstr);
 			machine_info_update(AXIS_Z_INFO,textstr);
 			changeTxt(&posz_txt,textstr);
-			machine_info_update(THC_REAL_INFO,textstr);
+			machine_info_update(THC_MANUAL_INFO,textstr);
 			changeTxt(&thcReal_txt,textstr);
 			machine_info_update(VELOCIDADE_JOG,textstr);
 			changeTxt(&vel_txt,textstr);
@@ -383,7 +383,7 @@ void page_handler (void *p_arg)
 			else
 				widgetChangePic(&ohm_Led, IMG_LED_OFF,NO_IMG);
 
-			if (machine_alarms_get(ARCOOK_INFO))
+			if (machine_alarms_get(ARCOOK_MANUAL_INFO))
 				widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
 			else
 				widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);

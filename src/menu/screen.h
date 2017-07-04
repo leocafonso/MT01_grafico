@@ -61,7 +61,7 @@ typedef enum{
 typedef struct{
 	mn_sc_id_t id;
 	char name[10];
-	uint16_t wt_selected;
+	int16_t wt_selected;
 	mn_widget_t **p_widget;
 	uint8_t widgetSize;
 	mn_timer_t  **p_timer;

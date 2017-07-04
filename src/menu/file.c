@@ -107,15 +107,18 @@ void find_files (mn_file_t *p_file,const char *path)
    for (;;) {
 	   fr = f_readdir(&p_file->dir, &p_file->fil);                   /* Read a directory item */
 	   if (fr != FR_OK || p_file->fil.fname[0] == 0) break;  /* Break on error or end of dir */
-	   if (p_file->fil.fattrib & AM_DIR)
-	   {                    /* It is a directory */
-		  snprintf(p_file->buffer[p_file->filesNum],MAX_FILE_NAME, "/%s", p_file->fil.fname);
-		  p_file->filesNum++;
-	   }
-	   else if(validExtension(p_file->fil.fname))
+	   if (strlen(p_file->fil.fname) < MAX_FILE_NAME)
 	   {
-		  snprintf(p_file->buffer[p_file->filesNum],MAX_FILE_NAME, "%s", p_file->fil.fname);
-		  p_file->filesNum++;
+		   if (p_file->fil.fattrib & AM_DIR)
+		   {                    /* It is a directory */
+			  snprintf(p_file->buffer[p_file->filesNum],MAX_FILE_NAME, "/%s", p_file->fil.fname);
+			  p_file->filesNum++;
+		   }
+		   else if(validExtension(p_file->fil.fname))
+		   {
+			  snprintf(p_file->buffer[p_file->filesNum],MAX_FILE_NAME, "%s", p_file->fil.fname);
+			  p_file->filesNum++;
+		   }
 	   }
    }
    sort_array(p_file->buffer[0],p_file->filesNum);

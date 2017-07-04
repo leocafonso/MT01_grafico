@@ -59,8 +59,8 @@ const fl_image_header_t g_fl_cur_app_header = {
     0,
     /* Version minor */
     0,
-    /* Version compilation */
-    3,
+    /* Version compilation mmi*/
+    4,
     /* CRC-16 CCITT of image as in MCU flash */
     0xFFFF
 };

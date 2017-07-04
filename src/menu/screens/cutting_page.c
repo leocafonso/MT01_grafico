@@ -29,7 +29,7 @@
 #include "xio.h"
 /* Defines */
 
-#define TIMER_NUM 2
+#define TIMER_NUM 1
 
 #define WIDGET_NUM 15
 
@@ -74,10 +74,10 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
-static mn_timer_t timer_thc = {.id = TIMER_THC, .name = "tthc"};
+//static mn_timer_t timer_thc = {.id = TIMER_THC, .name = "tthc"};
 
 #if (TIMER_NUM > 0)
-static mn_timer_t *p_timer[TIMER_NUM] = {&timer0, &timer_thc};
+static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
 /* Global variables and const */
 mn_screen_t cutting_page = {.id 		 = SC_PAGE6,
@@ -162,21 +162,21 @@ void page_handler (void *p_arg)
 		play_pause = false;
 		machine_start();
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-		mn_screen_create_timer(&timer0,200);
+		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{
 		play_pause = true;
 		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-		mn_screen_create_timer(&timer0,200);
+		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == SIM_ENTRY_EVENT)
 	{
 		play_pause = false;
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-		mn_screen_create_timer(&timer0,200);
+		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
@@ -198,24 +198,18 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_PRESSED))
 	{
 		btn_id_tch = btn_thcp.id;
-		mn_screen_create_timer(&timer_thc,500);
-		mn_screen_start_timer(&timer_thc);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_CLICK))
 	{
 		btn_id_tch = 0;
-		mn_screen_stop_timer(&timer_thc);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_PRESSED))
 	{
 		btn_id_tch = btn_thcm.id;
-		mn_screen_create_timer(&timer_thc,500);
-		mn_screen_start_timer(&timer_thc);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_CLICK))
 	{
 		btn_id_tch = 0;
-		mn_screen_stop_timer(&timer_thc);
 	}
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id,EVENT_CLICK))
@@ -302,9 +296,7 @@ void page_handler (void *p_arg)
 			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
 		else
 			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
-	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(timer_thc.id,EVENT_TIMER))
-	{
+
 		if (btn_id_tch == btn_thcp.id)
 		{
 			configVarPl[PL_CONFIG_TENSAO_THC] += 1;
@@ -318,6 +310,21 @@ void page_handler (void *p_arg)
 			  configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMIN;
 		}
 	}
+//	else if (p_page_hdl->event == EVENT_SIGNAL(timer_thc.id,EVENT_TIMER))
+//	{
+//		if (btn_id_tch == btn_thcp.id)
+//		{
+//			configVarPl[PL_CONFIG_TENSAO_THC] += 1;
+//			if(configVarPl[PL_CONFIG_TENSAO_THC] > THC_VMAX)
+//				configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMAX;
+//		}
+//		else if (btn_id_tch == btn_thcm.id)
+//		{
+//			configVarPl[PL_CONFIG_TENSAO_THC] -= 1;
+//			if(configVarPl[PL_CONFIG_TENSAO_THC] < THC_VMIN)
+//			  configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMIN;
+//		}
+//	}
 
 }
 

@@ -10,8 +10,8 @@
 #define MENU_FILE_H_
 #include "ff.h"
 
-#define MAX_FILES_BUFFER 8
-#define MAX_FILE_NAME 99
+#define MAX_FILES_BUFFER 100
+#define MAX_FILE_NAME 50
 
 /**
  * @brief Widget structure

@@ -100,7 +100,9 @@ void keyboard_task(void)
 				{
 					if (page->p_widget[i]->id == btEvent.widgetID)
 					{
+						widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
 						page->wt_selected = i;
+						widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 						break;
 					}
 				}

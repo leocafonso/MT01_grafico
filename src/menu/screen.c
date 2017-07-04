@@ -42,21 +42,9 @@ mn_screen_t *page = NULL;
 /************************** Static functions *********************************************/
 static void page_key_right (void *p_arg)
 {
-//	uint8_t lineNum;
-//	uint8_t selected;
-//	lineNum = page->wt_selected/page->matrixSize.col;
-//	if(page->wt_selected < (page->matrixSize.col*(lineNum + 1) - 1))
-//	{
-//		selected = page->wt_selected + 1;
-//		if (page->p_widget[selected] != NULL)
-//		{
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,31727);
-//			page->wt_selected = selected;
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,63488);
-//		}
-//	}
 	uint16_t index_posmin = 0xFFFF;
 	int16_t posx_cur,posx_diff,posx_diffmin = 1000;
+
 	posx_cur = page->p_widget[page->wt_selected]->position.x + page->p_widget[page->wt_selected]->position.w;
 	for (uint8_t i = 0;  i < page->widgetSize; i++)
 	{
@@ -84,19 +72,6 @@ static void page_key_right (void *p_arg)
 
 static void page_key_left (void *p_arg)
 {
-//	uint8_t lineNum;
-//	uint8_t selected;
-//	lineNum = page->wt_selected/page->matrixSize.col;
-//	if(page->wt_selected > (page->matrixSize.col*lineNum))
-//	{
-//		selected = page->wt_selected - 1;
-//		if (page->p_widget[selected] != NULL)
-//		{
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,31727);
-//			page->wt_selected = selected;
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,63488);
-//		}
-//	}
 	uint16_t index_posmin = 0xFFFF;
 	int16_t posx_cur,posx_diff,posx_diffmin = 1000;
 	posx_cur = page->p_widget[page->wt_selected]->position.x;
@@ -126,19 +101,6 @@ static void page_key_left (void *p_arg)
 
 static void page_key_up (void *p_arg)
 {
-//	uint8_t lineNum;
-//	uint8_t selected;
-//	lineNum = page->wt_selected/page->matrixSize.col;
-//	if (lineNum > 0)
-//	{
-//		selected = (lineNum - 1)*page->matrixSize.col + page->p_widget[page->wt_selected]->matrixPos.col;
-//		if (page->p_widget[selected] != NULL)
-//		{
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,31727);
-//			page->wt_selected = selected;
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,63488);
-//		}
-//	}
 	uint16_t index_posmin = 0xFFFF;
 	int16_t posy_cur,posy_diff,posy_diffmin = 1000;
 	posy_cur = page->p_widget[page->wt_selected]->position.y;
@@ -168,19 +130,6 @@ static void page_key_up (void *p_arg)
 
 static void page_key_down (void *p_arg)
 {
-//	uint8_t lineNum;
-//	uint8_t selected;
-//	lineNum = page->wt_selected/page->matrixSize.col;
-//	if (lineNum < (page->matrixSize.line - 1))
-//	{
-//		selected = (lineNum + 1)*page->matrixSize.col + page->p_widget[page->wt_selected]->matrixPos.col;
-//		if (page->p_widget[selected] != NULL)
-//		{
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,31727);
-//			page->wt_selected = selected;
-//			NexDraw_rec(page->p_widget[page->wt_selected]->position,63488);
-//		}
-//	}
 	uint16_t index_posmin = 0xFFFF;
 	int16_t posy_cur,posy_diff,posy_diffmin = 1000;
 	posy_cur = page->p_widget[page->wt_selected]->position.y;
@@ -286,15 +235,31 @@ void mn_screen_change_image(mn_screen_t *p_screen, uint16_t pic)
 
 void mn_screen_bind_keyboard(mn_screen_t *p_screen)
 {
-	p_screen->iif_func[SC_KEY_ENTER] = &page_key_enter;
-	p_screen->iif_func[SC_KEY_ESC] = &page_key_esc;
-	p_screen->iif_func[SC_KEY_DOWN] = &page_key_down;
-	p_screen->iif_func[SC_KEY_UP] = &page_key_up;
-	p_screen->iif_func[SC_KEY_RIGHT] = &page_key_right;
-	p_screen->iif_func[SC_KEY_LEFT] = &page_key_left;
-	p_screen->iif_func[SC_KEY_RELEASE] = &page_key_release;
-	p_screen->iif_func[SC_KEY_ZDOWN] = &page_key_zdown;
-	p_screen->iif_func[SC_KEY_ZUP] = &page_key_zup;
+	if (p_screen->p_widget != NULL)
+	{
+		p_screen->iif_func[SC_KEY_ENTER] = &page_key_enter;
+		p_screen->iif_func[SC_KEY_ESC] = &page_key_esc;
+		p_screen->iif_func[SC_KEY_DOWN] = &page_key_down;
+		p_screen->iif_func[SC_KEY_UP] = &page_key_up;
+		p_screen->iif_func[SC_KEY_RIGHT] = &page_key_right;
+		p_screen->iif_func[SC_KEY_LEFT] = &page_key_left;
+		p_screen->iif_func[SC_KEY_RELEASE] = &page_key_release;
+		p_screen->iif_func[SC_KEY_ZDOWN] = &page_key_zdown;
+		p_screen->iif_func[SC_KEY_ZUP] = &page_key_zup;
+	}
+	else
+	{
+		p_screen->iif_func[SC_KEY_ENTER] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_ESC] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_DOWN] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_UP] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_RIGHT] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_LEFT] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_RELEASE] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_ZDOWN] = &mn_screen_idle;
+		p_screen->iif_func[SC_KEY_ZUP] = &mn_screen_idle;
+	}
 }
+
 
 void mn_screen_idle(void *p_arg) {}
