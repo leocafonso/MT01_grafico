@@ -29,6 +29,8 @@
 #include "controller.h"
 #include "xio.h"
 #include "macros.h"
+
+#include "fInfoPL_page.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -120,6 +122,7 @@ void page_handler (void *p_arg)
 		else
 		{
 			xio_close(cs.primary_src);
+			g_runCase = FILE_AUTO;
 			mn_screen_change(&fileInfo_page,EVENT_SHOW);
 		}
 	}
@@ -134,6 +137,7 @@ void page_handler (void *p_arg)
 		else
 		{
 			xio_close(cs.primary_src);
+			g_runCase = FILE_SIM;
 			mn_screen_change(&fileInfo_page,EVENT_SHOW);
 		}
 	}

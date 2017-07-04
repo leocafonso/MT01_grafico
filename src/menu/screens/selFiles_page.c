@@ -18,10 +18,12 @@
 #include "timer_screen.h"
 #include "screen.h"
 #include "menu.h"
-#include "selFiles_page.h"
 #include "file.h"
 #include "spiffs.h"
 #include "xio.h"
+
+#include "selFiles_page.h"
+
 /* Defines */
 
 #define TIMER_NUM 0

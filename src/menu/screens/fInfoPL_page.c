@@ -30,6 +30,8 @@
 #include "config_menu_pl.h"
 #include "state_functions.h"
 #include "eeprom.h"
+
+#include "fInfoPL_page.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -86,8 +88,10 @@ mn_screen_t fileInfo_page = {.id 		 = SC_PAGE13,
 										[SC_ATTACH] = page_attach,
 										[SC_DETACH] = page_detach
 									}};
-/* extern variables */
 
+mn_file_var_t  g_runCase;
+/* extern variables */
+extern uint32_t choosedLine;
 /************************** Static functions *********************************************/
 
 /************************** Public functions *********************************************/
@@ -115,7 +119,8 @@ void page_handler (void *p_arg)
 		SPIFFS_fstat(&uspiffs[0].gSPIFFS, uspiffs[0].f, &fileStat);
 		changeTxt(&cfg_txt[0],(const char *)fileStat.name);
 		xio_close(cs.primary_src);
-		changeTxt(&cfg_txt[1],"PLASMA");
+		sprintf(result_str, "%d", choosedLine);
+		changeTxt(&cfg_txt[1],result_str);
 		sprintf(result_str, "%4.0f", configVarPl[PL_CONFIG_VELOC_CORTE]);
 		changeTxt(&cfg_txt[2],result_str);
 		sprintf(result_str, "%s", configFlags[KERF] ? "DESABILITADO":"HABILITADO");
@@ -139,7 +144,16 @@ static void warning_rodar_callback(warn_btn_t btn_type)
 {
 	switch (btn_type)
 	{
-		case BTN_PRESSED_SIM: mn_screen_change(&cutting_page,EVENT_SHOW);break;
+		case BTN_PRESSED_SIM:
+			if (g_runCase ==  FILE_AUTO)
+			{
+				mn_screen_change(&cutting_page,EVENT_SHOW);
+			}
+			else if (g_runCase ==  FILE_SIM)
+			{
+				mn_screen_change(&sim_page, EVENT_SHOW);
+			}
+			break;
 		case BTN_PRESSED_NAO: mn_screen_change(&auto_page,EVENT_SHOW); break;
 	}
 }
