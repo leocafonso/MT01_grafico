@@ -44,6 +44,7 @@ static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_desloca_callback(warn_btn_t btn_type);
+static void warning_limites_callback(warn_btn_t btn_type);
 static void warning_semzeromaquina_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
@@ -170,7 +171,12 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_limites.id,EVENT_CLICK))
 	{
-		mn_screen_change(&limite_page,EVENT_SHOW);
+		warn_args.buttonUseInit = BTN_ASK;
+		warn_args.img_txt[0] = IMG_CONTINUAR;
+		warn_args.msg_count = 1;
+		warn_args.func_callback = warning_desloca_callback;
+		warning_page.p_args = &warn_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
@@ -183,6 +189,15 @@ static void warning_desloca_callback(warn_btn_t btn_type)
 	switch (btn_type)
 	{
 	case BTN_PRESSED_SIM: mn_screen_change(&desloca_page,EVENT_SHOW);break;
+	case BTN_PRESSED_NAO: mn_screen_change(&auto_page,EVENT_SHOW);break;
+	}
+}
+
+static void warning_limites_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+	case BTN_PRESSED_SIM: mn_screen_change(&limite_page,EVENT_SHOW);break;
 	case BTN_PRESSED_NAO: mn_screen_change(&auto_page,EVENT_SHOW);break;
 	}
 }

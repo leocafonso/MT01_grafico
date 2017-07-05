@@ -55,7 +55,6 @@ static void jog_key_zdown (void *p_arg);
 static void jog_key_zup (void *p_arg);
 
 static void warning_zerarpeca_callback(warn_btn_t btn_type);
-static void warning_zerarmaquina_callback(warn_btn_t btn_type);
 static void warning_semzeromaquina_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
@@ -67,7 +66,6 @@ static mn_widget_t btn_zup = {.name = "b7", .selectable = true};
 static mn_widget_t btn_zdown = {.name = "b8", .selectable = true};
 static mn_widget_t btn_tocha = {.name = "p0", .selectable = true};
 static mn_widget_t btn_voltar = {.name = "b4", .selectable = true};
-static mn_widget_t btn_zmaq = {.name = "b5", .selectable = true};
 static mn_widget_t btn_zpeca = {.name = "b6", .selectable = true};
 
 static mn_widget_t posx_txt = {.name = "t0", .selectable = false};
@@ -88,11 +86,6 @@ static mn_warning_t warn_zerarpeca_args = { .buttonUseInit = BTN_ASK,
 											.msg_count = 1,
 											.func_callback = warning_zerarpeca_callback
 										   };
-static mn_warning_t warn_zerarmaquina_args = { .buttonUseInit = BTN_ASK,
-											.img_txt[0] = IMG_ZERO_MAQ,
-											.msg_count = 1,
-											.func_callback = warning_zerarmaquina_callback
-										   };
 static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
 											.img_txt[0] = IMG_SEM_ZERO_MAQ,
 											.msg_count = 1,
@@ -101,7 +94,7 @@ static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
-		&btn_cima,&btn_baixo,&btn_direita,&btn_esquerda,&btn_zup,&btn_zdown,&btn_tocha,&btn_voltar,&btn_zpeca,&btn_zmaq,
+		&btn_cima,&btn_baixo,&btn_direita,&btn_esquerda,&btn_zup,&btn_zdown,&btn_tocha,&btn_voltar,&btn_zpeca,
 		&posx_txt,&posy_txt,&posz_txt,&vel_txt,&thcReal_txt,&tocha_Led,&arcook_Led,&ohm_Led
 };
 
@@ -339,11 +332,6 @@ void page_handler (void *p_arg)
 		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zmaq.id,EVENT_CLICK))
-	{
-		warning_page.p_args = &warn_zerarmaquina_args;
-		mn_screen_change(&warning_page,EVENT_SHOW);
-	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(vel_txt.id,EVENT_CLICK))
 	{
 		jog_keypad_args.p_var = &configVarJog[JOG_RAPIDO];
@@ -357,7 +345,7 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 		machine_torch_state(MC_TORCH_OFF);
-		mn_screen_change(&main_page,EVENT_SHOW);
+		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 		{
@@ -395,15 +383,6 @@ static void warning_zerarpeca_callback(warn_btn_t btn_type)
 	switch (btn_type)
 	{
 		case BTN_PRESSED_SIM: machine_zerar_peca(); break;
-		case BTN_PRESSED_NAO: break;
-	}
-	mn_screen_change(&jog_page,EVENT_SHOW);
-}
-static void warning_zerarmaquina_callback(warn_btn_t btn_type)
-{
-	switch (btn_type)
-	{
-		case BTN_PRESSED_SIM: machine_zerar_maquina(); break;
 		case BTN_PRESSED_NAO: break;
 	}
 	mn_screen_change(&jog_page,EVENT_SHOW);

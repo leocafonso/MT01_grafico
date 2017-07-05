@@ -115,7 +115,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_manual.id,EVENT_CLICK))
 	{
-		mn_screen_change(&jog_page,EVENT_SHOW);
+		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_auto.id,EVENT_CLICK))
 	{
@@ -127,6 +127,6 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_confMaq.id,EVENT_CLICK))
 	{
-
+		mn_screen_change(&cfgMaq_page,EVENT_SHOW);
 	}
 }

@@ -61,6 +61,8 @@ static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
 static uint32_t event_args;
+static uint32_t btn_id_tch;
+static mn_screen_event_t sim;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -90,13 +92,43 @@ mn_screen_t sim_page = {.id 		 = SC_PAGE7,
 										[SC_DETACH] = page_detach
 									}};
 /* extern variables */
-
+extern float zmove;
 /************************** Static functions *********************************************/
+static void sim_key_zdown (void *p_arg)
+{
+	widgetClick(&btn_thcm, NT_PRESS);
+	sim.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &sim, 0 );
+}
 
+static void sim_key_zup (void *p_arg)
+{
+	widgetClick(&btn_thcp, NT_PRESS);
+	sim.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &sim, 0 );
+}
+
+static void sim_key_release (void *p_arg)
+{
+	if (btn_thcm.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcm, NT_RELEASE);
+		sim.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
+	}
+	else if (btn_thcp.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcp, NT_RELEASE);
+		sim.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
+	}
+	xQueueSend( menu.qEvent, &sim, 0 );
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	sim_page.iif_func[SC_KEY_ZDOWN] = sim_key_zdown;
+	sim_page.iif_func[SC_KEY_ZUP] = sim_key_zup;
+	sim_page.iif_func[SC_KEY_RELEASE] = sim_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -126,14 +158,14 @@ void page_handler (void *p_arg)
 		machine_start_sim();
 		play_pause = false;
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-		mn_screen_create_timer(&timer0,200);
+		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{
 		play_pause = true;
 		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-		mn_screen_create_timer(&timer0,200);
+		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
@@ -152,6 +184,24 @@ void page_handler (void *p_arg)
 			play_pause = false;
 		}
 
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_PRESSED))
+	{
+		btn_id_tch = btn_thcp.id;
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_CLICK))
+	{
+		btn_id_tch = 0;
+		zmove = 0;
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_PRESSED))
+	{
+		btn_id_tch = btn_thcm.id;
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_CLICK))
+	{
+		btn_id_tch = 0;
+		zmove = 0;
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_auto.id,EVENT_CLICK))
 	{
@@ -224,6 +274,15 @@ void page_handler (void *p_arg)
 			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
 		else
 			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
+
+		if (btn_id_tch == btn_thcp.id)
+		{
+			zmove = 0.005;
+		}
+		else if (btn_id_tch == btn_thcm.id)
+		{
+			zmove = -0.005;
+		}
 	}
 }
 

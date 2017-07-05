@@ -13,6 +13,7 @@ typedef enum {
 	KEY_CONFIG_PL = 0,
 	KEY_CONFIG_OX,
 	KEY_CONFIG_JOG,
+	KEY_CONFIG_MAQ,
 	KEY_LINES,
 	KEY_MAX
 }mn_key_var_t;

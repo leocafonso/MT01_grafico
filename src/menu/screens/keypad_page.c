@@ -184,6 +184,10 @@ void page_handler (void *p_arg)
 					eepromWriteConfig(CONFIGVAR_JOG);
 					mn_screen_change(p_previous_page,EVENT_SHOW);
 					break;
+				case KEY_CONFIG_MAQ:
+					eepromWriteConfig(CONFIGVAR_MAQ);
+					mn_screen_change(p_previous_page,EVENT_SHOW);
+					break;
 				case KEY_LINES:
 					mn_screen_change(&selLines_page,EVENT_SHOW);
 				break;
