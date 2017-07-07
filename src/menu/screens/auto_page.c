@@ -174,7 +174,7 @@ void page_handler (void *p_arg)
 		warn_args.buttonUseInit = BTN_ASK;
 		warn_args.img_txt[0] = IMG_CONTINUAR;
 		warn_args.msg_count = 1;
-		warn_args.func_callback = warning_desloca_callback;
+		warn_args.func_callback = warning_limites_callback;
 		warning_page.p_args = &warn_args;
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}

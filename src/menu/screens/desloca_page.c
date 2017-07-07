@@ -19,7 +19,7 @@
 #include "timer_screen.h"
 #include "screen.h"
 #include "menu.h"
-#include "cutting_page.h"
+#include "desloca_page.h"
 #include "warning_page.h"
 #include "spiffs.h"
 #include "tinyg.h"
@@ -59,6 +59,8 @@ static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
 static uint32_t event_args;
+static mn_screen_event_t desloca;
+static bool machine_is_paused = false;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -90,11 +92,83 @@ mn_screen_t desloca_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void desloca_key_enter (void *p_arg)
+{
+	if (machine_is_paused == true)
+	{
+		widgetClick(&btn_play, NT_PRESS);
+		desloca.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+}
 
+static void desloca_key_esc (void *p_arg)
+{
+	if (machine_is_paused == false)
+	{
+		widgetClick(&btn_play, NT_PRESS);
+		desloca.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+	else
+	{
+		widgetClick(&btn_volta, NT_PRESS);
+		desloca.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+}
+
+static void desloca_key_zdown (void *p_arg)
+{
+	widgetClick(&btn_thcm, NT_PRESS);
+	desloca.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &desloca, 0 );
+}
+
+static void desloca_key_zup (void *p_arg)
+{
+	widgetClick(&btn_thcp, NT_PRESS);
+	desloca.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &desloca, 0 );
+}
+
+static void desloca_key_release (void *p_arg)
+{
+	if (btn_thcm.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcm, NT_RELEASE);
+		desloca.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+	else if (btn_thcp.click == NT_PRESS)
+	{
+		widgetClick(&btn_thcp, NT_RELEASE);
+		desloca.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+	else if (btn_play.click == NT_PRESS)
+	{
+		widgetClick(&btn_play, NT_RELEASE);
+		desloca.event = EVENT_SIGNAL(btn_play.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+	else if (btn_volta.click == NT_PRESS)
+	{
+		widgetClick(&btn_volta, NT_RELEASE);
+		desloca.event = EVENT_SIGNAL(btn_volta.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &desloca, 0 );
+	}
+
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	desloca_page.iif_func[SC_KEY_ENTER] = desloca_key_enter;
+	desloca_page.iif_func[SC_KEY_ESC] = desloca_key_esc;
+	desloca_page.iif_func[SC_KEY_ZDOWN] = desloca_key_zdown;
+	desloca_page.iif_func[SC_KEY_ZUP] = desloca_key_zup;
+	desloca_page.iif_func[SC_KEY_RELEASE] = desloca_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -108,7 +182,7 @@ void page_detach (void *p_arg)
 void page_handler (void *p_arg)
 {
 	uint8_t programEnd = 0;
-	static bool play_pause = false;
+
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
@@ -119,17 +193,17 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
 	{
-		if (play_pause == false)
+		if (machine_is_paused == false)
 		{
 			machine_pause();
 			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-			play_pause = true;
+			machine_is_paused = true;
 		}
 		else
 		{
 			machine_restart();
 			widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-			play_pause = false;
+			machine_is_paused = false;
 		}
 
 	}
@@ -143,7 +217,7 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == PROGRAM_FINISHED_EVENT)
 	{
 		programEnd = 1;
-		play_pause = false;
+		machine_is_paused = false;
 		event_args = PROGRAM_FINISHED_EVENT;
 		machine_stop(programEnd);
 		warn_args.buttonUseInit = BTN_OK;

@@ -65,7 +65,7 @@ static mn_warning_t warn_args;
 static uint32_t event_args;
 static uint32_t btn_id_tch;
 static mn_screen_event_t cutting;
-static bool machine_is_running = false;
+static bool machine_is_paused = false;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -100,7 +100,7 @@ mn_screen_t cutting_page = {.id 		 = SC_PAGE6,
 /************************** Static functions *********************************************/
 static void cutting_key_enter (void *p_arg)
 {
-	if (machine_is_running == true)
+	if (machine_is_paused == true)
 	{
 		widgetClick(&btn_play, NT_PRESS);
 		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
@@ -110,7 +110,7 @@ static void cutting_key_enter (void *p_arg)
 
 static void cutting_key_esc (void *p_arg)
 {
-	if (machine_is_running == false)
+	if (machine_is_paused == false)
 	{
 		widgetClick(&btn_play, NT_PRESS);
 		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
@@ -202,7 +202,7 @@ void page_handler (void *p_arg)
 		SPIFFS_fstat(&uspiffs[0].gSPIFFS, uspiffs[0].f, &fileStat);
 		changeTxt(&file_txt,(const char *)fileStat.name);
 		xio_close(cs.primary_src);
-		machine_is_running = false;
+		machine_is_paused = false;
 		machine_start();
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
@@ -210,31 +210,31 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{
-		machine_is_running = true;
+		machine_is_paused = true;
 		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == SIM_ENTRY_EVENT)
 	{
-		machine_is_running = false;
+		machine_is_paused = false;
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
 	{
-		if (machine_is_running == false)
+		if (machine_is_paused == false)
 		{
 			machine_pause();
 			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-			machine_is_running = true;
+			machine_is_paused = true;
 		}
 		else
 		{
 			machine_restart();
 			widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-			machine_is_running = false;
+			machine_is_paused = false;
 		}
 
 	}
@@ -297,7 +297,7 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == PROGRAM_FINISHED_EVENT)
 	{
 		programEnd = 1;
-		machine_is_running = false;
+		machine_is_paused = false;
 		event_args = PROGRAM_FINISHED_EVENT;
 		machine_stop(programEnd);
 		warn_args.buttonUseInit = BTN_OK;
