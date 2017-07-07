@@ -29,6 +29,7 @@
 
 #define EVENT_SIGNAL(_a, _b)   (((_a) | (_b)<< 8))
 #define GET_ID(_a)   ((_a)&0x000000FF)
+#define GET_EVENT(_b)   ((_b)&0x0000FF00)
 
 /**
  * @brief Menu structure

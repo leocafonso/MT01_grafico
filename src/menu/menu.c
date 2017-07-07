@@ -86,7 +86,7 @@ void menu_task(void)
 	screenGetWidgetsInfo(&manual_page);
 
 	vTaskDelay(500/portTICK_PERIOD_MS);
-    xTaskCreate( (pdTASK_CODE)keyboard_task,     "keyboard_task    ",  512, NULL, 2, NULL); /* keyboard_task      */
+    xTaskCreate( (pdTASK_CODE)keyboard_task,     "keyboard_task    ",  512, NULL, 3, NULL); /* keyboard_task      */
 	if(R_IsFileLoaderAvailable())
 	{
 		loadfilesNum |= MCU_FILE;

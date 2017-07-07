@@ -65,6 +65,7 @@ static mn_warning_t warn_args;
 static uint32_t event_args;
 static uint32_t btn_id_tch;
 static mn_screen_event_t cutting;
+static bool machine_is_running = false;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -97,6 +98,32 @@ mn_screen_t cutting_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void cutting_key_enter (void *p_arg)
+{
+	if (machine_is_running == true)
+	{
+		widgetClick(&btn_play, NT_PRESS);
+		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &cutting, 0 );
+	}
+}
+
+static void cutting_key_esc (void *p_arg)
+{
+	if (machine_is_running == false)
+	{
+		widgetClick(&btn_play, NT_PRESS);
+		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &cutting, 0 );
+	}
+	else
+	{
+		widgetClick(&btn_volta, NT_PRESS);
+		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
+		xQueueSend( menu.qEvent, &cutting, 0 );
+	}
+}
+
 static void cutting_key_zdown (void *p_arg)
 {
 	widgetClick(&btn_thcm, NT_PRESS);
@@ -117,18 +144,34 @@ static void cutting_key_release (void *p_arg)
 	{
 		widgetClick(&btn_thcm, NT_RELEASE);
 		cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &cutting, 0 );
 	}
 	else if (btn_thcp.click == NT_PRESS)
 	{
 		widgetClick(&btn_thcp, NT_RELEASE);
 		cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &cutting, 0 );
 	}
-	xQueueSend( menu.qEvent, &cutting, 0 );
+	else if (btn_play.click == NT_PRESS)
+	{
+		widgetClick(&btn_play, NT_RELEASE);
+		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &cutting, 0 );
+	}
+	else if (btn_volta.click == NT_PRESS)
+	{
+		widgetClick(&btn_volta, NT_RELEASE);
+		cutting.event = EVENT_SIGNAL(btn_volta.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &cutting, 0 );
+	}
+
 }
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	cutting_page.iif_func[SC_KEY_ENTER] = cutting_key_enter;
+	cutting_page.iif_func[SC_KEY_ESC] = cutting_key_esc;
 	cutting_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;
 	cutting_page.iif_func[SC_KEY_ZUP] = cutting_key_zup;
 	cutting_page.iif_func[SC_KEY_RELEASE] = cutting_key_release;
@@ -146,7 +189,7 @@ void page_handler (void *p_arg)
 {
 	uint8_t programEnd = 0;
 
-	static bool play_pause = false;
+
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event != EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 	{
@@ -159,7 +202,7 @@ void page_handler (void *p_arg)
 		SPIFFS_fstat(&uspiffs[0].gSPIFFS, uspiffs[0].f, &fileStat);
 		changeTxt(&file_txt,(const char *)fileStat.name);
 		xio_close(cs.primary_src);
-		play_pause = false;
+		machine_is_running = false;
 		machine_start();
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
@@ -167,31 +210,31 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{
-		play_pause = true;
+		machine_is_running = true;
 		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == SIM_ENTRY_EVENT)
 	{
-		play_pause = false;
+		machine_is_running = false;
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
 	{
-		if (play_pause == false)
+		if (machine_is_running == false)
 		{
 			machine_pause();
 			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-			play_pause = true;
+			machine_is_running = true;
 		}
 		else
 		{
 			machine_restart();
 			widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
-			play_pause = false;
+			machine_is_running = false;
 		}
 
 	}
@@ -254,7 +297,7 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == PROGRAM_FINISHED_EVENT)
 	{
 		programEnd = 1;
-		play_pause = false;
+		machine_is_running = false;
 		event_args = PROGRAM_FINISHED_EVENT;
 		machine_stop(programEnd);
 		warn_args.buttonUseInit = BTN_OK;

@@ -31,6 +31,8 @@ static uint16_t NexUpload_recvRetString(char *buffer, uint32_t timeout,bool recv
 /* Static variables and const */
 static bool recvRetOk = false, recvOk = false;
 static uint8_t recvBuffer[20];
+static uint8_t recvBufferTouch[20];
+static uint8_t recvBufferRetOK[20];
 static sci_hdl_t console;
 static const sci_uart_t config = {
 	    .baud_rate = 9600,     // ie 9600, 19200, 115200
@@ -67,10 +69,12 @@ static void sciCallback(void *p_args)
 				{
 					if (recvBuffer[0] == NEX_RET_EVENT_TOUCH_HEAD || recvBuffer[0] == NEX_RET_EVENT_POSITION_HEAD)
 					{
+						memcpy(recvBufferTouch,recvBuffer,20);
 						recvOk = true;
 					}
 					else
 					{
+						memcpy(recvBufferRetOK,recvBuffer,20);
 						recvRetOk = true;
 					}
 
@@ -107,10 +111,10 @@ static bool recvRetCommandFinished(uint32_t timeout)
 		vTaskDelay(1/portTICK_PERIOD_MS);
 	}
 	recvRetOk = false;
-	if (recvBuffer[0] == NEX_RET_CMD_FINISHED
-		&& recvBuffer[1] == 0xFF
-		&& recvBuffer[2] == 0xFF
-		&& recvBuffer[3] == 0xFF)
+	if (recvBufferRetOK[0] == NEX_RET_CMD_FINISHED
+		&& recvBufferRetOK[1] == 0xFF
+		&& recvBufferRetOK[2] == 0xFF
+		&& recvBufferRetOK[3] == 0xFF)
 	{
 		ret = true;
 	}
@@ -132,12 +136,12 @@ static bool recvRetNumber(uint32_t *number, uint32_t timeout)
 		vTaskDelay(1/portTICK_PERIOD_MS);
 	}
 	recvRetOk = false;
-	if (recvBuffer[0] == NEX_RET_NUMBER_HEAD
-		&& recvBuffer[5] == 0xFF
-		&& recvBuffer[6] == 0xFF
-		&& recvBuffer[7] == 0xFF)
+	if (recvBufferRetOK[0] == NEX_RET_NUMBER_HEAD
+		&& recvBufferRetOK[5] == 0xFF
+		&& recvBufferRetOK[6] == 0xFF
+		&& recvBufferRetOK[7] == 0xFF)
 	{
-		*number = ((uint32_t)recvBuffer[4] << 24) | ((uint32_t)recvBuffer[3] << 16) | (recvBuffer[2] << 8) | (recvBuffer[1]);
+		*number = ((uint32_t)recvBufferRetOK[4] << 24) | ((uint32_t)recvBufferRetOK[3] << 16) | (recvBufferRetOK[2] << 8) | (recvBufferRetOK[1]);
 		ret = true;
 	}
     return ret;
@@ -405,24 +409,24 @@ bool NexTouch_recv(nt_touch_t *buf, uint32_t timeout)
     if(recvOk == true)
     {
     	recvOk = false;
-		if (recvBuffer[0] == NEX_RET_EVENT_TOUCH_HEAD
-			&& recvBuffer[4] == 0xFF
-			&& recvBuffer[5] == 0xFF
-			&& recvBuffer[6] == 0xFF)
+		if (recvBufferTouch[0] == NEX_RET_EVENT_TOUCH_HEAD
+			&& recvBufferTouch[4] == 0xFF
+			&& recvBufferTouch[5] == 0xFF
+			&& recvBufferTouch[6] == 0xFF)
 		{
-			buf->eventType = recvBuffer[0];
-			buf->pageID = recvBuffer[1];
-			buf->widgetID = recvBuffer[2];
-			buf->event = recvBuffer[3];
+			buf->eventType = recvBufferTouch[0];
+			buf->pageID = recvBufferTouch[1];
+			buf->widgetID = recvBufferTouch[2];
+			buf->event = recvBufferTouch[3];
 			ret = true;
 		}
-		else  if (recvBuffer[0] == NEX_RET_EVENT_POSITION_HEAD
-				&& recvBuffer[6] == 0xFF
-				&& recvBuffer[7] == 0xFF
-				&& recvBuffer[8] == 0xFF)
+		else  if (recvBufferTouch[0] == NEX_RET_EVENT_POSITION_HEAD
+				&& recvBufferTouch[6] == 0xFF
+				&& recvBufferTouch[7] == 0xFF
+				&& recvBufferTouch[8] == 0xFF)
 		{
-			buf->eventType = recvBuffer[0];
-			buf->event = recvBuffer[5];
+			buf->eventType = recvBufferTouch[0];
+			buf->event = recvBufferTouch[5];
 			ret = true;
 		}
     }

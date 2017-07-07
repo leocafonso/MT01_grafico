@@ -184,6 +184,16 @@ void page_handler (void *p_arg)
 			 p_page_hdl->event == EVENT_SIGNAL(t7.id,EVENT_CLICK)
 	)
 	{
+		for (uint8_t i = 0; i < page->widgetSize; i++)
+		{
+			if (page->p_widget[i]->id == GET_ID(p_page_hdl->event))
+			{
+				widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+				page->wt_selected = i;
+				widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+				break;
+			}
+		}
 		listIndex = (GET_ID(p_page_hdl->event) - 3) + new_index;
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(bfolder.id,EVENT_CLICK))
