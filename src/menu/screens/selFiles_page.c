@@ -53,6 +53,7 @@ static mn_widget_t t5 = {.name = "t5", .selectable = true};
 static mn_widget_t t6 = {.name = "t6", .selectable = true};
 static mn_widget_t t7 = {.name = "t7", .selectable = true};
 static uint16_t new_index = 0;
+static mn_screen_event_t selFiles;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -93,10 +94,10 @@ mn_screen_t selFiles_page = {.id 		 = SC_PAGE5,
 
 
 /************************** Static functions *********************************************/
-bool showFileDir(mn_file_t *p_file, const char *path)
+static bool showFileDir(mn_file_t *p_file, const char *path)
 {
 	bool ret = false;
-	if (path[0] == '/' || !strcmp(path,".."))
+	if (path[0] == '/' || !strcmp(path,".") || !strcmp(path,".."))
 	{
 		for (uint8_t i = 0; i < FILE_IN_SCREEN; i++)
 			changeTxt(selFiles_page.p_widget[i],"");
@@ -119,7 +120,7 @@ bool showFileDir(mn_file_t *p_file, const char *path)
 }
 
 
-showFileDown(mn_file_t *p_file, uint16_t index)
+static void showFileDown(mn_file_t *p_file, uint16_t index)
 {
 	if (index >= FILE_IN_SCREEN)
 	{
@@ -133,7 +134,7 @@ showFileDown(mn_file_t *p_file, uint16_t index)
 	}
 }
 
-showFileUp(mn_file_t *p_file, uint16_t index)
+static void showFileUp(mn_file_t *p_file, uint16_t index)
 {
 	for (uint8_t i = 0; i < FILE_IN_SCREEN; i++)
 		changeTxt(selFiles_page.p_widget[i],"");
@@ -144,10 +145,83 @@ showFileUp(mn_file_t *p_file, uint16_t index)
 		changeTxt(selFiles_page.p_widget[i],p_file->buffer[i + new_index]);
 }
 
+static void selFiles_key_enter (void *p_arg)
+{
+	widgetClick(&bok, NT_PRESS);
+}
+
+static void selFiles_key_up (void *p_arg)
+{
+	widgetClick(&bcima, NT_PRESS);
+}
+
+static void selFiles_key_down (void *p_arg)
+{
+	widgetClick(&bbaixo, NT_PRESS);
+}
+
+static void selFiles_key_esc (void *p_arg)
+{
+	TCHAR str[10];
+	f_getcwd(str, sizeof str / sizeof *str);
+	if (!strcmp(str, "/"))
+	{
+		widgetClick(&bvolta, NT_PRESS);
+	}
+	else
+	{
+		widgetClick(&bfolder, NT_PRESS);
+	}
+}
+
+static void selFiles_key_release (void *p_arg)
+{
+	if (bok.click == NT_PRESS)
+	{
+		widgetClick(&bok, NT_RELEASE);
+		selFiles.event = EVENT_SIGNAL(bok.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &selFiles, 0 );
+	}
+	else if (bcima.click == NT_PRESS)
+	{
+		widgetClick(&bcima, NT_RELEASE);
+		selFiles.event = EVENT_SIGNAL(bcima.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &selFiles, 0 );
+	}
+	else if (bbaixo.click == NT_PRESS)
+	{
+		widgetClick(&bbaixo, NT_RELEASE);
+		selFiles.event = EVENT_SIGNAL(bbaixo.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &selFiles, 0 );
+	}
+	else if (bfolder.click == NT_PRESS)
+	{
+		widgetClick(&bfolder, NT_RELEASE);
+		selFiles.event = EVENT_SIGNAL(bfolder.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &selFiles, 0 );
+	}
+	else if (bvolta.click == NT_PRESS)
+	{
+		widgetClick(&bvolta, NT_RELEASE);
+		selFiles.event = EVENT_SIGNAL(bvolta.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &selFiles, 0 );
+	}
+}
+
+
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	selFiles_page.iif_func[SC_KEY_ENTER] = selFiles_key_enter;
+	selFiles_page.iif_func[SC_KEY_ESC] = selFiles_key_esc;
+	selFiles_page.iif_func[SC_KEY_DOWN] = selFiles_key_down;
+	selFiles_page.iif_func[SC_KEY_UP] = selFiles_key_up;
+	selFiles_page.iif_func[SC_KEY_RIGHT] = mn_screen_idle;
+	selFiles_page.iif_func[SC_KEY_LEFT] = mn_screen_idle;
+	selFiles_page.iif_func[SC_KEY_ZDOWN] = mn_screen_idle;
+	selFiles_page.iif_func[SC_KEY_ZUP] = mn_screen_idle;
+	selFiles_page.iif_func[SC_KEY_RELEASE] = selFiles_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -172,6 +246,7 @@ void page_handler (void *p_arg)
 		page->wt_selected = 0;
 		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 		gcode_file = pvPortMalloc(sizeof(mn_file_t));
+		f_chdir("/");
 		showFileDir(gcode_file, "/");
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(t0.id,EVENT_CLICK) ||
@@ -198,7 +273,14 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(bfolder.id,EVENT_CLICK))
 	{
+		listIndex = 0;
+		new_index = 0;
+		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+		page->wt_selected = 0;
+		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+
 		showFileDir(gcode_file, "..");
+		f_chdir("..");
 	}
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(bcima.id,EVENT_CLICK))
@@ -247,8 +329,16 @@ void page_handler (void *p_arg)
 		//uint16_t lineSel = selFiles_page.wt_selected;
 		uint16_t lineSel = listIndex;
 
-		if (showFileDir(gcode_file, gcode_file->buffer[lineSel]) == true)
+		if (gcode_file->buffer[lineSel][0] == '/')
 		{
+			listIndex = 0;
+			new_index = 0;
+			widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+			page->wt_selected = 0;
+			widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+
+			f_chdir(&gcode_file->buffer[lineSel][1]);
+			showFileDir(gcode_file, ".");
 			widgetVisible(&bfolder,NT_SHOW);
 			widgetTouchable(&bfolder,NT_ENABLE);
 		}
