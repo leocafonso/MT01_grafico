@@ -297,6 +297,16 @@ void page_handler (void *p_arg)
 		warning_page.p_args = &warn_args;
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		if (machine_is_paused == false)
+		{
+			machine_pause();
+			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
+			machine_is_paused = true;
+		}
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 	{
 		char textstr[20];

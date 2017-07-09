@@ -29,6 +29,7 @@
 #include "controller.h"
 #include "xio.h"
 #include "macros.h"
+#include "keyboard.h"
 
 #include "fInfoPL_page.h"
 /* Defines */
@@ -60,7 +61,7 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 {
 		&btn_manual,&btn_vel_manual,&btn_zerar_maq,&btn_voltar
 };
-
+static mn_screen_event_t manual;
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
@@ -82,11 +83,34 @@ mn_screen_t manual_page = {.id 		 = SC_PAGE2,
 									}};
 /* extern variables */
 /************************** Static functions *********************************************/
+static void manual_key_esc (void *p_arg)
+{
+	widgetClick(&btn_voltar, NT_PRESS);
+}
 
+static void manual_key_release (void *p_arg)
+{
+	if (btn_voltar.click == NT_PRESS)
+	{
+		widgetClick(&btn_voltar, NT_RELEASE);
+		manual.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &manual, 0 );
+	}
+	uint32_t *key_pressed = p_arg;
+	if (*key_pressed == KEY_ENTER)
+	{
+		mn_screen_event_t touch;
+		widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
+		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	manual_page.iif_func[SC_KEY_ESC] = manual_key_esc;
+	manual_page.iif_func[SC_KEY_RELEASE] = manual_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -127,6 +151,10 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 		mn_screen_change(&main_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 }
 

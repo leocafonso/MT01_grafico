@@ -29,6 +29,7 @@
 #include "timer_screen.h"
 #include "screen.h"
 #include "menu.h"
+#include "machine_com.h"
 
 
 #include "platform.h"
@@ -80,7 +81,7 @@ uint32_t currentLine;
 
 void pl_arcook_init(void)
 {
-	xTaskCreate((pdTASK_CODE)plasma_task, "Plasma task", 512, NULL, 3, &xPlasmaTaskHandle );
+	xTaskCreate((pdTASK_CODE)plasma_task, "Plasma task", 512, NULL, 7, &xPlasmaTaskHandle );
     /* Attempt to create a semaphore. */
 	xArcoOkSync = xSemaphoreCreateBinary();
 }
@@ -328,47 +329,13 @@ void emergencia_task(void)
 			emergencyCount++;
 			if(emergencyCount == 100)
 			{
-//				emergenciaFlag = true;
-//				xTimerStop( swTimers[AUTO_MENU_TIMER], 0 );
-//	    		if (isCuttingGet() == true)
-//	    		{
-//	    			stopDuringCut_Set(true);
-//	    		}
-//
-//			    vTaskPrioritySet( xCncTaskHandle, 3 );
-//				warm_stop(2);
-//			    vTaskPrioritySet( xCncTaskHandle, 1 );
-//				TORCH = FALSE;
-//			    if( uxTaskPriorityGet( xCncTaskHandle ) != 1 )
-//				{
-//
-//				}
-//	    		lstop = true;
-//
-//		    	if (currentLine == 0){
-//		    		strcpy(Str,"MODO DE EMERGÊNCIA\n");
-//		    	}
-//		    	else
-//		    	{
-//		    		sprintf(Str,"MODO DE EMERGÊNCIA\nPARADO LINHA\n%d\n",currentLine);
-//		    	}
-//		    	ut_lcd_output_warning(Str);
-//				while(keyEntry != KEY_ESC){
-//					WDT_FEED
-//					xQueueReceive( qKeyboard, &keyEntry, portMAX_DELAY );
-//				}
-//				keyEntry = EMERGENCIA_SIGNAL;
-//				xQueueSend( qKeyboard, &keyEntry, 0 );
-//			//	macro_func_ptr = command_idle;
-//				realease = true;
-//				emergencyCount = 0;
-				mn_screen_event_t mn_emergencia;
+				static mn_screen_event_t mn_emergencia;
 				emergenciaFlag = true;
 				if (isCuttingGet() == true)
 				{
 					stopDuringCut_Set(true);
 				}
-				machine_pause();
+				//machine_pause();
 				mn_emergencia.event = EMERGENCIA_SIGNAL_EVENT;
 				xQueueSend( menu.qEvent, &mn_emergencia, 0 );
 				ulTaskNotifyTake( pdTRUE, portMAX_DELAY );

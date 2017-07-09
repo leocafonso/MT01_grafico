@@ -347,6 +347,10 @@ void page_handler (void *p_arg)
 		machine_torch_state(MC_TORCH_OFF);
 		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 		{
 			char textstr[20];

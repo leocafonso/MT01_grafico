@@ -94,7 +94,8 @@ void page_handler (void *p_arg)
 	spiffs_file *fd = &uspiffs[0].f;
 	spiffs *fs = &uspiffs[0].gSPIFFS;
 	mn_screen_event_t *p_page_hdl = p_arg;
-	if (p_page_hdl->event == EVENT_SHOW)
+	if (p_page_hdl->event == EVENT_SHOW ||
+		p_page_hdl->event == EMERGENCIA_EVENT)
 	{
 		SPIFFS_opendir(fs, "/", &sf_dir);
 		pe = SPIFFS_readdir(&sf_dir, pe);
@@ -103,11 +104,6 @@ void page_handler (void *p_arg)
 			changeTxt(&filename_txt,pe->name);
 			SPIFFS_closedir(&sf_dir);
 		}
-
-	}
-	if (p_page_hdl->event == EVENT_SHOW)
-	{
-
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_loadfile.id,EVENT_CLICK))
 	{
@@ -128,5 +124,9 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_confMaq.id,EVENT_CLICK))
 	{
 		mn_screen_change(&cfgMaq_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 }

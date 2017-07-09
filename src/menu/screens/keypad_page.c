@@ -78,6 +78,8 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 static mn_screen_t *p_previous_page;
+static mn_screen_t *p_back_page;
+static mn_screen_event_t keypad;
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
@@ -102,9 +104,26 @@ mn_screen_t keypad_page = {.id 		 = SC_PAGE10,
 /************************** Static functions *********************************************/
 
 /************************** Public functions *********************************************/
+static void keypad_key_esc (void *p_arg)
+{
+	widgetClick(&btn_cancel, NT_PRESS);
+}
+
+static void keypad_key_release (void *p_arg)
+{
+	if (btn_cancel.click == NT_PRESS)
+	{
+		widgetClick(&btn_cancel, NT_RELEASE);
+		keypad.event = EVENT_SIGNAL(btn_cancel.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &keypad, 0 );
+	}
+}
+/************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	keypad_page.iif_func[SC_KEY_ESC] = keypad_key_esc;
+	keypad_page.iif_func[SC_KEY_RELEASE] = keypad_key_release;
 	p_previous_page = page;
 }
 
@@ -149,6 +168,11 @@ void page_handler (void *p_arg)
 		sprintf(result_str, "%0*.*f", digits , decimalCount,*p_keypad->p_var);
 		changeTxt(&num_txt,result_str);
 		snprintf(result_str, sizeof(result_str), "%s", "0");
+		p_back_page = p_previous_page;
+	}
+	else if (p_page_hdl->event == EMERGENCIA_EVENT)
+	{
+		snprintf(result_str, strlen(result_str), "%s", result_str);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_point.id,EVENT_CLICK))
 	{
@@ -165,7 +189,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_cancel.id,EVENT_CLICK))
 	{
-		mn_screen_change(p_previous_page,EVENT_SHOW);
+		mn_screen_change(p_back_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_enter.id,EVENT_CLICK))
 	{
@@ -178,21 +202,25 @@ void page_handler (void *p_arg)
 			{
 				case KEY_CONFIG_PL:
 					eepromWriteConfig(CONFIGVAR_PL);
-					mn_screen_change(p_previous_page,EVENT_SHOW);
+					mn_screen_change(p_back_page,EVENT_SHOW);
 					break;
 				case KEY_CONFIG_JOG:
 					eepromWriteConfig(CONFIGVAR_JOG);
-					mn_screen_change(p_previous_page,EVENT_SHOW);
+					mn_screen_change(p_back_page,EVENT_SHOW);
 					break;
 				case KEY_CONFIG_MAQ:
 					eepromWriteConfig(CONFIGVAR_MAQ);
-					mn_screen_change(p_previous_page,EVENT_SHOW);
+					mn_screen_change(p_back_page,EVENT_SHOW);
 					break;
 				case KEY_LINES:
 					mn_screen_change(&selLines_page,EVENT_SHOW);
 				break;
 			}
 		}
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 	else
 	{

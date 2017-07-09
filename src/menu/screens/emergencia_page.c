@@ -35,8 +35,8 @@ static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 
 /* Static variables and const */
-static mn_widget_t btn_sim = {.name = "b1", .selectable = true};
-static mn_widget_t btn_ok = {.name = "b0", .selectable = true};
+static mn_widget_t btn_sim = {.name = "b0", .selectable = true};
+static mn_widget_t btn_ok = {.name = "b1", .selectable = true};
 static mn_widget_t btn_nao = {.name =  "b2", .selectable = true};
 static mn_widget_t msg_pic = {.name =  "p0", .selectable = false};
 

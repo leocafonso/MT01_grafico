@@ -272,8 +272,8 @@ void page_handler (void *p_arg)
 			}
 		}
 	}
-//	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
-//	{
-//		mn_screen_change(&emergencia_page);
-//	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
+	}
 }

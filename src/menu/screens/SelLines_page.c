@@ -114,5 +114,9 @@ void page_handler (void *p_arg)
 	{
 		mn_screen_change(&auto_page,EVENT_SHOW);
 	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
+	}
 
 }

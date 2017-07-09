@@ -107,14 +107,15 @@ void menu_task(void)
 	{
 		xQueueReceive(menu.qEvent, &event, portMAX_DELAY);
 		event.p_arg = page->p_args;
-		if (event.event == EMERGENCIA_SIGNAL_EVENT)
-		{
-			mn_screen_change(&emergencia_page,EVENT_SHOW);
-		}
-		else
-		{
-			page->iif_func[SC_HANDLER](&event);
-		}
+		page->iif_func[SC_HANDLER](&event);
+//		if (event.event == EMERGENCIA_SIGNAL_EVENT)
+//		{
+//			mn_screen_change(&emergencia_page,EVENT_SHOW);
+//		}
+//		else
+//		{
+//			page->iif_func[SC_HANDLER](&event);
+//		}
 	}
 }
 

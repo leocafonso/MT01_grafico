@@ -30,6 +30,7 @@
 #include "config_menu_pl.h"
 #include "state_functions.h"
 #include "eeprom.h"
+#include "keyboard.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -67,6 +68,8 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 mn_keypad_t cfgCorte_keypad_args;
+static mn_screen_event_t cfgCorte;
+
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
@@ -88,11 +91,34 @@ mn_screen_t cfgCorte_page = {.id 		 = SC_PAGE9,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void cfgCorte_key_esc (void *p_arg)
+{
+	widgetClick(&btn_voltar, NT_PRESS);
+}
 
+static void cfgCorte_key_release (void *p_arg)
+{
+	if (btn_voltar.click == NT_PRESS)
+	{
+		widgetClick(&btn_voltar, NT_RELEASE);
+		cfgCorte.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &cfgCorte, 0 );
+	}
+	uint32_t *key_pressed = p_arg;
+	if (*key_pressed == KEY_ENTER)
+	{
+		mn_screen_event_t touch;
+		widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
+		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
+	cfgCorte_page.iif_func[SC_KEY_ESC] = cfgCorte_key_esc;
+	cfgCorte_page.iif_func[SC_KEY_RELEASE] = cfgCorte_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -107,7 +133,8 @@ void page_handler (void *p_arg)
 {
 	static char result_str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
-	if (p_page_hdl->event == EVENT_SHOW)
+	if (p_page_hdl->event == EVENT_SHOW ||
+		p_page_hdl->event == EMERGENCIA_EVENT)
 	{
 		uint32_t decNum;
 		uint16_t decCount;
@@ -187,6 +214,10 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 		mn_screen_change(&main_page, EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 }
 

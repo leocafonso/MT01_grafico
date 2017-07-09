@@ -206,6 +206,13 @@ void page_handler (void *p_arg)
 			mn_screen_start_timer(&timer0);
 		}
 	}
+	else if (p_page_hdl->event == EMERGENCIA_EVENT)
+	{
+		machine_is_paused = true;
+		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
+		mn_screen_create_timer(&timer0,300);
+		mn_screen_start_timer(&timer0);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_play.id,EVENT_CLICK))
 	{
 		if (machine_is_paused == false)
@@ -241,6 +248,16 @@ void page_handler (void *p_arg)
 		warn_args.func_callback = warning_callback;
 		warning_page.p_args = &warn_args;
 		mn_screen_change(&warning_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		if (machine_is_paused == false)
+		{
+			machine_pause();
+			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
+			machine_is_paused = true;
+		}
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 	{
