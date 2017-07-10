@@ -4,7 +4,7 @@
  *  Created on: Jun 16, 2013
  *      Author: petera
  */
-
+#include "platform.h"
 #include "spiffs.h"
 #include "spiffs_nucleus.h"
 
@@ -52,6 +52,7 @@ s32_t SPIFFS_format(spiffs *fs) {
   spiffs_block_ix bix = 0;
   while (bix < fs->block_count) {
     fs->max_erase_count = 0;
+    WDT_FEED
     res = spiffs_erase_block(fs, bix);
     if (res != SPIFFS_OK) {
       res = SPIFFS_ERR_ERASE_FAIL;

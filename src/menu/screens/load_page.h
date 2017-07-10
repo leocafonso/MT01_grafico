@@ -11,6 +11,8 @@
 
 #define MCU_FILE  		0x01
 #define NEXTION_FILE  	0x02
+#define MEM_FORMAT  	0x04
+
 
 extern uint8_t loadfilesNum;
 

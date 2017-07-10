@@ -26,11 +26,14 @@
 #include "xio.h"
 #include "machine_com.h"
 #include "r_flash_loader_rx_if.h"
+#include "spiffs_hw.h"
 /* Defines */
 
-#define TIMER_NUM 0
+#define TIMER_NUM 1
 
 #define WIDGET_NUM 2
+
+#define TIMER_PROGRESS 210
 
 static mn_widget_t btn_sim = {.name = "b0", .selectable = true};
 static mn_widget_t btn_nao = {.name =  "b1", .selectable = true};
@@ -44,12 +47,13 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 /* Static functions */
+static void format_mem_task(void);
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 
 /* Static variables and const */
-
+static mn_timer_t timer0 = {.id = TIMER_PROGRESS, .name = "tpro"};
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
@@ -74,7 +78,15 @@ mn_screen_t load_page = {.id = SC_PAGE11,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void format_mem_task(void)
+{
+	spiffs_format();
+	RESET;
+	while(1)
+	{
 
+	}
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
@@ -91,12 +103,24 @@ void page_detach (void *p_arg)
 
 void page_handler (void *p_arg)
 {
+	static uint8_t progress_val;
 	bool ret;
 	char str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-		if ((loadfilesNum & MCU_FILE) == MCU_FILE)
+		if ((loadfilesNum & MEM_FORMAT) == MEM_FORMAT)
+		{
+			widgetVisible(&btn_sim, NT_HIDE);
+			widgetVisible(&btn_nao, NT_HIDE);
+			widgetVisible(&txt_info, NT_HIDE);
+			widgetVisible(&load_bar, NT_SHOW);
+			snprintf(str,sizeof(str), "Formatando mem ext");
+		    xTaskCreate( (pdTASK_CODE)format_mem_task,     "format_mem_task    ",  256, NULL, 1, NULL); /* keyboard_task      */
+			mn_screen_create_timer(&timer0,200);
+			mn_screen_start_timer(&timer0);
+		}
+		else if ((loadfilesNum & MCU_FILE) == MCU_FILE)
 		{
 			get_fileName(str);
 		}
@@ -104,7 +128,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sim.id, EVENT_CLICK))
 	{
-		uint8_t progress_val;
+
 		if ((loadfilesNum & MCU_FILE) == MCU_FILE)
 		{
 			widgetVisible(&btn_sim, NT_HIDE);
@@ -134,5 +158,17 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_nao.id, EVENT_CLICK))
 	{
 		mn_screen_change(&splash_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(timer0.id,EVENT_TIMER))
+	{
+		if(progress_val <= 10)
+		{
+			widgetProgressBar(&load_bar,(progress_val*100)/10);
+			progress_val++;
+		}
+		else
+		{
+			progress_val = 0;
+		}
 	}
 }

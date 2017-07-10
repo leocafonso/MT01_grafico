@@ -43,10 +43,10 @@ void menu_task(void)
 	vTaskDelay(1000/portTICK_PERIOD_MS);
 	nexInit();
 	menu.qEvent = xQueueCreate(10,sizeof(mn_screen_event_t));
-    if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
-    {
-    	spiffs_format();
-    }
+//    if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
+//    {
+//    	spiffs_format();
+//    }
 	mn_screen_bind_keyboard(&splash_page);
 	mn_screen_bind_keyboard(&warning_page);
 	mn_screen_bind_keyboard(&emergencia_page);
@@ -95,6 +95,11 @@ void menu_task(void)
 	{
 		loadfilesNum |= NEXTION_FILE;
 	}
+    if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
+    {
+		loadfilesNum |= MEM_FORMAT;
+    //	spiffs_format();
+    }
 	if(loadfilesNum > 0)
 	{
 		mn_screen_change(&load_page,EVENT_SHOW);

@@ -48,7 +48,7 @@ s32_t spiffs_format(void)
 {
 	s32_t res = 0;
 
-	R_SF_Erase(1, 0, SF_ERASE_BULK);
+//	R_SF_Erase(1, 0, SF_ERASE_BULK);
 
 	res = SPIFFS_mount(fs,
 			&cfg,
