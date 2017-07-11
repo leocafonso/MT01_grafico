@@ -117,6 +117,7 @@ static void cfgCorte_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	cfgCorte_page.iif_func[SC_KEY_ESC] = cfgCorte_key_esc;
 	cfgCorte_page.iif_func[SC_KEY_RELEASE] = cfgCorte_key_release;
 }

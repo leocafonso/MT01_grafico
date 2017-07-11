@@ -180,6 +180,7 @@ static void sim_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	sim_page.iif_func[SC_KEY_ENTER] = sim_key_enter;
 	sim_page.iif_func[SC_KEY_ESC] = sim_key_esc;
 	sim_page.iif_func[SC_KEY_ZDOWN] = sim_key_zdown;

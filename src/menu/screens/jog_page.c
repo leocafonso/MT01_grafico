@@ -232,6 +232,7 @@ static void jog_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 }
 
 void page_detach (void *p_arg)

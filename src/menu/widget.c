@@ -28,7 +28,7 @@
 /* Static variables and const */
 
 /* Global variables and const */
-
+mn_widget_t maq_mode_label = {.name =  "p8", .selectable = false};
 
 /* extern variables */
 

@@ -43,6 +43,12 @@ enum{
 	IMG_ZERO_MAQ_INIT = 98,
 	IMG_ZERO_PECA = 99,
 	IMG_SEM_ZERO_MAQ = 100,
+	IMG_OXI_EN = 109,
+	IMG_PL_EN =  110,
+	IMG_OXI_LABEL = 111,
+	IMG_PL_LABEL =  112,
+	IMG_LIG_EN = 113,
+	IMG_DESL_EN =  114,
 	NO_IMG = 0xFFFF
 };
 
@@ -73,6 +79,8 @@ typedef struct{
 	nt_touch_event_t click;
 	mn_wt_type_t wtType;
 }mn_widget_t;
+
+extern mn_widget_t maq_mode_label;
 
 void changeTxt(mn_widget_t *wg, const char *str);
 void widgetClick(mn_widget_t *wg, nt_touch_event_t event);

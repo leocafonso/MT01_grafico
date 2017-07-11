@@ -75,6 +75,7 @@ mn_screen_t main_page = {.id 		 = SC_PAGE1,
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 }
 
 void page_detach (void *p_arg)

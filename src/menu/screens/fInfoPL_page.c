@@ -97,6 +97,7 @@ extern uint32_t choosedLine;
 /************************** Static functions *********************************************/
 static void fileInfo_key_esc (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	widgetClick(&btn_voltar, NT_PRESS);
 }
 

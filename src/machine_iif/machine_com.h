@@ -8,6 +8,8 @@
 #ifndef MACHINE_IIF_MACHINE_COM_H_
 #define MACHINE_IIF_MACHINE_COM_H_
 
+#include "eeprom.h"
+
 enum{
 	AXIS_X_INFO,
 	AXIS_Y_INFO,
@@ -54,5 +56,7 @@ void machine_homming_eixos(void);
 void machine_limite_eixos(void);
 void machine_info_update(uint8_t axis, char * textstr);
 bool machine_alarms_get(uint8_t info);
+bool machine_flag_get(flag_name flag);
+void machine_flag_set(flag_name flag,bool mod);
 
 #endif /* MACHINE_IIF_MACHINE_COM_H_ */

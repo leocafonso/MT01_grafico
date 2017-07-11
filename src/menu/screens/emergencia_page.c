@@ -72,6 +72,7 @@ extern TaskHandle_t xEmergenciaTaskHandle;
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	p_previous_page = page;
 }
 

@@ -170,6 +170,7 @@ static void cutting_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	cutting_page.iif_func[SC_KEY_ENTER] = cutting_key_enter;
 	cutting_page.iif_func[SC_KEY_ESC] = cutting_key_esc;
 	cutting_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;

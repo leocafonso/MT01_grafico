@@ -366,3 +366,14 @@ bool machine_alarms_get(uint8_t info)
 	}
 	return alarm;
 }
+
+bool machine_flag_get(flag_name flag)
+{
+	return configFlags[flag];
+}
+
+void machine_flag_set(flag_name flag,bool mod)
+{
+	configFlags[flag] = mod;
+	eepromWriteConfig(CONFIGFLAG);
+}

@@ -82,6 +82,7 @@ mn_screen_t cfgMaq_page = {.id 		 = SC_PAGE9,
 /************************** Static functions *********************************************/
 static void cfgMaq_key_esc (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	widgetClick(&btn_voltar, NT_PRESS);
 }
 
@@ -106,6 +107,7 @@ static void cfgMaq_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	cfgMaq_page.iif_func[SC_KEY_ESC] = cfgMaq_key_esc;
 	cfgMaq_page.iif_func[SC_KEY_RELEASE] = cfgMaq_key_release;
 }
@@ -146,6 +148,7 @@ void page_handler (void *p_arg)
 		}
 		sprintf(result_str, "%0*.*f", digits , decimalCount,configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO]);
 		changeTxt(&txt_alt_desloc,result_str);
+		widgetChangePic(&btn_modo_maq,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_EN) : (IMG_PL_EN)),NO_IMG);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_alt_desloc.id,EVENT_CLICK))
 	{
@@ -156,6 +159,16 @@ void page_handler (void *p_arg)
 		cfgMaq_keypad_args.max = mq_init_max[CFG_MAQUINA_ALT_DESLOCAMENTO];
 		keypad_page.p_args = &cfgMaq_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_modo_maq.id,EVENT_CLICK))
+	{
+		machine_flag_set(MODOMAQUINA,!machine_flag_get(MODOMAQUINA));
+		widgetChangePic(&btn_modo_maq,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_EN) : (IMG_PL_EN)),NO_IMG);
+		widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_par_thc.id,EVENT_CLICK))
+	{
+		mn_screen_change(&cfgParTHC_page, EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
