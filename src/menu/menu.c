@@ -43,6 +43,29 @@ void menu_task(void)
 	vTaskDelay(1000/portTICK_PERIOD_MS);
 	nexInit();
 	menu.qEvent = xQueueCreate(10,sizeof(mn_screen_event_t));
+	if (NexUpload_checkFile("MT01_5in_regular.tft"))
+	{
+		NexUpload_setDownloadBaudrate(1500000);
+		NexUpload_downloadTftFile("MT01_5in_regular.tft");
+		NexUpload_waitingReset(10000);
+		if(R_IsFileLoaderAvailable())
+		{
+			while(R_loader_progress() < 16)
+			{
+				WDT_FEED
+			}
+		}
+		RESET
+	}
+	if(R_IsFileLoaderAvailable())
+	{
+		while(R_loader_progress() < 16)
+		{
+
+		}
+		RESET
+	}
+
 //    if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
 //    {
 //    	spiffs_format();
@@ -89,18 +112,10 @@ void menu_task(void)
 
 	vTaskDelay(500/portTICK_PERIOD_MS);
     xTaskCreate( (pdTASK_CODE)keyboard_task,     "keyboard_task    ",  512, NULL, 3, NULL); /* keyboard_task      */
-	if(R_IsFileLoaderAvailable())
-	{
-		loadfilesNum |= MCU_FILE;
-	}
-	if (NexUpload_checkFile("MT01_5in_regular.tft"))
-	{
-		loadfilesNum |= NEXTION_FILE;
-	}
+
     if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
     {
 		loadfilesNum |= MEM_FORMAT;
-    //	spiffs_format();
     }
 	if(loadfilesNum > 0)
 	{

@@ -512,9 +512,10 @@ bool NexUpload_downloadTftFile(char* p_file_name)
 	temp = pvPortMalloc( 4096 );
 	memset(string,'\0',50);
 	memset(temp,'\0',4096);
-	f_open(&fileNextion, p_file_name, FA_READ);
+	f_open(&fileNextion, p_file_name, FA_READ | FA_WRITE);
 	while(!f_eof(&fileNextion))
 	{
+		WDT_FEED
 		f_read (&fileNextion, temp, 4096, (UINT *)&remain);			/* Read data from the file */
 		if (remain == 0)
 		{
@@ -540,6 +541,7 @@ bool NexUpload_downloadTftFile(char* p_file_name)
 	    	//break;
 	    }
 	}
+	f_rename(p_file_name, "MT01_DONE.tft");
 	f_close(&fileNextion);
 	vPortFree(temp);
 	return 0;
