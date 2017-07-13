@@ -351,6 +351,17 @@ void machine_info_update(uint8_t info, char * textstr)
 			vel = *velocidadeJog;
 			sprintf(textstr, "%.0f",  vel);
 		break;
+		case TIMER_REAL_OXI:
+		 if(isDwell)
+		 {
+			 sprintf(textstr, "%.0f",  st_get_dwell_elapsed_time());
+		 }
+		 else
+		 {
+			 sprintf(textstr, "---");
+		 }
+		 break;
+		case TIMER_SET_OXI:	sprintf(textstr, "%.0f", configVarOx[tempoDwell]);	break;
 	}
 }
 

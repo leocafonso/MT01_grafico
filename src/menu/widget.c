@@ -95,12 +95,12 @@ void widgetGetPos(mn_widget_t *wg)
 void widgetSelRec(mn_widget_t *wg, uint8_t thickness, uint16_t color)
 {
 	nt_pos_t recPos;
-	for (uint8_t i = 1; i < thickness + 1; i++)
+	for (uint8_t i = 0; i < thickness; i++)
 	{
 		recPos.x = wg->position.x - i;
 		recPos.y = wg->position.y - i;
-		recPos.h = wg->position.h + i;
-		recPos.w = wg->position.w + i;
+		recPos.h = wg->position.h + 2*i;
+		recPos.w = wg->position.w + 2*i;
 		NexDraw_rec(recPos,color);
 	}
 }

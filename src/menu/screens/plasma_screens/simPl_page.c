@@ -19,7 +19,7 @@
 #include "timer_screen.h"
 #include "screen.h"
 #include "menu.h"
-#include "cutting_page.h"
+#include "cutPl_page.h"
 #include "warning_page.h"
 #include "spiffs.h"
 #include "tinyg.h"
@@ -78,9 +78,9 @@ static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
 /* Global variables and const */
-mn_screen_t sim_page = {.id 		 = SC_PAGE7,
+mn_screen_t simPl_page = {.id 		 = SC_PAGE7,
 					.wt_selected = 0,
-					.name        = "sim",
+					.name        = "simPl",
 					.p_widget = p_widget,
 #if (TIMER_NUM > 0)
 					.p_timer = p_timer,
@@ -181,11 +181,11 @@ static void sim_key_release (void *p_arg)
 void page_attach (void *p_arg)
 {
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	sim_page.iif_func[SC_KEY_ENTER] = sim_key_enter;
-	sim_page.iif_func[SC_KEY_ESC] = sim_key_esc;
-	sim_page.iif_func[SC_KEY_ZDOWN] = sim_key_zdown;
-	sim_page.iif_func[SC_KEY_ZUP] = sim_key_zup;
-	sim_page.iif_func[SC_KEY_RELEASE] = sim_key_release;
+	simPl_page.iif_func[SC_KEY_ENTER] = sim_key_enter;
+	simPl_page.iif_func[SC_KEY_ESC] = sim_key_esc;
+	simPl_page.iif_func[SC_KEY_ZDOWN] = sim_key_zdown;
+	simPl_page.iif_func[SC_KEY_ZUP] = sim_key_zup;
+	simPl_page.iif_func[SC_KEY_RELEASE] = sim_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -266,7 +266,7 @@ void page_handler (void *p_arg)
 			machine_restart();
 		}
 		machine_sim_to_auto(NULL);
-		mn_screen_change(&cutting_page,SIM_ENTRY_EVENT);
+		mn_screen_change(&cutPl_page,SIM_ENTRY_EVENT);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id,EVENT_CLICK))
 	{
@@ -361,6 +361,6 @@ static void warning_callback(warn_btn_t btn_type)
 	}
 	else if (event_args == MATERIAL_FAILED_EVENT)
 	{
-		mn_screen_change(&cutting_page,EMERGENCIA_EVENT);
+		mn_screen_change(&cutPl_page,EMERGENCIA_EVENT);
 	}
 }

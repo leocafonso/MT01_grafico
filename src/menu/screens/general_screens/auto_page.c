@@ -5,6 +5,7 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+#include "fInfo_page.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
@@ -31,7 +32,6 @@
 #include "macros.h"
 #include "keyboard.h"
 
-#include "fInfoPL_page.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -70,7 +70,7 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 		&btn_rodar,&btn_sim,&btn_deslocar,&btn_sel,&btn_limites,&btn_voltar
 };
 
-
+mn_file_var_t  g_runCase;
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
@@ -150,7 +150,7 @@ void page_handler (void *p_arg)
 		{
 			xio_close(cs.primary_src);
 			g_runCase = FILE_AUTO;
-			mn_screen_change(&fileInfo_page,EVENT_SHOW);
+			mn_screen_change((machine_flag_get(MODOMAQUINA) ? (&fInfoOX_page) : (&fInfoPl_page)) ,EVENT_SHOW);
 		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sim.id,EVENT_CLICK))
@@ -165,7 +165,7 @@ void page_handler (void *p_arg)
 		{
 			xio_close(cs.primary_src);
 			g_runCase = FILE_SIM;
-			mn_screen_change(&fileInfo_page,EVENT_SHOW);
+			mn_screen_change((machine_flag_get(MODOMAQUINA) ? (&fInfoOX_page) : (&fInfoPl_page)) ,EVENT_SHOW);
 		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_deslocar.id,EVENT_CLICK))

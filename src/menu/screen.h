@@ -77,18 +77,23 @@ extern mn_screen_t warning_page;
 extern mn_screen_t emergencia_page;
 extern mn_screen_t jog_page;
 extern mn_screen_t desloca_page;
-extern mn_screen_t sim_page;
+extern mn_screen_t simPl_page;
+extern mn_screen_t simOxi_page;
 extern mn_screen_t selFiles_page;
-extern mn_screen_t cutting_page;
+extern mn_screen_t cutPl_page;
+extern mn_screen_t cutOxi_page;
 extern mn_screen_t keypad_page;
-extern mn_screen_t cfgCorte_page;
+extern mn_screen_t cfgCutPl_page;
+extern mn_screen_t cfgCutOx_page;
 extern mn_screen_t load_page;
 extern mn_screen_t selLines_page;
 extern mn_screen_t limite_page;
-extern mn_screen_t fileInfo_page;
+extern mn_screen_t fInfoPl_page;
+extern mn_screen_t fInfoOX_page;
 extern mn_screen_t cfgMaq_page;
 extern mn_screen_t manual_page;
 extern mn_screen_t cfgParTHC_page;
+
 
 extern void (*mn_func[SC_KEY_TOTAL])(void *p_arg);
 

@@ -743,7 +743,7 @@ static stat_t _exec_aline_segment()
 			mr.gm.target[i] = mr.position[i] + (mr.unit[i] * segment_length);
 		}
 		//if (configsVar->currentState == STATE_CONFIG_AUTO_MODE)
-		if (page == &cutting_page)
+		if (page == &cutPl_page)
 		{
 			if((configFlags[MODOMAQUINA] == MODO_PLASMA) && isCuttingGet() == true){
 				zmove = pl_thc_pid();

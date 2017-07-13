@@ -9,7 +9,7 @@
 #ifndef MN_MENU_H_
 #define MN_MENU_H_
 
-#include "./screens/warning_page.h"
+#include "warning_page.h"
 
 #define EVENT_SHOW 					0
 #define EMERGENCIA_EVENT 			1

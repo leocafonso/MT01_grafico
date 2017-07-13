@@ -22,6 +22,7 @@
 #include "keyboard.h"
 #include "interpreter_if.h"
 /* Defines */
+#define SELECT_WIDTH 3
 
 /* Static functions */
 static void page_key_up (void *p_arg);
@@ -64,9 +65,9 @@ static void page_key_right (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 	}
 }
 
@@ -93,9 +94,9 @@ static void page_key_left (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 	}
 }
 
@@ -122,9 +123,9 @@ static void page_key_up (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 	}
 }
 
@@ -151,9 +152,9 @@ static void page_key_down (void *p_arg)
 	}
 	if (index_posmin < 0xFFFF)
 	{
-		widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
 		page->wt_selected = index_posmin;
-		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 	}
 }
 
@@ -210,6 +211,7 @@ void screenGetWidgetsInfo(mn_screen_t *p_screen)
 	uint8_t i;
 	for (i = 0; i < p_screen->widgetSize; i++)
 	{
+		WDT_FEED
 		if (p_screen->p_widget[i]->selectable == true)
 		{
 			sprintf(temp,"%s.%s.x",p_screen->name,p_screen->p_widget[i]->name);

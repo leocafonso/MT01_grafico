@@ -96,16 +96,6 @@ void keyboard_task(void)
 				{
 					touch.event = EVENT_SIGNAL(btEvent.widgetID,EVENT_CLICK);
 				}
-//				for (uint8_t i = 0; i < page->widgetSize; i++)
-//				{
-//					if (page->p_widget[i]->id == btEvent.widgetID)
-//					{
-//					//	widgetSelRec(page->p_widget[page->wt_selected],3, DESELECT_COLOR);
-//					//	page->wt_selected = i;
-//					//	widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
-//						break;
-//					}
-//				}
 			}
 			else if (btEvent.eventType == NEX_RET_EVENT_POSITION_HEAD)
 			{

@@ -67,16 +67,16 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 		&btn_alt_per,&btn_alt_corte,&btn_vel_corte,&btn_tempo_per,&btn_tensao_thc,&btn_voltar
 };
 
-mn_keypad_t cfgCorte_keypad_args;
+static mn_keypad_t cfgCorte_keypad_args;
 static mn_screen_event_t cfgCorte;
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
 /* Global variables and const */
-mn_screen_t cfgCorte_page = {.id 		 = SC_PAGE9,
+mn_screen_t cfgCutPl_page = {.id 		 = SC_PAGE9,
 					.wt_selected = 0,
-					.name        = "cfgCorte",
+					.name        = "cfgCutPl",
 					.p_widget = p_widget,
 #if (TIMER_NUM > 0)
 					.p_timer = p_timer,
@@ -118,8 +118,8 @@ static void cfgCorte_key_release (void *p_arg)
 void page_attach (void *p_arg)
 {
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	cfgCorte_page.iif_func[SC_KEY_ESC] = cfgCorte_key_esc;
-	cfgCorte_page.iif_func[SC_KEY_RELEASE] = cfgCorte_key_release;
+	cfgCutPl_page.iif_func[SC_KEY_ESC] = cfgCorte_key_esc;
+	cfgCutPl_page.iif_func[SC_KEY_RELEASE] = cfgCorte_key_release;
 }
 
 void page_detach (void *p_arg)

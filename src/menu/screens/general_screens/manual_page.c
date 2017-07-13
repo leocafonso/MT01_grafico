@@ -5,6 +5,7 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+#include "fInfo_page.h"
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
@@ -31,7 +32,6 @@
 #include "macros.h"
 #include "keyboard.h"
 
-#include "fInfoPL_page.h"
 /* Defines */
 
 #define TIMER_NUM 0

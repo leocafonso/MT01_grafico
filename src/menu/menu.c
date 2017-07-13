@@ -22,7 +22,7 @@
 #include "interpreter_if.h"
 #include "spiffs_hw.h"
 #include "r_flash_loader_rx_if.h"
-#include "screens/load_page.h"
+#include "load_page.h"
 /* Defines */
 
 /* Static functions */
@@ -76,16 +76,20 @@ void menu_task(void)
 	mn_screen_bind_keyboard(&main_page);
 	mn_screen_bind_keyboard(&auto_page);
 	mn_screen_bind_keyboard(&selFiles_page);
-	mn_screen_bind_keyboard(&cutting_page);
+	mn_screen_bind_keyboard(&cutPl_page);
+	mn_screen_bind_keyboard(&cutOxi_page);
 //	mn_screen_bind_keyboard(&jog_page);
 	mn_screen_bind_keyboard(&desloca_page);
-	mn_screen_bind_keyboard(&sim_page);
+	mn_screen_bind_keyboard(&simPl_page);
+	mn_screen_bind_keyboard(&simOxi_page);
 	mn_screen_bind_keyboard(&keypad_page);
-	mn_screen_bind_keyboard(&cfgCorte_page);
+	mn_screen_bind_keyboard(&cfgCutPl_page);
+	mn_screen_bind_keyboard(&cfgCutOx_page);
 	mn_screen_bind_keyboard(&load_page);
 	mn_screen_bind_keyboard(&selLines_page);
 	mn_screen_bind_keyboard(&limite_page);
-	mn_screen_bind_keyboard(&fileInfo_page);
+	mn_screen_bind_keyboard(&fInfoPl_page);
+	mn_screen_bind_keyboard(&fInfoOX_page);
 	mn_screen_bind_keyboard(&cfgMaq_page);
 	mn_screen_bind_keyboard(&manual_page);
 	mn_screen_bind_keyboard(&cfgParTHC_page);
@@ -96,16 +100,20 @@ void menu_task(void)
 	screenGetWidgetsInfo(&selFiles_page);
 	screenGetWidgetsInfo(&main_page);
 	screenGetWidgetsInfo(&auto_page);
-	screenGetWidgetsInfo(&cutting_page);
+	screenGetWidgetsInfo(&cutPl_page);
+	screenGetWidgetsInfo(&cutOxi_page);
 	screenGetWidgetsInfo(&jog_page);
 	screenGetWidgetsInfo(&desloca_page);
-	screenGetWidgetsInfo(&sim_page);
+	screenGetWidgetsInfo(&simPl_page);
+	screenGetWidgetsInfo(&simOxi_page);
 	screenGetWidgetsInfo(&keypad_page);
-	screenGetWidgetsInfo(&cfgCorte_page);
+	screenGetWidgetsInfo(&cfgCutPl_page);
+	screenGetWidgetsInfo(&cfgCutOx_page);
 	screenGetWidgetsInfo(&load_page);
 	screenGetWidgetsInfo(&selLines_page);
 	screenGetWidgetsInfo(&limite_page);
-	screenGetWidgetsInfo(&fileInfo_page);
+	screenGetWidgetsInfo(&fInfoPl_page);
+	screenGetWidgetsInfo(&fInfoOX_page);
 	screenGetWidgetsInfo(&cfgMaq_page);
 	screenGetWidgetsInfo(&manual_page);
 	screenGetWidgetsInfo(&cfgParTHC_page);
