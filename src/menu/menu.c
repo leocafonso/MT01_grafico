@@ -43,10 +43,10 @@ void menu_task(void)
 	vTaskDelay(1000/portTICK_PERIOD_MS);
 	nexInit();
 	menu.qEvent = xQueueCreate(10,sizeof(mn_screen_event_t));
-	if (NexUpload_checkFile("MT01_5in_regular.tft"))
+	if (NexUpload_checkFile())
 	{
 		NexUpload_setDownloadBaudrate(1500000);
-		NexUpload_downloadTftFile("MT01_5in_regular.tft");
+		NexUpload_downloadTftFile();
 		NexUpload_waitingReset(10000);
 		if(R_IsFileLoaderAvailable())
 		{

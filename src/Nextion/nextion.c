@@ -433,16 +433,19 @@ bool NexTouch_recv(nt_touch_t *buf, uint32_t timeout)
     return ret;
 }
 
-bool NexUpload_checkFile(char* p_file_name)
+FILINFO     file_info;
+bool NexUpload_checkFile(void)
 {
 	bool ret = false;
-	FILINFO     file_info;
+
+	DIR			dj;
+    FRESULT     res;
 	if(drivemountFlag){
-		if (f_open(&fileNextion, p_file_name, FA_READ) != FR_OK)
+		if (f_findfirst(&dj, &file_info, "", "MT02*.tft"))
 		{
 			return ret;
 		}
-		if (f_stat(p_file_name, &file_info) != FR_OK)
+		if (f_open(&fileNextion, file_info.fname, FA_READ) != FR_OK)
 		{
 			return ret;
 		}
@@ -503,16 +506,18 @@ bool NexUpload_setDownloadBaudrate(uint32_t baudrate)
     return ret;
 }
 
-bool NexUpload_downloadTftFile(char* p_file_name)
+bool NexUpload_downloadTftFile(void)
 {
+	char str[20];
 	uint8_t *temp = NULL;
 	uint32_t remain;
+	char *p_str;
     //char *string;
     string = pvPortMalloc( 50 );
 	temp = pvPortMalloc( 4096 );
 	memset(string,'\0',50);
 	memset(temp,'\0',4096);
-	f_open(&fileNextion, p_file_name, FA_READ | FA_WRITE);
+	f_open(&fileNextion, file_info.fname, FA_READ | FA_WRITE);
 	while(!f_eof(&fileNextion))
 	{
 		WDT_FEED
@@ -541,7 +546,10 @@ bool NexUpload_downloadTftFile(char* p_file_name)
 	    	//break;
 	    }
 	}
-	f_rename(p_file_name, "MT01_DONE.tft");
+	strcpy(str,file_info.fname);
+	p_str = strstr(str,".tft");
+	strncpy(p_str,".TDN",4);
+	f_rename(file_info.fname, str);
 	f_close(&fileNextion);
 	vPortFree(temp);
 	return 0;

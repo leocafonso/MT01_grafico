@@ -221,11 +221,13 @@ void R_FL_StateMachine(void)
 	}
     
 }
-
+FILINFO     finfo;
 bool R_IsFileLoaderAvailable(void)
 {
 	bool ret = false;
+	DIR			dj;
 	FIL         file;
+
     FRESULT     res;
     uint16_t    file_rw_cnt;
 	uint8_t     uiMsgRow = 0;
@@ -237,9 +239,10 @@ bool R_IsFileLoaderAvailable(void)
 
 	/* Open a text file */
 	if(drivemountFlag){
-		res = f_open(&file, proj_name, FA_READ | FA_WRITE);
+		res = f_findfirst(&dj, &finfo, "", "MT02*.bin");
 		if(FR_OK == res)
 		{
+			res = f_open(&file, finfo.fname, FA_READ | FA_WRITE);
 			res = f_lseek(&file,CRC_ADDRESS);
 			f_read(&file, g_fl_load_image_headers, sizeof(g_fl_load_image_headers), (UINT *)&file_rw_cnt);
 			if (g_fl_load_image_headers[0].valid_mask == 0xAA)
@@ -266,10 +269,11 @@ uint8_t R_loader_progress(void)
 	FRESULT     res;
 	uint16_t    file_rw_cnt;
 	uint8_t     uiMsgRow = 0;
-
+	char str[20];
+	char *p_str;
 	uint32_t    keyEntry = 0;
 
-	res = f_open(&file, proj_name, FA_READ | FA_WRITE);
+	res = f_open(&file, finfo.fname, FA_READ | FA_WRITE);
 	if(FR_OK != res)
 	{
 		return 0xFF;
@@ -288,7 +292,10 @@ uint8_t R_loader_progress(void)
 	}
 	if (f_eof(&file))
 	{
-			f_rename(proj_name, proj_programmed);
+		strcpy(str,finfo.fname);
+		p_str = strstr(str,".bin");
+		strncpy(p_str,".DON",4);
+		f_rename(finfo.fname, str);
 	}
 	res = f_close(&file);
 	return (address / 0x10000);
