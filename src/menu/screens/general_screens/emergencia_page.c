@@ -27,7 +27,7 @@
 
 #define TIMER_NUM 0
 
-#define WIDGET_NUM 4
+#define WIDGET_NUM 2
 
 /* Static functions */
 static void page_handler (void *p_arg);
@@ -42,7 +42,7 @@ static mn_widget_t msg_pic = {.name =  "p0", .selectable = false};
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
-		&btn_sim,&btn_ok,&btn_nao,&msg_pic
+		&btn_ok,&msg_pic
 };
 static mn_screen_t *p_previous_page;
 

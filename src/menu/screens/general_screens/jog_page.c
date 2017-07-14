@@ -182,6 +182,8 @@ static void jog_key_zup (void *p_arg)
 static void jog_key_enter (void *p_arg)
 {
 	widgetClick(&btn_tocha, NT_PRESS);
+	jog.event = EVENT_SIGNAL(btn_tocha.id, EVENT_CLICK);
+	xQueueSend( menu.qEvent, &jog, 0 );
 }
 
 static void jog_key_esc (void *p_arg)
@@ -191,53 +193,60 @@ static void jog_key_esc (void *p_arg)
 
 static void jog_key_release (void *p_arg)
 {
-	if (btn_tocha.click == NT_PRESS)
-	{
-		widgetClick(&btn_tocha, NT_RELEASE);
-		jog.event = EVENT_SIGNAL(btn_tocha.id, EVENT_CLICK);
-	}
-	else if (btn_cima.click == NT_PRESS)
+//	if (btn_tocha.click == NT_PRESS)
+//	{
+//		widgetClick(&btn_tocha, NT_RELEASE);
+//		jog.event = EVENT_SIGNAL(btn_tocha.id, EVENT_CLICK);
+//	}
+	if (btn_cima.click == NT_PRESS)
 	{
 		//widgetClick(&btn_cima, NT_RELEASE);
 		btn_cima.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_cima.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_baixo.click == NT_PRESS)
+	if (btn_baixo.click == NT_PRESS)
 	{
 		//widgetClick(&btn_baixo, NT_RELEASE);
 		btn_baixo.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_baixo.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_direita.click == NT_PRESS)
+	if (btn_direita.click == NT_PRESS)
 	{
 		//widgetClick(&btn_direita, NT_RELEASE);
 		btn_direita.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_direita.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_esquerda.click == NT_PRESS)
+	if (btn_esquerda.click == NT_PRESS)
 	{
 		//widgetClick(&btn_esquerda, NT_RELEASE);
 		btn_esquerda.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_esquerda.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_zup.click == NT_PRESS)
+	if (btn_zup.click == NT_PRESS)
 	{
 		//widgetClick(&btn_zup, NT_RELEASE);
 		btn_zup.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_zup.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_zdown.click == NT_PRESS)
+	if (btn_zdown.click == NT_PRESS)
 	{
 		//widgetClick(&btn_zdown, NT_RELEASE);
 		btn_zdown.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_zdown.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	else if (btn_voltar.click == NT_PRESS)
+	if (btn_voltar.click == NT_PRESS)
 	{
 		widgetClick(&btn_voltar, NT_RELEASE);
 		jog.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &jog, 0 );
 	}
-	xQueueSend( menu.qEvent, &jog, 0 );
+
 }
 
 /************************** Public functions *********************************************/
@@ -359,6 +368,8 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
+		JogkeyPressed = 0;
+		machine_jog_stop();
 		machine_torch_state(MC_TORCH_OFF);
 		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
