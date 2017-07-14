@@ -196,6 +196,7 @@ void mn_screen_change (mn_screen_t *p_screen, uint32_t event_in_change)
 	mn_screen_event_t changePage;
 	if (page != NULL)
 	{
+		mn_screen_bind_keyboard(page);
 		page->iif_func[SC_DETACH](NULL);
 	}
 	NexPage_show(p_screen->name);

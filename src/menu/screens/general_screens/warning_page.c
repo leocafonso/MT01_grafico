@@ -192,8 +192,8 @@ void page_handler (void *p_arg)
 	mn_warning_t *p_warning = p_page_hdl->p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-		widgetVisible(&msg_pic, NT_SHOW);
 		widgetChangePic(&msg_pic, p_warning->img_txt[0],NO_IMG);
+		widgetVisible(&msg_pic, NT_SHOW);
 		warning_key_keyborad_bind (p_warning->buttonUseInit);
 		switch (p_warning->buttonUseInit)
 		{

@@ -128,6 +128,7 @@ void page_detach (void *p_arg)
 	for (uint8_t i = 0; i < TIMER_NUM; i++)
 		mn_screen_stop_timer(page->p_timer[i]);
 #endif
+//	mn_screen_bind_keyboard(page);
 }
 
 void page_handler (void *p_arg)

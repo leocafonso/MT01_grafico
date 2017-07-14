@@ -43,11 +43,16 @@ static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_zerarmaquina_callback(warn_btn_t btn_type);
+static void warning_zerarpeca_callback(warn_btn_t btn_type);
+static void warning_semzeromaquina_callback(warn_btn_t btn_type);
+static void warning_desloca_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t btn_manual = {.name = "b1", .selectable = true};
 static mn_widget_t btn_vel_manual = {.name = "b2", .selectable = true};
-static mn_widget_t btn_zerar_maq = {.name = "b3", .selectable = true};
+static mn_widget_t btn_zerar_peca = {.name = "b3", .selectable = true};
+static mn_widget_t btn_deslocar = {.name = "b4", .selectable = true};
+static mn_widget_t btn_zerar_maq = {.name = "b5", .selectable = true};
 static mn_widget_t btn_voltar = {.name = "b0", .selectable = true};
 
 static mn_warning_t warn_zerarmaquina_args = { .buttonUseInit = BTN_ASK,
@@ -55,11 +60,23 @@ static mn_warning_t warn_zerarmaquina_args = { .buttonUseInit = BTN_ASK,
 											.msg_count = 1,
 											.func_callback = warning_zerarmaquina_callback};
 
+static mn_warning_t warn_zerarpeca_args = { .buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_ZERO_PECA,
+											.msg_count = 1,
+											.func_callback = warning_zerarpeca_callback
+										   };
+static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_SEM_ZERO_MAQ,
+											.msg_count = 1,
+											.func_callback = warning_semzeromaquina_callback
+										   };
+static mn_warning_t warn_args;
+
 static mn_keypad_t vel_keypad_args;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
-		&btn_manual,&btn_vel_manual,&btn_zerar_maq,&btn_voltar
+		&btn_manual,&btn_vel_manual,&btn_deslocar,&btn_zerar_peca,&btn_zerar_maq,&btn_voltar
 };
 static mn_screen_event_t manual;
 
@@ -144,9 +161,38 @@ void page_handler (void *p_arg)
 		keypad_page.p_args = &vel_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_deslocar.id,EVENT_CLICK))
+	{
+		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+		{
+			xio_close(cs.primary_src);
+			warn_args.buttonUseInit = BTN_ASK;
+			warn_args.img_txt[0] = IMG_CONTINUAR;
+			warn_args.msg_count = 1;
+			warn_args.func_callback = warning_desloca_callback;
+			warning_page.p_args = &warn_args;
+		}
+		else
+		{
+			warning_page.p_args = &warn_semzeromaquina_args;
+		}
+		mn_screen_change(&warning_page,EVENT_SHOW);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zerar_maq.id,EVENT_CLICK))
 	{
 		warning_page.p_args = &warn_zerarmaquina_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zerar_peca.id,EVENT_CLICK))
+	{
+		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+		{
+			warning_page.p_args = &warn_zerarpeca_args;
+		}
+		else
+		{
+			warning_page.p_args = &warn_semzeromaquina_args;
+		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
@@ -166,5 +212,29 @@ static void warning_zerarmaquina_callback(warn_btn_t btn_type)
 		case BTN_PRESSED_SIM: machine_zerar_maquina(); break;
 		case BTN_PRESSED_NAO: break;
 	}
-	mn_screen_change(&jog_page,EVENT_SHOW);
+	mn_screen_change(&manual_page,EVENT_SHOW);
+}
+
+static void warning_zerarpeca_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM: machine_zerar_peca(); break;
+		case BTN_PRESSED_NAO: break;
+	}
+	mn_screen_change(&manual_page,EVENT_SHOW);
+}
+
+static void warning_semzeromaquina_callback(warn_btn_t btn_type)
+{
+	mn_screen_change(&manual_page,EVENT_SHOW);
+}
+
+static void warning_desloca_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+	case BTN_PRESSED_SIM: mn_screen_change(&desloca_page,EVENT_SHOW);break;
+	case BTN_PRESSED_NAO: mn_screen_change(&manual_page,EVENT_SHOW);break;
+	}
 }

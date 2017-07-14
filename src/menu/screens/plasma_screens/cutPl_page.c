@@ -41,6 +41,7 @@ static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_callback(warn_btn_t btn_type);
+static void warning_esc_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t btn_play = {.name = "b1", .selectable = true};
@@ -62,10 +63,16 @@ static mn_widget_t arcook_Led = {.name = "p1", .selectable = false};
 static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
+static mn_warning_t warn_esc_args = { .buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_ZERO_MAQ,
+											.msg_count = 1,
+											.func_callback = warning_esc_callback};
+
 static uint32_t event_args;
 static uint32_t btn_id_tch;
 static mn_screen_event_t cutting;
 static bool machine_is_paused = false;
+static uint8_t programEnd;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -204,6 +211,7 @@ void page_handler (void *p_arg)
 		changeTxt(&file_txt,(const char *)fileStat.name);
 		xio_close(cs.primary_src);
 		machine_is_paused = false;
+		programEnd = 0;
 		machine_start();
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
@@ -258,9 +266,11 @@ void page_handler (void *p_arg)
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id,EVENT_CLICK))
 	{
-		if (!programEnd)
-			machine_stop(programEnd);
-		mn_screen_change(&auto_page,EVENT_SHOW);
+//		if (!programEnd)
+//			machine_stop(programEnd);
+//		mn_screen_change(&auto_page,EVENT_SHOW);
+		warning_page.p_args = &warn_esc_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == ARCO_OK_INIT_FAILED_EVENT)
 	{
@@ -394,5 +404,21 @@ static void warning_callback(warn_btn_t btn_type)
 			 event_args == ARCO_OK_FAILED_EVENT)
 	{
 		mn_screen_change(&cutPl_page,EMERGENCIA_EVENT);
+	}
+}
+
+static void warning_esc_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM:
+			if (!programEnd)
+			{
+				machine_pause();
+				machine_stop(programEnd);
+			}
+			mn_screen_change(&auto_page,EVENT_SHOW);
+		break;
+		case BTN_PRESSED_NAO: 	mn_screen_change(&cutPl_page,EMERGENCIA_EVENT);break;
 	}
 }
