@@ -98,18 +98,19 @@ static void auto_key_esc (void *p_arg)
 
 static void auto_key_release (void *p_arg)
 {
-	if (btn_voltar.click == NT_PRESS)
-	{
-		widgetClick(&btn_voltar, NT_RELEASE);
-		SEauto.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &SEauto, 0 );
-	}
 	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
 	if (*key_pressed == KEY_ENTER)
 	{
-		mn_screen_event_t touch;
+
 		widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
 		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+	else if (*key_pressed == KEY_ESC)
+	{
+		widgetClick(&btn_voltar, NT_RELEASE);
+		touch.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &touch, 0 );
 	}
 }

@@ -110,8 +110,6 @@ static void cutting_key_enter (void *p_arg)
 	if (machine_is_paused == true)
 	{
 		widgetClick(&btn_play, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
 	}
 }
 
@@ -120,14 +118,10 @@ static void cutting_key_esc (void *p_arg)
 	if (machine_is_paused == false)
 	{
 		widgetClick(&btn_play, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
 	}
 	else
 	{
 		widgetClick(&btn_volta, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
 	}
 }
 
@@ -374,21 +368,6 @@ void page_handler (void *p_arg)
 			  configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMIN;
 		}
 	}
-//	else if (p_page_hdl->event == EVENT_SIGNAL(timer_thc.id,EVENT_TIMER))
-//	{
-//		if (btn_id_tch == btn_thcp.id)
-//		{
-//			configVarPl[PL_CONFIG_TENSAO_THC] += 1;
-//			if(configVarPl[PL_CONFIG_TENSAO_THC] > THC_VMAX)
-//				configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMAX;
-//		}
-//		else if (btn_id_tch == btn_thcm.id)
-//		{
-//			configVarPl[PL_CONFIG_TENSAO_THC] -= 1;
-//			if(configVarPl[PL_CONFIG_TENSAO_THC] < THC_VMIN)
-//			  configVarPl[PL_CONFIG_TENSAO_THC] = THC_VMIN;
-//		}
-//	}
 
 }
 

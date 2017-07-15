@@ -82,24 +82,24 @@ mn_screen_t cfgMaq_page = {.id 		 = SC_PAGE9,
 /************************** Static functions *********************************************/
 static void cfgMaq_key_esc (void *p_arg)
 {
-	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	widgetClick(&btn_voltar, NT_PRESS);
 }
 
 static void cfgMaq_key_release (void *p_arg)
 {
-	if (btn_voltar.click == NT_PRESS)
-	{
-		widgetClick(&btn_voltar, NT_RELEASE);
-		cfgCorte.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cfgCorte, 0 );
-	}
 	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
 	if (*key_pressed == KEY_ENTER)
 	{
-		mn_screen_event_t touch;
+
 		widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
 		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+	else if (*key_pressed == KEY_ESC)
+	{
+		widgetClick(&btn_voltar, NT_RELEASE);
+		touch.event = EVENT_SIGNAL(btn_voltar.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &touch, 0 );
 	}
 }
