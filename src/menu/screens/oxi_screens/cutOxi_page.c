@@ -27,11 +27,12 @@
 #include "tinyg.h"
 #include "controller.h"
 #include "xio.h"
+#include "keyboard.h"
 /* Defines */
 
 #define TIMER_NUM 1
 
-#define WIDGET_NUM 15
+#define WIDGET_NUM 17
 
 #define TIMER_POS 202
 #define TIMER_THC 203
@@ -41,13 +42,16 @@ static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_callback(warn_btn_t btn_type);
+static void warning_esc_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t btn_play = {.name = "b1", .selectable = true};
-//static mn_widget_t btn_stop = {.name = "b1", .selectable = true};
 static mn_widget_t btn_volta = {.name = "b0", .selectable = true};
-static mn_widget_t btn_thcp = {.name = "b2", .selectable = true};
-static mn_widget_t btn_thcm = {.name = "b3", .selectable = true};
+static mn_widget_t btn_zup = {.name = "b2", .selectable = true};
+static mn_widget_t btn_zdown = {.name = "b3", .selectable = true};
+static mn_widget_t btn_timeup = {.name = "b4", .selectable = true};
+static mn_widget_t btn_timefw = {.name = "b5", .selectable = true};
+static mn_widget_t btn_timedown = {.name = "b6", .selectable = true};
 
 static mn_widget_t file_txt = {.name = "t0", .selectable = false};
 static mn_widget_t posx_txt = {.name = "t1", .selectable = false};
@@ -56,22 +60,24 @@ static mn_widget_t posz_txt = {.name = "t3",.selectable = false};
 static mn_widget_t vel_txt = {.name = "t5", .selectable = false};
 static mn_widget_t line_txt = {.name = "t4", .selectable = false};
 static mn_widget_t thcReal_txt = {.name = "t6", .selectable = false};
-static mn_widget_t thcSet_txt = {.name = "t7", .selectable = false};
 
 static mn_widget_t arcook_Led = {.name = "p1", .selectable = false};
 static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
+static mn_warning_t warn_esc_args = { .buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_SAIR,
+											.msg_count = 1,
+											.func_callback = warning_esc_callback};
 static uint32_t event_args;
-static uint32_t btn_id_tch;
-static mn_screen_event_t cutting;
+static uint32_t btn_id;
 static bool machine_is_paused = false;
+static uint8_t programEnd;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
-		&btn_play,&btn_volta,&btn_thcp,&btn_thcm,
-		&file_txt,&posx_txt,&posy_txt,&posz_txt,&vel_txt,&line_txt,&thcReal_txt,&thcSet_txt,&arcook_Led,&tocha_Led,&ohm_Led,
-
+		&btn_play,&btn_volta,&btn_zup,&btn_zdown,&btn_timeup,&btn_timedown,&btn_timefw,
+		&file_txt,&posx_txt,&posy_txt,&posz_txt,&vel_txt,&line_txt,&thcReal_txt,&arcook_Led,&tocha_Led,&ohm_Led,
 };
 
 static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
@@ -98,86 +104,97 @@ mn_screen_t cutOxi_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 extern float zmove;
 /************************** Static functions *********************************************/
-static void cutting_key_enter (void *p_arg)
-{
-	if (machine_is_paused == true)
-	{
-		widgetClick(&btn_play, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
-	}
-}
-
-static void cutting_key_esc (void *p_arg)
-{
-	if (machine_is_paused == false)
-	{
-		widgetClick(&btn_play, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
-	}
-	else
-	{
-		widgetClick(&btn_volta, NT_PRESS);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_PRESSED);
-		xQueueSend( menu.qEvent, &cutting, 0 );
-	}
-}
-
 static void cutting_key_zdown (void *p_arg)
 {
-	widgetClick(&btn_thcm, NT_PRESS);
-	cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &cutting, 0 );
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_zdown.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
 }
 
 static void cutting_key_zup (void *p_arg)
 {
-	widgetClick(&btn_thcp, NT_PRESS);
-	cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &cutting, 0 );
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_zup.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
+}
+
+static void cutting_key_right (void *p_arg)
+{
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_timeup.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
+}
+
+static void cutting_key_left (void *p_arg)
+{
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_timedown.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
 }
 
 static void cutting_key_release (void *p_arg)
 {
-	if (btn_thcm.click == NT_PRESS)
+	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
+	if (*key_pressed == KEY_ENTER)
 	{
-		zmove = 0;
-		widgetClick(&btn_thcm, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		if (machine_is_paused == false)
+		{
+			touch.event = EVENT_SIGNAL(btn_timefw.id,EVENT_CLICK);
+		}
+		else
+		{
+			touch.event = EVENT_SIGNAL(btn_play.id,EVENT_CLICK);
+		}
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_thcp.click == NT_PRESS)
+	else if (*key_pressed == KEY_ESC)
 	{
-		zmove = 0;
-		widgetClick(&btn_thcp, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		if (machine_is_paused == false)
+		{
+			touch.event = EVENT_SIGNAL(btn_play.id,EVENT_CLICK);
+		}
+		else
+		{
+			touch.event = EVENT_SIGNAL(btn_volta.id,EVENT_CLICK);
+		}
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_play.click == NT_PRESS)
+	else if (*key_pressed == KEY_Z_UP)
 	{
-		widgetClick(&btn_play, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		touch.event = EVENT_SIGNAL(btn_zup.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_volta.click == NT_PRESS)
+	else if (*key_pressed == KEY_Z_DOWN)
 	{
-		widgetClick(&btn_volta, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_volta.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		touch.event = EVENT_SIGNAL(btn_zdown.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-
+	else if (*key_pressed == KEY_RIGHT)
+	{
+		touch.event = EVENT_SIGNAL(btn_timeup.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+	else if (*key_pressed == KEY_LEFT)
+	{
+		touch.event = EVENT_SIGNAL(btn_timedown.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
 }
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	cutPl_page.iif_func[SC_KEY_ENTER] = cutting_key_enter;
-	cutPl_page.iif_func[SC_KEY_ESC] = cutting_key_esc;
-	cutPl_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;
-	cutPl_page.iif_func[SC_KEY_ZUP] = cutting_key_zup;
-	cutPl_page.iif_func[SC_KEY_RELEASE] = cutting_key_release;
+	cutOxi_page.iif_func[SC_KEY_ENTER] = mn_screen_idle;
+	cutOxi_page.iif_func[SC_KEY_ESC] = mn_screen_idle;
+	cutOxi_page.iif_func[SC_KEY_DOWN] = mn_screen_idle;
+	cutOxi_page.iif_func[SC_KEY_UP] = mn_screen_idle;
+	cutOxi_page.iif_func[SC_KEY_RIGHT] = cutting_key_right;
+	cutOxi_page.iif_func[SC_KEY_LEFT] = cutting_key_left;
+	cutOxi_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;
+	cutOxi_page.iif_func[SC_KEY_ZUP] = cutting_key_zup;
+	cutOxi_page.iif_func[SC_KEY_RELEASE] = cutting_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -194,10 +211,6 @@ void page_handler (void *p_arg)
 
 
 	mn_screen_event_t *p_page_hdl = p_arg;
-	if (p_page_hdl->event != EVENT_SIGNAL(timer0.id,EVENT_TIMER))
-	{
-		nop();
-	}
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
 		spiffs_stat fileStat;
@@ -206,6 +219,7 @@ void page_handler (void *p_arg)
 		changeTxt(&file_txt,(const char *)fileStat.name);
 		xio_close(cs.primary_src);
 		machine_is_paused = false;
+		programEnd = 0;
 		machine_start();
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
@@ -241,28 +255,33 @@ void page_handler (void *p_arg)
 		}
 
 	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_PRESSED))
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_timefw.id,EVENT_CLICK))
 	{
-		btn_id_tch = btn_thcp.id;
+		machine_oxi_timer_zero();
 	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcp.id,EVENT_CLICK))
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zup.id,EVENT_PRESSED) ||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_PRESSED)||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_timeup.id,EVENT_PRESSED)||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_timedown.id,EVENT_PRESSED))
 	{
-		btn_id_tch = 0;
+		btn_id = GET_ID(p_page_hdl->event);
 	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_PRESSED))
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zup.id,EVENT_CLICK) ||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_CLICK)||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_timeup.id,EVENT_CLICK)||
+			 p_page_hdl->event == EVENT_SIGNAL(btn_timedown.id,EVENT_CLICK))
 	{
-		btn_id_tch = btn_thcm.id;
-	}
-	else if (p_page_hdl->event == EVENT_SIGNAL(btn_thcm.id,EVENT_CLICK))
-	{
-		btn_id_tch = 0;
+		zmove = 0;
+		btn_id = 0;
 	}
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id,EVENT_CLICK))
 	{
-		if (!programEnd)
-			machine_stop(programEnd);
-		mn_screen_change(&auto_page,EVENT_SHOW);
+//		if (!programEnd)
+//			machine_stop(programEnd);
+//		mn_screen_change(&auto_page,EVENT_SHOW);
+		warning_page.p_args = &warn_esc_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == ARCO_OK_INIT_FAILED_EVENT)
 	{
@@ -333,8 +352,6 @@ void page_handler (void *p_arg)
 		changeTxt(&line_txt,textstr);
 		machine_info_update(TIMER_REAL_OXI,textstr);
 		changeTxt(&thcReal_txt,textstr);
-		machine_info_update(TIMER_SET_OXI,textstr);
-		changeTxt(&thcSet_txt,textstr);
 		machine_info_update(VELOCIDADE_INFO,textstr);
 		changeTxt(&vel_txt,textstr);
 
@@ -353,13 +370,21 @@ void page_handler (void *p_arg)
 		else
 			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
 
-		if (btn_id_tch == btn_thcp.id)
+		if (btn_id == btn_zup.id)
 		{
 			zmove = 0.005;
 		}
-		else if (btn_id_tch == btn_thcm.id)
+		else if (btn_id == btn_zdown.id)
 		{
 			zmove = -0.005;
+		}
+		else if (btn_id == btn_timeup.id)
+		{
+			machine_oxi_timer_up();
+		}
+		else if (btn_id == btn_timedown.id)
+		{
+			machine_oxi_timer_down();
 		}
 	}
 }
@@ -375,6 +400,22 @@ static void warning_callback(warn_btn_t btn_type)
 			 event_args == MATERIAL_FAILED_EVENT     ||
 			 event_args == ARCO_OK_FAILED_EVENT)
 	{
-		mn_screen_change(&cutPl_page,EMERGENCIA_EVENT);
+		mn_screen_change(&cutOxi_page,EMERGENCIA_EVENT);
+	}
+}
+
+static void warning_esc_callback(warn_btn_t btn_type)
+{
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM:
+			if (!programEnd)
+			{
+				machine_pause();
+				machine_stop(programEnd);
+			}
+			mn_screen_change(&auto_page,EVENT_SHOW);
+		break;
+		case BTN_PRESSED_NAO: 	mn_screen_change(&cutOxi_page,EMERGENCIA_EVENT);break;
 	}
 }

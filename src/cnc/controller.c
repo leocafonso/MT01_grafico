@@ -212,10 +212,10 @@ static void _controller_HSM()
 	DISPATCH(set_baud_callback());				// perform baud rate update (must be after TX sync)
 #endif
 
-	static uint32_t  linebuffer = 0;
-	if (linebuffer != cm_get_linenum(RUNTIME))
-		printf("line - %d\n", cm_get_linenum(RUNTIME));
-	linebuffer = cm_get_linenum(RUNTIME);
+	//static uint32_t  linebuffer = 0;
+	//if (linebuffer != cm_get_linenum(RUNTIME))
+	//	printf("line - %d\n", cm_get_linenum(RUNTIME));
+	//linebuffer = cm_get_linenum(RUNTIME);
 
 	DISPATCH(macro_func_ptr());				// read and execute next command
 	DISPATCH(_normal_idler());					// blink LEDs slowly to show everything is OK

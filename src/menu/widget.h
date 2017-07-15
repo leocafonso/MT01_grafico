@@ -49,6 +49,7 @@ enum{
 	IMG_PL_LABEL =  112,
 	IMG_LIG_EN = 113,
 	IMG_DESL_EN =  114,
+	IMG_SAIR =  138,
 	NO_IMG = 0xFFFF
 };
 

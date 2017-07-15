@@ -47,6 +47,7 @@ void machine_pause_arcoOKinit(void);
 void machine_pause_ohmico(void);
 void machine_restart(void);
 void machine_restart_sim(void);
+void machine_sim_to_auto(uint8_t event);
 void machine_stop(uint8_t programEnd);
 void machine_torch_state(mc_torch_state_t state);
 void machine_jog(uint8_t axis, mc_dir_t direction);
@@ -60,5 +61,8 @@ void machine_info_update(uint8_t axis, char * textstr);
 bool machine_alarms_get(uint8_t info);
 bool machine_flag_get(flag_name flag);
 void machine_flag_set(flag_name flag,bool mod);
+void machine_oxi_timer_zero(void);
+void machine_oxi_timer_up(void);
+void machine_oxi_timer_down(void);
 
 #endif /* MACHINE_IIF_MACHINE_COM_H_ */

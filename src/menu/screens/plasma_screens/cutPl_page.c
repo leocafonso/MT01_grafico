@@ -27,6 +27,7 @@
 #include "tinyg.h"
 #include "controller.h"
 #include "xio.h"
+#include "keyboard.h"
 /* Defines */
 
 #define TIMER_NUM 1
@@ -64,13 +65,12 @@ static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
 static mn_warning_t warn_esc_args = { .buttonUseInit = BTN_ASK,
-											.img_txt[0] = IMG_ZERO_MAQ,
+											.img_txt[0] = IMG_SAIR,
 											.msg_count = 1,
 											.func_callback = warning_esc_callback};
 
 static uint32_t event_args;
 static uint32_t btn_id_tch;
-static mn_screen_event_t cutting;
 static bool machine_is_paused = false;
 static uint8_t programEnd;
 
@@ -78,7 +78,6 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 {
 		&btn_play,&btn_volta,&btn_thcp,&btn_thcm,
 		&file_txt,&posx_txt,&posy_txt,&posz_txt,&vel_txt,&line_txt,&thcReal_txt,&thcSet_txt,&arcook_Led,&tocha_Led,&ohm_Led,
-
 };
 
 static mn_timer_t timer0 = {.id = TIMER_POS, .name = "tpos"};
@@ -105,75 +104,63 @@ mn_screen_t cutPl_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 
 /************************** Static functions *********************************************/
-static void cutting_key_enter (void *p_arg)
-{
-	if (machine_is_paused == true)
-	{
-		widgetClick(&btn_play, NT_PRESS);
-	}
-}
-
-static void cutting_key_esc (void *p_arg)
-{
-	if (machine_is_paused == false)
-	{
-		widgetClick(&btn_play, NT_PRESS);
-	}
-	else
-	{
-		widgetClick(&btn_volta, NT_PRESS);
-	}
-}
-
 static void cutting_key_zdown (void *p_arg)
 {
-	widgetClick(&btn_thcm, NT_PRESS);
-	cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &cutting, 0 );
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_thcm.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
 }
 
 static void cutting_key_zup (void *p_arg)
 {
-	widgetClick(&btn_thcp, NT_PRESS);
-	cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &cutting, 0 );
+	mn_screen_event_t touch;
+	touch.event = EVENT_SIGNAL(btn_thcp.id, EVENT_PRESSED);
+	xQueueSend( menu.qEvent, &touch, 0 );
 }
 
 static void cutting_key_release (void *p_arg)
 {
-	if (btn_thcm.click == NT_PRESS)
+	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
+	if (*key_pressed == KEY_ENTER)
 	{
-		widgetClick(&btn_thcm, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		touch.event = EVENT_SIGNAL(btn_play.id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_thcp.click == NT_PRESS)
+	else if (*key_pressed == KEY_ESC)
 	{
-		widgetClick(&btn_thcp, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		if (machine_is_paused == false)
+		{
+			touch.event = EVENT_SIGNAL(btn_play.id,EVENT_CLICK);
+		}
+		else
+		{
+			touch.event = EVENT_SIGNAL(btn_volta.id,EVENT_CLICK);
+		}
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_play.click == NT_PRESS)
+	else if (*key_pressed == KEY_Z_UP)
 	{
-		widgetClick(&btn_play, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_play.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		touch.event = EVENT_SIGNAL(btn_thcm.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_volta.click == NT_PRESS)
+	else if (*key_pressed == KEY_Z_DOWN)
 	{
-		widgetClick(&btn_volta, NT_RELEASE);
-		cutting.event = EVENT_SIGNAL(btn_volta.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &cutting, 0 );
+		touch.event = EVENT_SIGNAL(btn_thcp.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-
 }
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
 {
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	cutPl_page.iif_func[SC_KEY_ENTER] = cutting_key_enter;
-	cutPl_page.iif_func[SC_KEY_ESC] = cutting_key_esc;
+	cutPl_page.iif_func[SC_KEY_ENTER] = mn_screen_idle;
+	cutPl_page.iif_func[SC_KEY_ESC] = mn_screen_idle;
+	cutPl_page.iif_func[SC_KEY_DOWN] = mn_screen_idle;
+	cutPl_page.iif_func[SC_KEY_UP] = mn_screen_idle;
+	cutPl_page.iif_func[SC_KEY_RIGHT] = mn_screen_idle;
+	cutPl_page.iif_func[SC_KEY_LEFT] = mn_screen_idle;
 	cutPl_page.iif_func[SC_KEY_ZDOWN] = cutting_key_zdown;
 	cutPl_page.iif_func[SC_KEY_ZUP] = cutting_key_zup;
 	cutPl_page.iif_func[SC_KEY_RELEASE] = cutting_key_release;
@@ -189,9 +176,6 @@ void page_detach (void *p_arg)
 
 void page_handler (void *p_arg)
 {
-	uint8_t programEnd = 0;
-
-
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event != EVENT_SIGNAL(timer0.id,EVENT_TIMER))
 	{

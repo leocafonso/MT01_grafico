@@ -254,6 +254,31 @@ void machine_stop(uint8_t programEnd)
 		zinhibitor = false;
 }
 
+void machine_oxi_timer_zero(void)
+{
+	st_command_dwell(DWELL_EXIT);
+}
+
+void machine_oxi_timer_up(void)
+{
+	if(isDwell)
+	{
+		st_set_dwell_elapsed_time(1);
+		configVarOx[tempoDwell] += 1;
+	}
+}
+
+void machine_oxi_timer_down(void)
+{
+	if(isDwell)
+	{
+		st_set_dwell_elapsed_time(-1);
+		configVarOx[tempoDwell] -= 1;
+	}
+}
+
+
+
 void machine_torch_state(mc_torch_state_t state)
 {
 	TORCH = state;
