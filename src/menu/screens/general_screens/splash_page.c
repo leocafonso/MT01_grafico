@@ -5,26 +5,16 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+/* Includes */
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-#include "r_fl_globals.h"
 
-/* Includes */
-#include "platform.h"
-#include "machine_com.h"
-#include "nextion.h"
-#include "widget.h"
-#include "timer_screen.h"
-#include "screen.h"
-#include "menu.h"
-#include "warning_page.h"
-#include "spiffs.h"
-#include "tinyg.h"
-#include "xio.h"
-#include "machine_com.h"
+#include "pages_includes.h"
+
+#include "r_fl_globals.h"
 /* Defines */
 
 #define TIMER_NUM 1

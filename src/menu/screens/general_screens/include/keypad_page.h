@@ -25,6 +25,7 @@ typedef struct{
 	float step;
 	float min;
 	float max;
+	mn_screen_t *p_ret_page;
 }mn_keypad_t;
 
 #endif /* KEYPAD_MAIN_H_ */

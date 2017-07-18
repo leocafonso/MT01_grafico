@@ -5,24 +5,14 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+/* Includes */
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
 
-/* Includes */
-#include "platform.h"
-#include "machine_com.h"
-#include "nextion.h"
-#include "widget.h"
-#include "timer_screen.h"
-#include "screen.h"
-#include "menu.h"
-#include "warning_page.h"
-#include "spiffs.h"
-#include "tinyg.h"
-#include "xio.h"
+#include "pages_includes.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -50,6 +40,8 @@ static mn_screen_t *p_previous_page;
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer_warning};
 #endif
 /* Global variables and const */
+mn_emergencia_t emergencia_args;
+
 mn_screen_t emergencia_page = {.id 		 = SC_PAGE1,
 					.wt_selected = 0,
 					.name        = "warning",
@@ -72,8 +64,10 @@ extern TaskHandle_t xEmergenciaTaskHandle;
 
 void page_attach (void *p_arg)
 {
+	mn_screen_t *p_page_hdl = p_arg;
+	mn_emergencia_t *p_emg_arg = p_page_hdl->p_args;
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	p_previous_page = page;
+	p_previous_page = p_emg_arg->p_ret_page;
 }
 
 void page_detach (void *p_arg)

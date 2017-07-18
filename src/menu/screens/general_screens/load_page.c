@@ -5,30 +5,14 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+/* Includes */
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
-#include "load_page.h"
 
-/* Includes */
-#include "platform.h"
-#include "machine_com.h"
-#include "nextion.h"
-#include "widget.h"
-#include "timer_screen.h"
-#include "screen.h"
-#include "menu.h"
-#include "warning_page.h"
-#include "spiffs.h"
-#include "tinyg.h"
-#include "xio.h"
-#include "machine_com.h"
-#include "r_flash_loader_rx_if.h"
-#include "spiffs_hw.h"
-#include "load_page.h"
-#include "file.h"
+#include "pages_includes.h"
 /* Defines */
 
 #define TIMER_NUM 1
@@ -211,5 +195,11 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == FILE_LOAD_EVENT)
 	{
 		mn_screen_change(&main_page,EVENT_SHOW);
+	}
+	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
+	{
+		emergencia_args.p_ret_page = page;
+		emergencia_page.p_args = &emergencia_args;
+		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 }

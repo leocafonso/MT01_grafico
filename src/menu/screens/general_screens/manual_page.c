@@ -5,32 +5,14 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
-#include "fInfo_page.h"
+/* Includes */
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
 
-/* Includes */
-#include "platform.h"
-#include "machine_com.h"
-#include "nextion.h"
-#include "widget.h"
-#include "timer_screen.h"
-#include "screen.h"
-#include "menu.h"
-#include "main_page.h"
-#include "spiffs.h"
-#include "state_functions.h"
-#include "keypad_page.h"
-
-#include "tinyg.h"				// #1
-#include "config.h"				// #2
-#include "controller.h"
-#include "xio.h"
-#include "macros.h"
-#include "keyboard.h"
+#include "pages_includes.h"
 
 /* Defines */
 
@@ -159,6 +141,7 @@ void page_handler (void *p_arg)
 		vel_keypad_args.step = 1;
 		vel_keypad_args.min = 10;
 		vel_keypad_args.max = 10000;
+		vel_keypad_args.p_ret_page = page;
 		keypad_page.p_args = &vel_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
@@ -202,6 +185,8 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
 	{
+		emergencia_args.p_ret_page = page;
+		emergencia_page.p_args = &emergencia_args;
 		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 }

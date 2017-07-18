@@ -5,29 +5,14 @@
  *  @author leocafonso
  *  @bug No known bugs.
  */
+/* Includes */
 #include "FreeRTOS.h"
 #include "timers.h"
 #include "task.h"
 #include "queue.h"
 #include "semphr.h"
 
-/* Includes */
-#include "platform.h"
-#include "machine_com.h"
-#include "nextion.h"
-#include "widget.h"
-#include "timer_screen.h"
-#include "screen.h"
-#include "menu.h"
-#include "main_page.h"
-#include "spiffs.h"
-#include "keypad_page.h"
-#include "state_functions.h"
-
-#include "tinyg.h"				// #1
-#include "config.h"				// #2
-#include "controller.h"
-#include "xio.h"
+#include "pages_includes.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -125,7 +110,7 @@ void page_attach (void *p_arg)
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	keypad_page.iif_func[SC_KEY_ESC] = keypad_key_esc;
 	keypad_page.iif_func[SC_KEY_RELEASE] = keypad_key_release;
-	p_previous_page = page;
+	//p_previous_page = page;
 }
 
 void page_detach (void *p_arg)
@@ -169,7 +154,7 @@ void page_handler (void *p_arg)
 		sprintf(result_str, "%0*.*f", digits , decimalCount,*p_keypad->p_var);
 		changeTxt(&num_txt,result_str);
 		snprintf(result_str, sizeof(result_str), "%s", "0");
-		p_back_page = p_previous_page;
+		p_back_page = p_keypad->p_ret_page;
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{
@@ -221,6 +206,8 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
 	{
+		emergencia_args.p_ret_page = page;
+		emergencia_page.p_args = &emergencia_args;
 		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 	else
