@@ -9,7 +9,7 @@
 #ifndef MENU_SCREEN_H_
 #define MENU_SCREEN_H_
 
-
+#define SELECT_WIDTH 3
 
 /**
  * @brief Defines the type of widget

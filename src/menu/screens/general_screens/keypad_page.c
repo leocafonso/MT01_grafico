@@ -89,18 +89,107 @@ mn_screen_t keypad_page = {.id 		 = SC_PAGE10,
 /************************** Static functions *********************************************/
 
 /************************** Public functions *********************************************/
-static void keypad_key_esc (void *p_arg)
-{
-	widgetClick(&btn_cancel, NT_PRESS);
-}
-
 static void keypad_key_release (void *p_arg)
 {
-	if (btn_cancel.click == NT_PRESS)
+	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
+	if (*key_pressed == KEY_ENTER)
 	{
-		widgetClick(&btn_cancel, NT_RELEASE);
-		keypad.event = EVENT_SIGNAL(btn_cancel.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &keypad, 0 );
+		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+	else if (*key_pressed == KEY_ESC)
+	{
+		touch.event = EVENT_SIGNAL(btn_cancel.id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+	else if (*key_pressed == KEY_UP)
+	{
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+		switch (page->wt_selected)
+		{
+			case 0:  page->wt_selected = 0;  break;
+			case 1:  page->wt_selected = 1; break;
+			case 2:  page->wt_selected = 2; break;
+			case 3:  page->wt_selected = 0; break;
+			case 4:  page->wt_selected = 1; break;
+			case 5:  page->wt_selected = 2; break;
+			case 6:  page->wt_selected = 3; break;
+			case 7:  page->wt_selected = 4; break;
+			case 8:  page->wt_selected = 5; break;
+			case 9:  page->wt_selected = 7; break;
+			case 10: page->wt_selected = 8; break;
+			case 11: page->wt_selected = 11; break;
+			case 13: page->wt_selected = 11; break;
+			default: break;
+		}
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
+	}
+	else if (*key_pressed == KEY_DOWN)
+	{
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+		switch (page->wt_selected)
+		{
+			case 0:  page->wt_selected = 3;  break;
+			case 1:  page->wt_selected = 4; break;
+			case 2:  page->wt_selected = 5; break;
+			case 3:  page->wt_selected = 6; break;
+			case 4:  page->wt_selected = 7; break;
+			case 5:  page->wt_selected = 8; break;
+			case 6:  page->wt_selected = 6; break;
+			case 7:  page->wt_selected = 9; break;
+			case 8:  page->wt_selected = 10; break;
+			case 9: page->wt_selected = 9; break;
+			case 10: page->wt_selected = 10; break;
+			case 11: page->wt_selected = 13; break;
+			case 13: page->wt_selected = 13; break;
+			default: break;
+		}
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
+	}
+	else if (*key_pressed == KEY_RIGHT)
+	{
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+		switch (page->wt_selected)
+		{
+			case 0:  page->wt_selected = 1;  break;
+			case 1:  page->wt_selected = 2; break;
+			case 2:  page->wt_selected = 11; break;
+			case 3:  page->wt_selected = 4; break;
+			case 4:  page->wt_selected = 5; break;
+			case 5:  page->wt_selected = 13; break;
+			case 6:  page->wt_selected = 7; break;
+			case 7:  page->wt_selected = 8; break;
+			case 8:  page->wt_selected = 8; break;
+			case 9: page->wt_selected = 10; break;
+			case 10: page->wt_selected = 10; break;
+			case 11: page->wt_selected = 11; break;
+			case 13: page->wt_selected = 13; break;
+			default: break;
+		}
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
+	}
+	else if (*key_pressed == KEY_LEFT)
+	{
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+		switch (page->wt_selected)
+		{
+			case 0:  page->wt_selected = 0;  break;
+			case 1:  page->wt_selected = 0; break;
+			case 2:  page->wt_selected = 1; break;
+			case 3:  page->wt_selected = 3; break;
+			case 4:  page->wt_selected = 3; break;
+			case 5:  page->wt_selected = 4; break;
+			case 6:  page->wt_selected = 6; break;
+			case 7:  page->wt_selected = 6; break;
+			case 8:  page->wt_selected = 7; break;
+			case 9: page->wt_selected = 9; break;
+			case 10: page->wt_selected = 9; break;
+			case 11: page->wt_selected = 2; break;
+			case 13: page->wt_selected = 5; break;
+			default: break;
+		}
+		widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 	}
 }
 /************************** Public functions *********************************************/
@@ -108,7 +197,14 @@ static void keypad_key_release (void *p_arg)
 void page_attach (void *p_arg)
 {
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
-	keypad_page.iif_func[SC_KEY_ESC] = keypad_key_esc;
+	keypad_page.iif_func[SC_KEY_ENTER] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_ESC] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_DOWN] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_UP] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_RIGHT] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_LEFT] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_ZDOWN] = mn_screen_idle;
+	keypad_page.iif_func[SC_KEY_ZUP] = mn_screen_idle;
 	keypad_page.iif_func[SC_KEY_RELEASE] = keypad_key_release;
 	//p_previous_page = page;
 }
@@ -136,6 +232,7 @@ void page_handler (void *p_arg)
 	{
 		uint32_t decNum = 1;
 		uint16_t decCount = 0;
+		page->wt_selected = 0;
 		flagKeypad = false;
 		decimalCount = 0;
 

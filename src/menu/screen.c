@@ -22,7 +22,7 @@
 #include "keyboard.h"
 #include "interpreter_if.h"
 /* Defines */
-#define SELECT_WIDTH 3
+
 
 /* Static functions */
 static void page_key_up (void *p_arg);
