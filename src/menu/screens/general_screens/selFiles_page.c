@@ -23,7 +23,9 @@
 #include "xio.h"
 #include "eeprom.h"
 
+#include "machine_com.h"
 #include "selFiles_page.h"
+#include "load_page.h"
 
 /* Defines */
 
@@ -33,7 +35,6 @@
 
 #define FILE_IN_SCREEN 8
 
-#define FS_PAGE_SIZE              	 (256)
 /* Static functions */
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
@@ -55,6 +56,8 @@ static mn_widget_t t6 = {.name = "t6", .selectable = true};
 static mn_widget_t t7 = {.name = "t7", .selectable = true};
 static uint16_t new_index = 0;
 static mn_screen_event_t selFiles;
+static mn_file_t *gcode_file;
+static mn_load_t load_arg;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -164,14 +167,20 @@ static void selFiles_key_down (void *p_arg)
 static void selFiles_key_esc (void *p_arg)
 {
 	TCHAR str[10];
-	f_getcwd(str, sizeof str / sizeof *str);
-	if (!strcmp(str, "/"))
+	if (FR_OK == f_getcwd(str, sizeof str / sizeof *str))
 	{
-		widgetClick(&bvolta, NT_PRESS);
+		if (!strcmp(str, "/"))
+		{
+			widgetClick(&bvolta, NT_PRESS);
+		}
+		else
+		{
+			widgetClick(&bfolder, NT_PRESS);
+		}
 	}
 	else
 	{
-		widgetClick(&bfolder, NT_PRESS);
+		widgetClick(&bvolta, NT_PRESS);
 	}
 }
 
@@ -236,7 +245,7 @@ void page_detach (void *p_arg)
 	selFiles_page.widgetSize = WIDGET_NUM - 1;
 }
 
-mn_file_t *gcode_file;
+
 void page_handler (void *p_arg)
 {
 	static int16_t listIndex = 0;
@@ -321,13 +330,7 @@ void page_handler (void *p_arg)
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(bok.id,EVENT_CLICK))
 	{
-		FIL File;
-		spiffs_DIR sf_dir;
-		struct spiffs_dirent e;
-		struct spiffs_dirent *pe = &e;
-		s32_t err;
-		void *temp = NULL;
-		uint32_t remain;
+
 		//uint16_t lineSel = selFiles_page.wt_selected;
 		uint16_t lineSel = listIndex;
 
@@ -346,34 +349,11 @@ void page_handler (void *p_arg)
 		}
 		else
 		{
-			f_open(&File,gcode_file->buffer[lineSel],FA_READ);
-
-			spiffs_file *fd = &uspiffs[0].f;
-			spiffs *fs = &uspiffs[0].gSPIFFS;
-
-			SPIFFS_opendir(fs, "/", &sf_dir);
-			pe = SPIFFS_readdir(&sf_dir, pe);
-
-			*fd = SPIFFS_open_by_dirent(fs, pe, SPIFFS_RDWR, 0);
-			if(*fd != SPIFFS_ERR_IS_FREE)
-			{
-				err = SPIFFS_fremove(fs, *fd);
-			}
-
-			*fd = SPIFFS_open(fs, gcode_file->buffer[lineSel], SPIFFS_CREAT | SPIFFS_RDWR | SPIFFS_DIRECT, 0);
-
-			temp = pvPortMalloc( FS_PAGE_SIZE );
-			while(!f_eof(&File))
-			{
-				f_read(&File,temp,FS_PAGE_SIZE,(UINT *)&remain);
-				err = SPIFFS_write(fs, *fd, (u8_t *)temp, remain);
-			}
-
-			vPortFree(temp);
-			f_close(&File);
-			SPIFFS_close(fs, *fd);
+	    	load_arg.type = FILE_LOAD;
+	    	load_arg.p_path = gcode_file->buffer[lineSel];
+	    	load_page.p_args = &load_arg;
+			mn_screen_change(&load_page,EVENT_SHOW);
 			vPortFree(gcode_file);
-			mn_screen_change(&main_page,EVENT_SHOW);
 		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(bvolta.id,EVENT_CLICK))
@@ -381,6 +361,7 @@ void page_handler (void *p_arg)
 		vPortFree(gcode_file);
 		mn_screen_change(&main_page,EVENT_SHOW);
 	}
+
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
 	{
 		mn_screen_change(&emergencia_page,EVENT_SHOW);

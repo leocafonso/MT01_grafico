@@ -28,7 +28,7 @@
 /* Static functions */
 
 /* Static variables and const */
-
+static mn_load_t load_arg;
 /* Global variables and const */
 mn_menu_t menu;
 /* extern variables */
@@ -123,12 +123,10 @@ void menu_task(void)
 
     if(spiffs_init() == SPIFFS_ERR_NOT_A_FS)
     {
-		loadfilesNum |= MEM_FORMAT;
-    }
-	if(loadfilesNum > 0)
-	{
+    	load_arg.type = MEM_FORMAT;
+    	load_page.p_args = &load_arg;
 		mn_screen_change(&load_page,EVENT_SHOW);
-	}
+    }
 	else
 	{
 		mn_screen_change(&splash_page,EVENT_SHOW);

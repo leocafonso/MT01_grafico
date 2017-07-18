@@ -197,11 +197,11 @@ void mn_screen_change (mn_screen_t *p_screen, uint32_t event_in_change)
 	if (page != NULL)
 	{
 		mn_screen_bind_keyboard(page);
-		page->iif_func[SC_DETACH](NULL);
+		page->iif_func[SC_DETACH](page);
 	}
-	NexPage_show(p_screen->name);
-	p_screen->iif_func[SC_ATTACH](NULL);
 	page = p_screen;
+	NexPage_show(p_screen->name);
+	p_screen->iif_func[SC_ATTACH](page);
 	changePage.event = event_in_change;
 	xQueueSend(menu.qEvent, &changePage, 0 );
 }
