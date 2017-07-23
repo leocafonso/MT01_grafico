@@ -242,7 +242,10 @@ void page_handler (void *p_arg)
 		new_index = 0;
 		page->wt_selected = 0;
 		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
-		gcode_file = pvPortMalloc(sizeof(mn_file_t));
+		if (gcode_file == NULL)
+		{
+			gcode_file = pvPortMalloc(sizeof(mn_file_t));
+		}
 		f_chdir("/");
 		showFileDir(gcode_file, "/");
 	}
@@ -340,11 +343,13 @@ void page_handler (void *p_arg)
 	    	load_page.p_args = &load_arg;
 			mn_screen_change(&load_page,EVENT_SHOW);
 			vPortFree(gcode_file);
+			gcode_file = NULL;
 		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(bvolta.id,EVENT_CLICK))
 	{
 		vPortFree(gcode_file);
+		gcode_file = NULL;
 		mn_screen_change(&main_page,EVENT_SHOW);
 	}
 

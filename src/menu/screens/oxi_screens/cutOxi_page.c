@@ -349,15 +349,15 @@ void page_handler (void *p_arg)
 		else
 			widgetChangePic(&tocha_Led, IMG_LED_OFF,NO_IMG);
 
-		if (machine_alarms_get(MATERIAL_INFO))
-			widgetChangePic(&ohm_Led, IMG_LED_ON,NO_IMG);
-		else
-			widgetChangePic(&ohm_Led, IMG_LED_OFF,NO_IMG);
-
-		if (machine_alarms_get(ARCOOK_INFO))
-			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
-		else
-			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
+//		if (machine_alarms_get(MATERIAL_INFO))
+//			widgetChangePic(&ohm_Led, IMG_LED_ON,NO_IMG);
+//		else
+//			widgetChangePic(&ohm_Led, IMG_LED_OFF,NO_IMG);
+//
+//		if (machine_alarms_get(ARCOOK_INFO))
+//			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
+//		else
+//			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
 
 		if (btn_id == btn_zup.id)
 		{
