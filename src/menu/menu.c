@@ -59,9 +59,16 @@ void menu_task(void)
 	}
 	if(R_IsFileLoaderAvailable())
 	{
+		uint8_t val = 0;
+		NexPage_show(load_page.name);
+		NexWidget_visible("p0",NT_HIDE);
+		NexWidget_visible("b0",NT_HIDE);
+		NexWidget_visible("b1",NT_HIDE);
+		NexWidget_visible("j0",NT_SHOW);
 		while(R_loader_progress() < 16)
 		{
-
+			NexWidget_ProgressBar("j0",val*15);
+			val++;
 		}
 		RESET
 	}
