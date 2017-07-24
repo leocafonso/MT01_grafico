@@ -156,6 +156,10 @@ void page_handler (void *p_arg)
 	{
 		mn_screen_change(&cfgParTHC_page, EVENT_SHOW);
 	}
+	else if (p_page_hdl->event == EVENT_SIGNAL(btn_par_maq.id,EVENT_CLICK))
+	{
+		mn_screen_change(&cfgMaqPar_page, EVENT_SHOW);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 		mn_screen_change(&main_page, EVENT_SHOW);

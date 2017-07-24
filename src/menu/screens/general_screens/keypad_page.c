@@ -224,6 +224,7 @@ bool flagKeypad;
 void page_handler (void *p_arg)
 {
 	static char result_str[20] = "0";
+	static float var_initial;
 	float check_boundary;
 	uint8_t btn_num;
 	mn_screen_event_t *p_page_hdl = p_arg;
@@ -235,7 +236,7 @@ void page_handler (void *p_arg)
 		page->wt_selected = 0;
 		flagKeypad = false;
 		decimalCount = 0;
-
+		var_initial = *p_keypad->p_var;
 		decCount = get_dec_digits(*p_keypad->p_var);
 		decimalCount = get_decimal_digits(p_keypad->step);
 
@@ -295,6 +296,15 @@ void page_handler (void *p_arg)
 					eepromWriteConfig(CONFIGVAR_MAQ);
 					mn_screen_change(p_back_page,EVENT_SHOW);
 					break;
+				case KEY_CONFIG_PAR_MAQ:
+					if (var_initial != *p_keypad->p_var)
+					{
+						eepromWriteConfig(CONFIGVAR_PAR_MAQ);
+						RESET
+					}
+					mn_screen_change(p_back_page,EVENT_SHOW);
+					break;
+
 				case KEY_LINES:
 					mn_screen_change(&selLines_page,EVENT_SHOW);
 				break;
