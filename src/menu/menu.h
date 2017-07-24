@@ -15,6 +15,7 @@
 #define EMERGENCIA_EVENT 			1
 #define SIM_ENTRY_EVENT 			2
 #define LIMITES_EVENT 				3
+#define KEYBACK_RET_EVENT 			4
 #define PANEL_TOUCH_EVENT			10
 #define FILE_LOAD_EVENT				11
 

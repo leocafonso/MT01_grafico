@@ -15,6 +15,7 @@
 #include "pages_includes.h"
 
 #include "r_fl_globals.h"
+#include "r_flash_loader_rx_if.h"
 /* Defines */
 
 #define TIMER_NUM 1
@@ -23,7 +24,7 @@
 
 #define TIMER_SPLASH 201
 
-#define TIME_SCREENS 2000
+#define TIME_SCREENS 3000
 
 /* Static functions */
 static void page_handler (void *p_arg);
@@ -99,6 +100,43 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(TIMER_SPLASH, EVENT_TIMER))
 	{
+		if (NexUpload_checkFile())
+			{
+				NexUpload_setDownloadBaudrate(1500000);
+				NexUpload_downloadTftFile();
+				NexUpload_waitingReset(10000);
+				if(R_IsFileLoaderAvailable())
+				{
+					uint8_t val = 0;
+					NexPage_show(load_page.name);
+					NexWidget_visible("p0",NT_HIDE);
+					NexWidget_visible("b0",NT_HIDE);
+					NexWidget_visible("b1",NT_HIDE);
+					NexWidget_visible("j0",NT_SHOW);
+					while(R_loader_progress() < 16)
+					{
+						NexWidget_ProgressBar("j0",(val*100)/15);
+						val++;
+					}
+					RESET
+				}
+				RESET
+			}
+			if(R_IsFileLoaderAvailable())
+			{
+				uint8_t val = 0;
+				NexPage_show(load_page.name);
+				NexWidget_visible("p0",NT_HIDE);
+				NexWidget_visible("b0",NT_HIDE);
+				NexWidget_visible("b1",NT_HIDE);
+				NexWidget_visible("j0",NT_SHOW);
+				while(R_loader_progress() < 16)
+				{
+					NexWidget_ProgressBar("j0",(val*100)/15);
+					val++;
+				}
+				RESET
+			}
 			warn_args.buttonUseInit = BTN_NO_USE;
 			warn_args.buttonUseEnd = BTN_ASK;
 			warn_args.img_txt[0] = IMG_WARNING_1;

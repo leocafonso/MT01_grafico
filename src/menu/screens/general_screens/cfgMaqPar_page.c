@@ -47,6 +47,7 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 		&btn_par[0],&btn_par[1],&btn_par[2],&btn_par[3],&btn_par[4],&btn_voltar
 };
 
+static float configVarParMaq_buffer[CFG_PAR_MAQ_MAX];
 static mn_keypad_t cfgPar_keypad_args;
 
 #if (TIMER_NUM > 0)
@@ -115,12 +116,17 @@ void page_handler (void *p_arg)
 	static char result_str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW ||
-		p_page_hdl->event == EMERGENCIA_EVENT)
+		p_page_hdl->event == EMERGENCIA_EVENT ||
+		p_page_hdl->event == KEYBACK_RET_EVENT)
 	{
 		uint32_t decNum;
 		uint16_t decCount;
 		uint16_t decimalCount;
 		uint16_t digits;
+		if (p_page_hdl->event == EVENT_SHOW)
+		{
+			memcpy(configVarParMaq_buffer, configVarParMaq, sizeof (configVarParMaq));
+		}
 		for (uint8_t index = 0; index < 5; index++)
 		{
 			decNum = 1;
@@ -158,6 +164,19 @@ void page_handler (void *p_arg)
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
+
+		if (memcmp(configVarParMaq_buffer,configVarParMaq, sizeof(configVarParMaq)) != 0)
+		{
+			NexPage_show(load_page.name);
+			NexWidget_visible("p0",NT_HIDE);
+			NexWidget_visible("b0",NT_HIDE);
+			NexWidget_visible("b1",NT_HIDE);
+			NexWidget_visible("t0",NT_SHOW);
+			NexWidget_txt("t0","Resetando...");
+			vTaskDelay(500 / portTICK_PERIOD_MS);
+			RESET;
+		}
+
 		mn_screen_change(&cfgMaq_page, EVENT_SHOW);
 	}
 	if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)

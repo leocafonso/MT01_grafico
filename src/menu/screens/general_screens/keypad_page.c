@@ -304,11 +304,9 @@ void page_handler (void *p_arg)
 					if (var_initial != *p_keypad->p_var)
 					{
 						eepromWriteConfig(CONFIGVAR_PAR_MAQ);
-						RESET
 					}
-					mn_screen_change(p_back_page,EVENT_SHOW);
+					mn_screen_change(p_back_page,KEYBACK_RET_EVENT);
 					break;
-
 				case KEY_LINES:
 					mn_screen_change(&selLines_page,EVENT_SHOW);
 				break;

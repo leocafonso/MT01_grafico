@@ -107,6 +107,7 @@ void find_files (mn_file_t *p_file,const char *path)
    for (;;) {
 	   fr = f_readdir(&p_file->dir, &p_file->fil);                   /* Read a directory item */
 	   if (fr != FR_OK || p_file->fil.fname[0] == 0) break;  /* Break on error or end of dir */
+	   if (!strcmp("System Volume Information", p_file->fil.fname)) continue;
 	   if (strlen(p_file->fil.fname) < MAX_FILE_NAME)
 	   {
 		   if (p_file->fil.fattrib & AM_DIR)
