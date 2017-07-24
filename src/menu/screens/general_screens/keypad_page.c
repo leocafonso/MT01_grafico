@@ -288,6 +288,10 @@ void page_handler (void *p_arg)
 					eepromWriteConfig(CONFIGVAR_PL);
 					mn_screen_change(p_back_page,EVENT_SHOW);
 					break;
+				case KEY_CONFIG_OX:
+					eepromWriteConfig(CONFIGVAR_OX);
+					mn_screen_change(p_back_page,EVENT_SHOW);
+					break;
 				case KEY_CONFIG_JOG:
 					eepromWriteConfig(CONFIGVAR_JOG);
 					mn_screen_change(p_back_page,EVENT_SHOW);
