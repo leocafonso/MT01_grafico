@@ -32,6 +32,7 @@
 #include "text_parser.h"
 #include "canonical_machine.h"
 #include "planner.h"
+#include "hardware.h"
 #include "switch.h"
 #include "report.h"
 
@@ -81,13 +82,14 @@ struct hmHomingSingleton {			// persistent homing runtime variables
 	float saved_jerk;				// saved and restored for each axis homed
 };
 static struct hmHomingSingleton hm;
-
+extern bool homming_abort;
 /**** NOTE: global prototypes and other .h info is located in canonical_machine.h ****/
 
 static stat_t _set_homing_func(stat_t (*func)(int8_t axis));
 static stat_t _homing_axis_start(int8_t axis);
 static stat_t _homing_axis_clear(int8_t axis);
 static stat_t _homing_axis_search(int8_t axis);
+static stat_t _homing_axis2_search(int8_t axis);				// start the search
 static stat_t _homing_axis_latch(int8_t axis);
 static stat_t _homing_axis_zero_backoff(int8_t axis);
 static stat_t _homing_axis_set_zero(int8_t axis);
@@ -247,7 +249,10 @@ static stat_t _homing_axis_start(int8_t axis)
 	if (fp_ZERO(cm.a[axis].search_velocity)) return (_homing_error_exit(axis, STAT_HOMING_ERROR_ZERO_SEARCH_VELOCITY));
 	if (fp_ZERO(cm.a[axis].latch_velocity)) return (_homing_error_exit(axis, STAT_HOMING_ERROR_ZERO_LATCH_VELOCITY));
 	if (cm.a[axis].latch_backoff < 0) return (_homing_error_exit(axis, STAT_HOMING_ERROR_NEGATIVE_LATCH_BACKOFF));
-
+//	if (LIMIT_X1 == 0 || LIMIT_X2 == 0)
+//	{
+//		return (_homing_error_exit(axis, STAT_HOMING_ERROR_NEGATIVE_LATCH_BACKOFF));
+//	}
 	// calculate and test travel distance
 	float travel_distance = fabs(cm.a[axis].travel_max - cm.a[axis].travel_min) + cm.a[axis].latch_backoff;
 	if (fp_ZERO(travel_distance)) return (_homing_error_exit(axis, STAT_HOMING_ERROR_TRAVEL_MIN_MAX_IDENTICAL));
@@ -351,7 +356,45 @@ static stat_t _homing_axis_clear(int8_t axis)				// first clear move
 
 static stat_t _homing_axis_search(int8_t axis)				// start the search
 {
+	if (homming_abort == true)
+	{
+		return (_set_homing_func(_homing_abort));
+	}
 	cm_set_axis_jerk(axis, cm.a[axis].jerk_homing);			// use the homing jerk for search onward
+	_homing_axis_move(axis, hm.search_travel, hm.search_velocity);
+
+	if (axis == AXIS_X)
+	{
+		sw_homming = X1_OR_X2;
+		return (_set_homing_func(_homing_axis2_search));
+	}
+	else
+	{
+		sw_homming = Y;
+		return (_set_homing_func(_homing_axis_latch));
+	}
+}
+
+static stat_t _homing_axis2_search(int8_t axis)				// start the search
+{
+	if (homming_abort == true)
+	{
+		return (_set_homing_func(_homing_abort));
+	}
+	if (LIMIT_X1 == 0 && LIMIT_X2 == 0)
+	{
+		return (_set_homing_func(_homing_axis_latch));
+	}
+	if (LIMIT_X1 == 0)
+	{
+		sw_homming = X2;
+		x2inhibitor = true;
+	}
+	if (LIMIT_X2 == 0)
+	{
+		sw_homming = X1;
+		x1inhibitor = true;
+	}
 	_homing_axis_move(axis, hm.search_travel, hm.search_velocity);
     return (_set_homing_func(_homing_axis_latch));
 }
@@ -360,6 +403,20 @@ static stat_t _homing_axis_latch(int8_t axis)				// latch to switch open
 {
 	// verify assumption that we arrived here because of homing switch closure
 	// rather than user-initiated feedhold or other disruption
+	if (homming_abort == true)
+	{
+		return (_set_homing_func(_homing_abort));
+	}
+	if (axis == AXIS_X)
+	{
+		x1inhibitor = false;
+		x2inhibitor = false;
+		sw_homming = X1_AND_X2;
+	}
+	else if (axis == AXIS_Y)
+	{
+		sw_homming = Y;
+	}
 #ifndef __NEW_SWITCHES
 	if (sw.state[hm.homing_switch] != SW_CLOSED)
 		return (_set_homing_func(_homing_abort));
@@ -416,6 +473,9 @@ static stat_t _homing_axis_move(int8_t axis, float target, float velocity)
 
 static stat_t _homing_abort(int8_t axis)
 {
+	homming_abort = false;
+	x1inhibitor = false;
+	x2inhibitor = false;
 	cm_set_axis_jerk(axis, hm.saved_jerk);					// restore the max jerk value
 #ifdef __NEW_SWITCHES
 	_restore_switch_settings(&sw.s[hm.homing_switch_axis][hm.homing_switch_position]);
@@ -465,6 +525,7 @@ static stat_t _homing_finalize_exit(int8_t axis)			// third part of return to ho
 	cm_set_motion_mode(MODEL, MOTION_MODE_CANCEL_MOTION_MODE);
 	cm_cycle_end();
 	cm.cycle_state = CYCLE_OFF;
+	sw_homming = X1_OR_X2;
 	return (STAT_OK);
 }
 

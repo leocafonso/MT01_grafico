@@ -43,6 +43,7 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 static mn_screen_event_t warning;
 static mn_timer_t timer_warning = {.id = TIMER_WARNING, .name = "twar"};
+static mn_warning_t *p_emg_warning;
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer_warning};
@@ -180,8 +181,13 @@ void page_handler (void *p_arg)
 	static uint8_t msg_counter = 0;
 	mn_screen_event_t *p_page_hdl = p_arg;
 	mn_warning_t *p_warning = p_page_hdl->p_arg;
-	if (p_page_hdl->event == EVENT_SHOW)
+	if (p_page_hdl->event == EVENT_SHOW ||
+		p_page_hdl->event == EMERGENCIA_EVENT)
 	{
+		if (p_page_hdl->event == EMERGENCIA_EVENT)
+		{
+			p_warning = p_emg_warning;
+		}
 		widgetChangePic(&msg_pic, p_warning->img_txt[0],NO_IMG);
 		widgetVisible(&msg_pic, NT_SHOW);
 		warning_key_keyborad_bind (p_warning->buttonUseInit);
@@ -264,6 +270,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
 	{
+		p_emg_warning = p_warning;
 		emergencia_args.p_ret_page = page;
 		emergencia_page.p_args = &emergencia_args;
 		mn_screen_change(&emergencia_page,EVENT_SHOW);

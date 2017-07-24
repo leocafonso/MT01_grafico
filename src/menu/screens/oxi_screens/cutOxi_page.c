@@ -30,6 +30,7 @@ static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
 static void warning_callback(warn_btn_t btn_type);
 static void warning_esc_callback(warn_btn_t btn_type);
+static void warning_limites_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t btn_play = {.name = "b1", .selectable = true};
@@ -56,6 +57,12 @@ static mn_warning_t warn_esc_args = { .buttonUseInit = BTN_ASK,
 											.img_txt[0] = IMG_SAIR,
 											.msg_count = 1,
 											.func_callback = warning_esc_callback};
+
+static mn_warning_t warn_limites_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_LIMITES,
+											.msg_count = 1,
+											.func_callback = warning_limites_callback
+										   };
 static uint32_t event_args;
 static uint32_t btn_id;
 static bool machine_is_paused = false;
@@ -218,6 +225,14 @@ void page_handler (void *p_arg)
 		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
+	}
+	else if (p_page_hdl->event == LIMITES_EVENT)
+	{
+		widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
+		machine_is_paused = true;
+		machine_pause();
+		warning_page.p_args = &warn_limites_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == SIM_ENTRY_EVENT)
 	{
@@ -407,4 +422,9 @@ static void warning_esc_callback(warn_btn_t btn_type)
 		break;
 		case BTN_PRESSED_NAO: 	mn_screen_change(&cutOxi_page,EMERGENCIA_EVENT);break;
 	}
+}
+
+static void warning_limites_callback(warn_btn_t btn_type)
+{
+	mn_screen_change(&cutOxi_page,EMERGENCIA_EVENT);
 }

@@ -99,10 +99,10 @@
 #define X_JUNCTION_DEVIATION	JUNCTION_DEVIATION	// xjd
 #define X_SWITCH_MODE_MIN		SW_MODE_HOMING		// xsn		SW_MODE_DISABLED, SW_MODE_HOMING, SW_MODE_LIMIT, SW_MODE_HOMING_LIMIT
 #define X_SWITCH_MODE_MAX 		SW_MODE_DISABLED	// xsx		SW_MODE_DISABLED, SW_MODE_HOMING, SW_MODE_LIMIT, SW_MODE_HOMING_LIMIT
-#define X_SEARCH_VELOCITY		3000				// xsv		minus means move to minimum switch
+#define X_SEARCH_VELOCITY		1500				// xsv		minus means move to minimum switch
 #define X_LATCH_VELOCITY		100					// xlv		mm/min
-#define X_LATCH_BACKOFF			10					// xlb		mm
-#define X_ZERO_BACKOFF			2					// xzb		mm
+#define X_LATCH_BACKOFF			30					// xlb		mm
+#define X_ZERO_BACKOFF			10					// xzb		mm
 
 #define Y_AXIS_MODE				AXIS_STANDARD
 #define Y_VELOCITY_MAX			10000
@@ -114,10 +114,10 @@
 #define Y_JUNCTION_DEVIATION	JUNCTION_DEVIATION
 #define Y_SWITCH_MODE_MIN		SW_MODE_HOMING
 #define Y_SWITCH_MODE_MAX		SW_MODE_DISABLED
-#define Y_SEARCH_VELOCITY		3000
+#define Y_SEARCH_VELOCITY		1500
 #define Y_LATCH_VELOCITY		100
-#define Y_LATCH_BACKOFF			10
-#define Y_ZERO_BACKOFF			2
+#define Y_LATCH_BACKOFF			30
+#define Y_ZERO_BACKOFF			10
 
 #define Z_AXIS_MODE				AXIS_STANDARD
 #define Z_VELOCITY_MAX			900

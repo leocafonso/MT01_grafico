@@ -119,6 +119,7 @@ void find_files (mn_file_t *p_file,const char *path)
 			  snprintf(p_file->buffer[p_file->filesNum],MAX_FILE_NAME, "%s", p_file->fil.fname);
 			  p_file->filesNum++;
 		   }
+		   if (p_file->filesNum > MAX_FILES_BUFFER) break;
 	   }
    }
    sort_array(p_file->buffer[0],p_file->filesNum);

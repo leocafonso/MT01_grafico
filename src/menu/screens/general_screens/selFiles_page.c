@@ -231,6 +231,7 @@ void page_detach (void *p_arg)
 	selFiles_page.widgetSize = WIDGET_NUM - 1;
 }
 
+uint32_t size_heap;
 
 void page_handler (void *p_arg)
 {
@@ -244,7 +245,22 @@ void page_handler (void *p_arg)
 		widgetSelRec(page->p_widget[page->wt_selected],3, SELECT_COLOR);
 		if (gcode_file == NULL)
 		{
-			gcode_file = pvPortMalloc(sizeof(mn_file_t));
+			size_heap = xPortGetFreeHeapSize();
+			if (size_heap > sizeof(mn_file_t))
+			{
+				gcode_file = pvPortMalloc(sizeof(mn_file_t));
+			}
+			else
+			{
+
+				mn_screen_change(&main_page,EVENT_SHOW);
+				return;
+			}
+		}
+		else
+		{
+			mn_screen_change(&main_page,EVENT_SHOW);
+			return;
 		}
 		f_chdir("/");
 		showFileDir(gcode_file, "/");

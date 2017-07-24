@@ -100,6 +100,7 @@ void menu_task(void)
 	mn_screen_bind_keyboard(&cfgMaq_page);
 	mn_screen_bind_keyboard(&manual_page);
 	mn_screen_bind_keyboard(&cfgParTHC_page);
+	mn_screen_bind_keyboard(&zerarmaq_page);
 
 	screenGetWidgetsInfo(&splash_page);
 	screenGetWidgetsInfo(&warning_page);
@@ -124,6 +125,7 @@ void menu_task(void)
 	screenGetWidgetsInfo(&cfgMaq_page);
 	screenGetWidgetsInfo(&manual_page);
 	screenGetWidgetsInfo(&cfgParTHC_page);
+	screenGetWidgetsInfo(&zerarmaq_page);
 
 	vTaskDelay(500/portTICK_PERIOD_MS);
     xTaskCreate( (pdTASK_CODE)keyboard_task,     "keyboard_task    ",  512, NULL, 3, NULL); /* keyboard_task      */

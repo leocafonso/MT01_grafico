@@ -37,8 +37,8 @@ static void warning_zeromaqinit_callback(warn_btn_t btn_type);
 static mn_widget_t txt_version = {.name =  "t0", .selectable = false};
 static mn_timer_t timer0 = {.id = TIMER_SPLASH, .name = "tspl"};
 static mn_warning_t warn_args;
-static mn_warning_t warn_zeromaq_args = { 	.buttonUseInit = BTN_OK,
-											.img_txt[0] = IMG_ZERO_MAQ_INIT,
+static mn_warning_t warn_zeromaq_args = { 	.buttonUseInit = BTN_ASK,
+											.img_txt[0] = IMG_CONTINUAR,
 											.msg_count = 1,
 											.func_callback = warning_zeromaqinit_callback
 										   };
@@ -134,6 +134,13 @@ static void warning_callback(warn_btn_t btn_type)
 static void warning_zeromaqinit_callback(warn_btn_t btn_type)
 {
 	machine_enable();
-	machine_zerar_maquina();
-	mn_screen_change(&main_page,EVENT_SHOW);
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM: mn_screen_change(&zerarmaq_page,EVENT_SHOW); break;
+		case BTN_PRESSED_NAO: mn_screen_change(&main_page,EVENT_SHOW); break;
+	}
+
+//	machine_enable();
+//	machine_zerar_maquina();
+//	mn_screen_change(&main_page,EVENT_SHOW);
 }

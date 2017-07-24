@@ -676,12 +676,16 @@ void timer_dda_callback(void *pdata)
 			INCREMENT_ENCODER(MOTOR_2);
 		}
 		if ((st_run.mot[MOTOR_3].substep_accumulator += st_run.mot[MOTOR_3].substep_increment) > 0) {
-			MOTOR3_STEP = TRUE;
+			if(!x1inhibitor){
+				MOTOR3_STEP = TRUE;
+			}
 			st_run.mot[MOTOR_3].substep_accumulator -= st_run.dda_ticks_X_substeps;
 			INCREMENT_ENCODER(MOTOR_3);
 		}
 		if ((st_run.mot[MOTOR_4].substep_accumulator += st_run.mot[MOTOR_4].substep_increment) > 0) {
-			MOTOR4_STEP = TRUE;
+			if(!x2inhibitor){
+				MOTOR4_STEP = TRUE;
+			}
 			st_run.mot[MOTOR_4].substep_accumulator -= st_run.dda_ticks_X_substeps;
 			INCREMENT_ENCODER(MOTOR_4);
 		}

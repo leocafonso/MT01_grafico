@@ -53,6 +53,7 @@ void machine_torch_state(mc_torch_state_t state);
 void machine_jog(uint8_t axis, mc_dir_t direction);
 void machine_jog_start(void);
 void machine_jog_stop(void) ;
+void machine_jog_pause(void);
 void machine_zerar_maquina(void);
 void machine_zerar_peca(void);
 void machine_homming_eixos(void);

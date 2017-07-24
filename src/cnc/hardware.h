@@ -148,6 +148,10 @@ extern "C"{
 #define ARCO_OK  	PORT2.PIDR.BIT.B1
 #define EMERGENCIA  PORT2.PIDR.BIT.B0
 
+#define LIMIT_X1  PORTB.PIDR.BIT.B1
+#define LIMIT_X2  PORTB.PIDR.BIT.B2
+#define LIMIT_Y   LIMIT_X1
+
 #define MOTOR_FOWARD	1
 #define MOTOR_REVERSE   0
 #define TRUE			0

@@ -38,6 +38,11 @@
  * 	The normally closed switch modes (NC) trigger an interrupt on the rising edge
  *	and lockout subsequent interrupts for the defined lockout period. Ditto on the method.
  */
+#include "FreeRTOS.h"
+#include "timers.h"
+#include "task.h"
+#include "queue.h"
+#include "semphr.h"
 
 #include "tinyg.h"
 #include "config.h"
@@ -46,8 +51,13 @@
 #include "canonical_machine.h"
 #include "text_parser.h"
 
+#include "menu.h"
+
 struct swStruct sw;
 bool zinhibitor = false;
+bool x1inhibitor = false;
+bool x2inhibitor = false;
+uint8_t sw_homming = 0;
 
 static void _switch_isr_helper(uint8_t sw_num);
 
@@ -105,8 +115,73 @@ static void _switch_isr_helper(uint8_t sw_num)
 	read_switch(sw_num);							// sets the state value in the struct
 }
 
+bool latch_limitx1 = true;
+bool latch_limitx2 = true;
+bool latch_limity = true;
+
+void switch_homming(uint8_t type)
+{
+	switch (type)
+	{
+	case X1_OR_X2:
+//	if (LIMIT_X1 != latch_limitx1)
+//		{
+//			_switch_isr_helper(SW_MIN_X);
+//			_switch_isr_helper(SW_MIN_Y);
+//		}
+//		latch_limitx1 = LIMIT_X1;
+//		if (LIMIT_X2 != latch_limitx2)
+//		{
+//			_switch_isr_helper(SW_MIN_X);
+//		}
+//		latch_limitx2 = LIMIT_X2;
+		if (LIMIT_X2 != latch_limitx2 || LIMIT_X1 != latch_limitx1)
+		{
+			_switch_isr_helper(SW_MIN_X);
+		}
+//		latch_limitx1 = LIMIT_X1;
+//		latch_limitx2 = LIMIT_X2;
+		break;
+	case X1:
+		if (LIMIT_X1 != latch_limitx1)
+		{
+			_switch_isr_helper(SW_MIN_X);
+		}
+
+		break;
+	case X2:
+		if (LIMIT_X2 != latch_limitx2)
+		{
+			_switch_isr_helper(SW_MIN_X);
+		}
+
+		break;
+	case X1_AND_X2:
+		if (LIMIT_X2 != latch_limitx2 || LIMIT_X1 != latch_limitx1)
+		{
+			if (LIMIT_X1 == 1 && LIMIT_X2 == 1)
+				_switch_isr_helper(SW_MIN_X);
+		}
+		break;
+	case Y:
+		if (LIMIT_Y != latch_limity)
+		{
+			_switch_isr_helper(SW_MIN_Y);
+		}
+
+		break;
+	}
+	latch_limitx1 = LIMIT_X1;
+	latch_limitx2 = LIMIT_X2;
+	latch_limity = LIMIT_Y;
+}
+
 void switch_rtc_callback(void)
 {
+	mn_screen_event_t mn_limit;
+
+	switch_homming(sw_homming);
+
 	for (uint8_t i=0; i < NUM_SWITCHES; i++) {
 		if (sw.mode[i] == SW_MODE_DISABLED || sw.debounce[i] == SW_IDLE)
             continue;
@@ -130,6 +205,11 @@ void switch_rtc_callback(void)
 				cm_request_feedhold();
 			} else if (sw.mode[i] & SW_LIMIT_BIT) {		// should be a limit switch, so fire it.
 				sw.limit_flag = true;					// triggers an emergency shutdown
+			}else if (cm.cycle_state == CYCLE_MACHINING) {
+//				cm_request_feedhold();
+//				TORCH = FALSE;
+				mn_limit.event = LIMITES_EVENT;
+				xQueueSend( menu.qEvent, &mn_limit, 0 );
 			}
 		}
 	}
@@ -172,9 +252,9 @@ uint8_t read_switch(uint8_t sw_num)
 
 	uint8_t read = 0;
 	switch (sw_num) {
-//		case SW_MIN_X: { read = hw.sw_port[AXIS_X]->IN & SW_MIN_BIT_bm; break;}
-//		case SW_MAX_X: { read = hw.sw_port[AXIS_X]->IN & SW_MAX_BIT_bm; break;}
-//		case SW_MIN_Y: { read = hw.sw_port[AXIS_Y]->IN & SW_MIN_BIT_bm; break;}
+		case SW_MIN_X: { read = !LIMIT_X1 | !LIMIT_X2; break;}
+//		case SW_MAX_X: { read = !LIMIT_X1 | !LIMIT_X2; break;}
+		case SW_MIN_Y: { read = !LIMIT_Y; break;}
 //		case SW_MAX_Y: { read = hw.sw_port[AXIS_Y]->IN & SW_MAX_BIT_bm; break;}
 		case SW_MIN_Z: { read = MATERIAL; break;}
 //		case SW_MAX_Z: { read = MATERIAL; break;}

@@ -38,7 +38,7 @@ static mn_widget_t btn_zerar_maq = {.name = "b5", .selectable = true};
 static mn_widget_t btn_voltar = {.name = "b0", .selectable = true};
 
 static mn_warning_t warn_zerarmaquina_args = { .buttonUseInit = BTN_ASK,
-											.img_txt[0] = IMG_ZERO_MAQ,
+											.img_txt[0] = IMG_CONTINUAR,
 											.msg_count = 1,
 											.func_callback = warning_zerarmaquina_callback};
 
@@ -195,10 +195,9 @@ static void warning_zerarmaquina_callback(warn_btn_t btn_type)
 {
 	switch (btn_type)
 	{
-		case BTN_PRESSED_SIM: machine_zerar_maquina(); break;
-		case BTN_PRESSED_NAO: break;
+		case BTN_PRESSED_SIM: mn_screen_change(&zerarmaq_page,EVENT_SHOW);break;
+		case BTN_PRESSED_NAO: mn_screen_change(&manual_page,EVENT_SHOW);break;
 	}
-	mn_screen_change(&manual_page,EVENT_SHOW);
 }
 
 static void warning_zerarpeca_callback(warn_btn_t btn_type)

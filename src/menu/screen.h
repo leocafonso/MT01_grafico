@@ -93,6 +93,7 @@ extern mn_screen_t fInfoOX_page;
 extern mn_screen_t cfgMaq_page;
 extern mn_screen_t manual_page;
 extern mn_screen_t cfgParTHC_page;
+extern mn_screen_t zerarmaq_page;
 
 
 extern void (*mn_func[SC_KEY_TOTAL])(void *p_arg);

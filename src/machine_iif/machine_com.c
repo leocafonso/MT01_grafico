@@ -301,10 +301,26 @@ void machine_jog_start(void)
 	intepreterRunning = true;
 }
 
-void machine_jog_stop(void)
+void machine_jog_pause(void)
 {
 	cm_request_feedhold();
 	cm_request_queue_flush();
+}
+
+void machine_jog_stop(void)
+{
+	if (cm.cycle_state == CYCLE_MACHINING)
+	{
+		cm_request_feedhold();
+		cm_request_queue_flush();
+		while(cm.queue_flush_requested == true)
+		{
+			vTaskDelay(1/portTICK_PERIOD_MS);
+		}
+	}
+
+	macro_func_ptr = command_idle;
+	intepreterRunning = false;
 }
 
 void machine_zerar_maquina(void)

@@ -39,6 +39,8 @@ static void jog_key_zup (void *p_arg);
 
 static void warning_zerarpeca_callback(warn_btn_t btn_type);
 static void warning_semzeromaquina_callback(warn_btn_t btn_type);
+static void warning_limites_callback(warn_btn_t btn_type);
+
 
 /* Static variables and const */
 static mn_widget_t btn_cima = {.name = "b0", .selectable = true};
@@ -73,6 +75,12 @@ static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
 											.img_txt[0] = IMG_SEM_ZERO_MAQ,
 											.msg_count = 1,
 											.func_callback = warning_semzeromaquina_callback
+										   };
+
+static mn_warning_t warn_limites_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_LIMITES,
+											.msg_count = 1,
+											.func_callback = warning_limites_callback
 										   };
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
@@ -273,6 +281,13 @@ void page_handler (void *p_arg)
 		mn_screen_create_timer(&timer0,200);
 		mn_screen_start_timer(&timer0);
 	}
+	else if (p_page_hdl->event == LIMITES_EVENT)
+	{
+		machine_jog_pause();
+		machine_torch_state(MC_TORCH_OFF);
+		warning_page.p_args = &warn_limites_args;
+		mn_screen_change(&warning_page,EVENT_SHOW);
+	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_cima.id,EVENT_PRESSED))
 	{
 		JogkeyPressed = KEY_UP;
@@ -311,7 +326,7 @@ void page_handler (void *p_arg)
 			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_CLICK))
 	{
 		JogkeyPressed = 0;
-		machine_jog_stop();
+		machine_jog_pause();
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_tocha.id,EVENT_CLICK))
 	{
@@ -361,7 +376,7 @@ void page_handler (void *p_arg)
 	{
 		machine_torch_state(MC_TORCH_OFF);
 		JogkeyPressed = 0;
-		machine_jog_stop();
+		machine_jog_pause();
 		emergencia_args.p_ret_page = page;
 		emergencia_page.p_args = &emergencia_args;
 		mn_screen_change(&emergencia_page,EVENT_SHOW);
@@ -410,4 +425,9 @@ static void warning_zerarpeca_callback(warn_btn_t btn_type)
 static void warning_semzeromaquina_callback(warn_btn_t btn_type)
 {
 	mn_screen_change(&jog_page,EVENT_SHOW);
+}
+
+static void warning_limites_callback(warn_btn_t btn_type)
+{
+	mn_screen_change(&jog_page,EMERGENCIA_EVENT);
 }

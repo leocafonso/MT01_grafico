@@ -371,11 +371,18 @@ stat_t ZerarMaquina_Macro(void)
 	switch (state)
 	{
 
-		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
-					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
-					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
-					state++; break;
+//		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
+//					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
+//					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
+//					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
+//					state++; break;
+	case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SEARCH_HOME);
+				SET_NON_MODAL_MACRO(target[AXIS_X], 0);
+				SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
+				state++; break;
+	case 1: SET_MODAL_MACRO (MODAL_GROUP_M4, program_flow, PROGRAM_END);
+			state++; break;
+
 		default:state = 0; 	intepreterRunning = false; macro_func_ptr = command_idle; return (STAT_OK);
 	}
 	_execute_gcode_block();
