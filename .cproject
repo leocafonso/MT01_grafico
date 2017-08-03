@@ -425,6 +425,11 @@
 								<option id="com.renesas.cdt.renesas.Compiler.option.deviceShortName.43925239" name="DeviceShortName" superClass="com.renesas.cdt.renesas.Compiler.option.deviceShortName" value="R5F563NBDxFP" valueType="string"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Compiler.option.incFileDirectories.213519813" name="Include file directories" superClass="com.renesas.cdt.renesas.Compiler.option.incFileDirectories" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${TCINSTALL}/include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_rspi_rx}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_rspi_rx/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_spi_flash}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_spi_flash/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_spi_flash/src/chips}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/r_bsp}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/include/r_config}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/HAL/include}&quot;"/>

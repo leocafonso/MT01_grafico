@@ -742,7 +742,6 @@ static stat_t _exec_aline_segment()
 		for (i=0; i<AXES; i++) {
 			mr.gm.target[i] = mr.position[i] + (mr.unit[i] * segment_length);
 		}
-		//if (configsVar->currentState == STATE_CONFIG_AUTO_MODE)
 		if (page == &cutPl_page)
 		{
 			if((configFlags[MODOMAQUINA] == MODO_PLASMA) && isCuttingGet() == true){
@@ -752,9 +751,6 @@ static stat_t _exec_aline_segment()
 			if((configFlags[MODOMAQUINA] == MODO_PLASMA) && isCuttingGet() == false && sim == false){
 				zmove = 0;
 			}
-		}else if (configsVar->currentState == STATE_CONFIG_MANUAL_MODE)
-		{
-
 		}
 		if(zmove != 0)
 		{

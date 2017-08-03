@@ -51,7 +51,6 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 };
 
 static mn_keypad_t cfgCorte_keypad_args;
-static mn_screen_event_t cfgCorte;
 
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};

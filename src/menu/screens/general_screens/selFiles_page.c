@@ -259,8 +259,19 @@ void page_handler (void *p_arg)
 		}
 		else
 		{
-			mn_screen_change(&main_page,EVENT_SHOW);
-			return;
+			vPortFree(gcode_file);
+			gcode_file = NULL;
+			size_heap = xPortGetFreeHeapSize();
+			if (size_heap > sizeof(mn_file_t))
+			{
+				gcode_file = pvPortMalloc(sizeof(mn_file_t));
+			}
+			else
+			{
+
+				mn_screen_change(&main_page,EVENT_SHOW);
+				return;
+			}
 		}
 		f_chdir("/");
 		showFileDir(gcode_file, "/");
