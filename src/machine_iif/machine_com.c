@@ -331,20 +331,20 @@ void machine_zerar_maquina(void)
 
 void machine_zerar_peca(void)
 {
-	if ((zero_flags & ZERO_PECA_FLAG) ==  ZERO_PECA_FLAG)
-	{
-		eepromReadConfig(ZEROPIECE);
-		zeroPiece[AXIS_X] += mp_get_runtime_absolute_position(AXIS_X);
-		zeroPiece[AXIS_Y] += mp_get_runtime_absolute_position(AXIS_Y);
-		zeroPiece[AXIS_Z] = 0;
-	}
-	else
-	{
-		zeroPiece[AXIS_X] = mp_get_runtime_absolute_position(AXIS_X);
-		zeroPiece[AXIS_Y] = mp_get_runtime_absolute_position(AXIS_Y);
-		zeroPiece[AXIS_Z] = 0;
-	}
-	eepromWriteConfig(ZEROPIECE);
+//	if ((zero_flags & ZERO_PECA_FLAG) ==  ZERO_PECA_FLAG)
+//	{
+//		eepromReadConfig(ZEROPIECE);
+//		zeroPiece[AXIS_X] += mp_get_runtime_absolute_position(AXIS_X);
+//		zeroPiece[AXIS_Y] += mp_get_runtime_absolute_position(AXIS_Y);
+//		zeroPiece[AXIS_Z] = 0;
+//	}
+//	else
+//	{
+//		zeroPiece[AXIS_X] = mp_get_runtime_absolute_position(AXIS_X);
+//		zeroPiece[AXIS_Y] = mp_get_runtime_absolute_position(AXIS_Y);
+//		zeroPiece[AXIS_Z] = 0;
+//	}
+//	eepromWriteConfig(ZEROPIECE);
 	xTaskNotifyGive(xCncTaskHandle);
 	macro_func_ptr = ZerarPeca_Macro;
 }
@@ -371,9 +371,9 @@ void machine_info_update(uint8_t info, char * textstr)
 	float vel;
 	switch (info)
 	{
-		case AXIS_X_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_absolute_position(AXIS_X));		break;
-		case AXIS_Y_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_absolute_position(AXIS_Y));		break;
-		case AXIS_Z_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_absolute_position(AXIS_Z));		break;
+		case AXIS_X_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_work_position(AXIS_X));		break;
+		case AXIS_Y_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_work_position(AXIS_Y));		break;
+		case AXIS_Z_INFO: 	sprintf(textstr, "%4.2f", mp_get_runtime_work_position(AXIS_Z));		break;
 		case LINE_INFO:   	sprintf(textstr, "%d",  cm_get_linenum(RUNTIME));					break;
 		case THC_REAL_INFO: sprintf(textstr, "%.0f",  THC_realGet());						break;
 		case THC_MANUAL_INFO: 	pl_thc_read();
@@ -426,6 +426,7 @@ bool machine_flag_get(flag_name flag)
 
 void machine_flag_set(flag_name flag,bool mod)
 {
-	configFlags[flag] = mod;
-	eepromWriteConfig(CONFIGFLAG);
+	configFlags[flag] = (float)mod;
+	nv_save_parameter_int(&configFlags[flag]);
+//	eepromWriteConfig(CONFIGFLAG);
 }

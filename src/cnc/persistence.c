@@ -36,6 +36,7 @@
 
 #ifdef __RX
 #include "platform.h"
+#include "r_flash_api_rx_if.h"
 #endif
 
 /***********************************************************************************
@@ -47,7 +48,9 @@ nvmSingleton_t nvm;
 /***********************************************************************************
  **** GENERIC STATIC FUNCTIONS AND VARIABLES ***************************************
  ***********************************************************************************/
+uint8_t DF_ReadBytes(uint32_t address, uint8_t * array, uint8_t size);
 
+uint8_t DF_WriteBytes(uint32_t address, uint8_t * array, uint8_t size);
 
 /***********************************************************************************
  **** CODE *************************************************************************
@@ -55,10 +58,9 @@ nvmSingleton_t nvm;
 
 void persistence_init()
 {
-#ifdef __AVR
+	R_FlashDataAreaAccess(0xFFFF, 0xFFFF);
 	nvm.base_addr = NVM_BASE_ADDR;
-	nvm.profile_base = 0;
-#endif
+	nvm.profile_base = NVM_BASE_ADDR;
 	return;
 }
 
@@ -92,7 +94,7 @@ stat_t read_persistent_value(nvObj_t *nv)
 {
 
 	nvm.address = nvm.profile_base + (nv->index * NVM_VALUE_LEN);
-	//(void)EEPROM_ReadBytes(nvm.address, nvm.byte_array, NVM_VALUE_LEN);
+	(void)DF_ReadBytes(nvm.address, nvm.byte_array, NVM_VALUE_LEN);
 	memcpy(&nv->value, &nvm.byte_array, NVM_VALUE_LEN);
 	return (STAT_OK);
 
@@ -156,12 +158,73 @@ stat_t write_persistent_value(nvObj_t *nv)
 	if ((isnan((double)nv->value)) || (isinf((double)nv->value)) || (fp_NE(nv->value, nvm.tmp_value))) {
 		memcpy(&nvm.byte_array, &nvm.tmp_value, NVM_VALUE_LEN);
 		nvm.address = nvm.profile_base + (nv->index * NVM_VALUE_LEN);
-	//	(void)EEPROM_WriteBytes(nvm.address, nvm.byte_array, NVM_VALUE_LEN);
+		(void)DF_WriteBytes(nvm.address, nvm.byte_array, NVM_VALUE_LEN);
+
 	}
 	nv->value =nvm.tmp_value;		// always restore value
 	return (STAT_OK);
 }
 #endif // __ARM
+
+
+uint8_t DF_ReadBytes(uint32_t address, uint8_t * array, uint8_t size)
+{
+	uint8_t flashRet;
+	for (uint8_t i = 0; i < size/2; i++)
+	{
+		flashRet = R_FlashDataAreaBlankCheck(address + i*2,BLANK_CHECK_2_BYTE);
+		if (flashRet != FLASH_BLANK)
+			break;
+	}
+	if (flashRet == FLASH_NOT_BLANK)
+	{
+		memcpy(array,nvm.address,size);
+		//array = *(uint8_t *)(nvm.address);
+	}
+	else if (flashRet == FLASH_BLANK)
+	{
+		for (uint8_t i = 0; i < size; i++)
+			array[i] = 0;
+	}
+	else
+	{
+		return (STAT_ERROR);
+	}
+	return (STAT_OK);
+}
+
+uint8_t DF_WriteBytes(uint32_t address, uint8_t * array, uint8_t size)
+{
+	uint8_t flashRet;
+	uint8_t buffer[32];
+	uint32_t blockStart;
+	uint32_t blockOffsetAddress;
+	for (uint8_t i = 0; i < size/2; i++)
+	{
+		flashRet = R_FlashDataAreaBlankCheck(address + i*2,BLANK_CHECK_2_BYTE);
+		if (flashRet != FLASH_BLANK)
+			break;
+	}
+	if (flashRet == FLASH_NOT_BLANK)
+	{
+		blockStart = (address / 32)*32;
+		memcpy(buffer, blockStart,32);
+		blockOffsetAddress = (address % 32);
+		memcpy((buffer + blockOffsetAddress), (uint8_t *)array,size);
+		flashRet = R_FlashEraseRange(blockStart,sizeof(buffer));
+		flashRet = R_FlashWrite(blockStart,(uint32_t)buffer,sizeof(buffer));
+	}
+	else if (flashRet == FLASH_BLANK)
+	{
+		memcpy(buffer, (uint8_t *)array,size);
+		flashRet = R_FlashWrite(address,(uint32_t)buffer,size);
+	}
+	else
+	{
+		return (STAT_ERROR);
+	}
+	return (STAT_OK);
+}
 
 #ifdef __cplusplus
 }

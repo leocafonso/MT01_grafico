@@ -10,6 +10,12 @@
 
 #include "ut_state_config_var.h"
 
+#define OX_ALTURA_PERFURACAO	15                               //!< Altura de perfuração
+#define OX_ALTURA_CORTE			5                               //!< Altura de corte
+#define OX_VEL_CORTE			500                             //!< Velocidade de corte
+#define OX_TEMPO_AQUECIMENTO		30                              //!< Tempo de aquecimento
+#define OX_TEMPO_PERFURACAO			1                              //!< Tempo de Perfuração
+
 extern ut_config_var configsOx[OX_CONFIG_MAX];
 extern ut_config_type ox_init_types[OX_CONFIG_MAX];
 extern char* ox_init_names[OX_CONFIG_MAX];

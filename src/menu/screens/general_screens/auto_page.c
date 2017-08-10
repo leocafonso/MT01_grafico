@@ -154,7 +154,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_deslocar.id,EVENT_CLICK))
 	{
-		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+//		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
 		{
 			xio_close(cs.primary_src);
 			warn_args.buttonUseInit = BTN_ASK;
@@ -163,20 +163,20 @@ void page_handler (void *p_arg)
 			warn_args.func_callback = warning_desloca_callback;
 			warning_page.p_args = &warn_args;
 		}
-		else
-		{
-			warning_page.p_args = &warn_semzeromaquina_args;
-		}
+//		else
+//		{
+//			warning_page.p_args = &warn_semzeromaquina_args;
+//		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_sel.id,EVENT_CLICK))
 	{
 		selLines_keypad_args.p_var = &selecionarLinhas;
-		selLines_keypad_args.key_var = KEY_LINES;
 		selLines_keypad_args.step = 1;
 		selLines_keypad_args.min = 0;
 		selLines_keypad_args.max = selecionarlinhasMax();
 		selLines_keypad_args.p_ret_page = page;
+		selLines_keypad_args.p_next_page = &selLines_page;
 		keypad_page.p_args = &selLines_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}

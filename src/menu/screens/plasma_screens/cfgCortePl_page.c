@@ -148,55 +148,55 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_alt_per.id,EVENT_CLICK))
 	{
 		cfgCorte_keypad_args.p_var = &configVarPl[PL_CONFIG_ALTURA_PERFURACAO];
-		cfgCorte_keypad_args.key_var = KEY_CONFIG_PL;
 		cfgCorte_keypad_args.step = pl_init_step[PL_CONFIG_ALTURA_PERFURACAO];
 		cfgCorte_keypad_args.min = pl_init_min[PL_CONFIG_ALTURA_PERFURACAO];
 		cfgCorte_keypad_args.max = pl_init_max[PL_CONFIG_ALTURA_PERFURACAO];
 		cfgCorte_keypad_args.p_ret_page = page;
+		cfgCorte_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgCorte_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_alt_corte.id,EVENT_CLICK))
 	{
 		cfgCorte_keypad_args.p_var = &configVarPl[PL_CONFIG_ALTURA_CORTE];
-		cfgCorte_keypad_args.key_var = KEY_CONFIG_PL;
 		cfgCorte_keypad_args.step = pl_init_step[PL_CONFIG_ALTURA_CORTE];
 		cfgCorte_keypad_args.min = pl_init_min[PL_CONFIG_ALTURA_CORTE];
 		cfgCorte_keypad_args.max = pl_init_max[PL_CONFIG_ALTURA_CORTE];
 		cfgCorte_keypad_args.p_ret_page = page;
+		cfgCorte_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgCorte_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_vel_corte.id,EVENT_CLICK))
 	{
 		cfgCorte_keypad_args.p_var = &configVarPl[PL_CONFIG_VELOC_CORTE];
-		cfgCorte_keypad_args.key_var = KEY_CONFIG_PL;
 		cfgCorte_keypad_args.step = pl_init_step[PL_CONFIG_VELOC_CORTE];
 		cfgCorte_keypad_args.min = pl_init_min[PL_CONFIG_VELOC_CORTE];
 		cfgCorte_keypad_args.max = pl_init_max[PL_CONFIG_VELOC_CORTE];
 		cfgCorte_keypad_args.p_ret_page = page;
+		cfgCorte_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgCorte_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_tempo_per.id,EVENT_CLICK))
 	{
 		cfgCorte_keypad_args.p_var = &configVarPl[PL_CONFIG_TEMPO_PERFURACAO];
-		cfgCorte_keypad_args.key_var = KEY_CONFIG_PL;
 		cfgCorte_keypad_args.step = pl_init_step[PL_CONFIG_TEMPO_PERFURACAO];
 		cfgCorte_keypad_args.min = pl_init_min[PL_CONFIG_TEMPO_PERFURACAO];
 		cfgCorte_keypad_args.max = pl_init_max[PL_CONFIG_TEMPO_PERFURACAO];
 		cfgCorte_keypad_args.p_ret_page = page;
+		cfgCorte_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgCorte_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_tensao_thc.id,EVENT_CLICK))
 	{
 		cfgCorte_keypad_args.p_var = &configVarPl[PL_CONFIG_TENSAO_THC];
-		cfgCorte_keypad_args.key_var = KEY_CONFIG_PL;
 		cfgCorte_keypad_args.step = pl_init_step[PL_CONFIG_TENSAO_THC];
 		cfgCorte_keypad_args.min = pl_init_min[PL_CONFIG_TENSAO_THC];
 		cfgCorte_keypad_args.max = pl_init_max[PL_CONFIG_TENSAO_THC];
 		cfgCorte_keypad_args.p_ret_page = page;
+		cfgCorte_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgCorte_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}

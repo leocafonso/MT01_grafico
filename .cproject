@@ -689,6 +689,8 @@
 									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\plasma_screens\cutPl_page.obj&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\plasma_screens\fInfoPl_page.obj&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\plasma_screens\simPl_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\general_screens\cfgMaqPar_page.obj&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;.\src\menu\screens\general_screens\zerarmaq_page.obj&quot;"/>
 								</option>
 								<option command="-nooptimize" id="com.renesas.cdt.renesas.Linker.option.linkerOptimizeCommand.131127002" name="Dummy option for Linker Optimize command" superClass="com.renesas.cdt.renesas.Linker.option.linkerOptimizeCommand" value="true" valueType="boolean"/>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.renesas.cdt.renesas.Linker.option.rom.1155223331" name="ROM to RAM mapped section" superClass="com.renesas.cdt.renesas.Linker.option.rom" valueType="stringList">

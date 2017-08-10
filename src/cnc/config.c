@@ -150,68 +150,89 @@ void config_init()
 #ifdef __RX
 // ++++ The following code is offered until persistence is implemented.
 // ++++ Then you can use the AVR code (or something like it)
-	cfg.comm_mode = TEXT_MODE;					// initial value until EEPROM is read
-	_set_defa(nv);
-	_config_maq(g_maq,nv);
-	for (uint8_t i = 0; i < 3; i++ )
-	{
-		nv->index = nv_get_index(P_str_axis[i], "vm");
-		nv->value = configVarParMaq[CFG_PAR_MAQ_VEL_X + i];
-		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-		nv_set(nv);
-		nv_persist(nv);
+	cm_set_units_mode(MILLIMETERS);				// must do inits in millimeter mode
+	nv->index = 0;								// this will read the first record in NVM
+
+	read_persistent_value(nv);
+	if (nv->value != cs.fw_build) {				// case (1) NVM is not setup or not in revision
+//	if (fp_NE(nv->value, cs.fw_build)) {
+		_set_defa(nv);
+	} else {									// case (2) NVM is setup and in revision
+		rpt_print_loading_configs_message();
+		for (nv->index=0; nv_index_is_single(nv->index); nv->index++) {
+			if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {
+				strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);	// read the token from the array
+				read_persistent_value(nv);
+				nv_set(nv);
+			}
+		}
+		sr_init_status_report();
 	}
-
-	for (uint8_t i = 0; i < 3; i++ )
-	{
-		nv->index = nv_get_index(P_str_axis[i], "fr");
-		nv->value = configVarParMaq[CFG_PAR_MAQ_VEL_X + i];
-		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-		nv_set(nv);
-		nv_persist(nv);
-	}
-
-	for (uint8_t i = 0; i < 2; i++ )
-	{
-		nv->index = nv_get_index(P_str_axis[i], "jm");
-		nv->value = configVarParMaq[CFG_PAR_MAQ_JERK_X + i];
-		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-		nv_set(nv);
-		nv_persist(nv);
-	}
-
-	for (uint8_t i = 0; i < 3; i++ )
-	{
-		nv->index = nv_get_index(P_str_axis[i], "jd");
-		nv->value = configVarParMaq[CFG_PAR_MAQ_JUNCTION_DEV];
-		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-		nv_set(nv);
-		nv_persist(nv);
-	}
-
-	nv->index = nv_get_index("", "ja");
-	nv->value = configVarParMaq[CFG_PAR_MAQ_JUNCTION_ACEL];
-	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-	nv_set(nv);
-	nv_persist(nv);
-
-	nv->index = nv_get_index("2", "tr");
-	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_Y];
-	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-	nv_set(nv);
-	nv_persist(nv);
-
-	nv->index = nv_get_index("3", "tr");
-	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_X1];
-	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-	nv_set(nv);
-	nv_persist(nv);
-
-	nv->index = nv_get_index("4", "tr");
-	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_X2];
-	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
-	nv_set(nv);
-	nv_persist(nv);
+//		nv->index = nv_get_index("", "cfm");
+//		nv->value = 0;
+//		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//		nv_set(nv);
+//		nv_persist(nv);
+//	_config_maq(g_maq,nv);
+//	for (uint8_t i = 0; i < 3; i++ )
+//	{
+//		nv->index = nv_get_index(P_str_axis[i], "vm");
+//		nv->value = configVarParMaq[CFG_PAR_MAQ_VEL_X + i];
+//		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//		nv_set(nv);
+//		nv_persist(nv);
+//	}
+//
+//	for (uint8_t i = 0; i < 3; i++ )
+//	{
+//		nv->index = nv_get_index(P_str_axis[i], "fr");
+//		nv->value = configVarParMaq[CFG_PAR_MAQ_VEL_X + i];
+//		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//		nv_set(nv);
+//		nv_persist(nv);
+//	}
+//
+//	for (uint8_t i = 0; i < 2; i++ )
+//	{
+//		nv->index = nv_get_index(P_str_axis[i], "jm");
+//		nv->value = configVarParMaq[CFG_PAR_MAQ_JERK_X + i];
+//		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//		nv_set(nv);
+//		nv_persist(nv);
+//	}
+//
+//	for (uint8_t i = 0; i < 3; i++ )
+//	{
+//		nv->index = nv_get_index(P_str_axis[i], "jd");
+//		nv->value = configVarParMaq[CFG_PAR_MAQ_JUNCTION_DEV];
+//		strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//		nv_set(nv);
+//		nv_persist(nv);
+//	}
+//
+//	nv->index = nv_get_index("", "ja");
+//	nv->value = configVarParMaq[CFG_PAR_MAQ_JUNCTION_ACEL];
+//	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//	nv_set(nv);
+//	nv_persist(nv);
+//
+//	nv->index = nv_get_index("2", "tr");
+//	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_Y];
+//	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//	nv_set(nv);
+//	nv_persist(nv);
+//
+//	nv->index = nv_get_index("3", "tr");
+//	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_X1];
+//	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//	nv_set(nv);
+//	nv_persist(nv);
+//
+//	nv->index = nv_get_index("4", "tr");
+//	nv->value = configVarParMaq[CFG_PAR_MAQ_EIXO_X2];
+//	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+//	nv_set(nv);
+//	nv_persist(nv);
 
 
 #endif
@@ -998,6 +1019,40 @@ nvObj_t *nv_add_string(const char_t *token, const char_t *string) // add a strin
 		return (nv);
 	}
 	return (NULL);
+}
+
+void nv_save_parameter_flt(float* val)
+{
+	nvObj_t *nv = nv_reset_nv_list();
+	for (uint16_t i = 0; i < nv_index_max(); i++)
+	{
+		if (cfgArray[i].target == val)
+		{
+			nv->index = i;
+			break;
+		}
+	}
+	nv->value = *val;
+	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+	nv_set(nv);
+	nv_persist(nv);
+}
+
+void nv_save_parameter_int(uint32_t* val)
+{
+	nvObj_t *nv = nv_reset_nv_list();
+	for (uint16_t i = 0; i < nv_index_max(); i++)
+	{
+		if (cfgArray[i].target == val)
+		{
+			nv->index = i;
+			break;
+		}
+	}
+	nv->value = *val;
+	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+	nv_set(nv);
+	nv_persist(nv);
 }
 
 /*

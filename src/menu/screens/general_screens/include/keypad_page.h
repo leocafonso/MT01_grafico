@@ -9,24 +9,14 @@
 #ifndef KEYPAD_MAIN_H_
 #define KEYPAD_MAIN_H_
 
-typedef enum {
-	KEY_CONFIG_PL = 0,
-	KEY_CONFIG_OX,
-	KEY_CONFIG_JOG,
-	KEY_CONFIG_MAQ,
-	KEY_CONFIG_PAR_MAQ,
-	KEY_LINES,
-	KEY_MAX
-}mn_key_var_t;
-
 typedef struct{
 	char  *p_var_name;
-	mn_key_var_t key_var;
 	float *p_var;
 	float step;
 	float min;
 	float max;
 	mn_screen_t *p_ret_page;
+	mn_screen_t *p_next_page;
 }mn_keypad_t;
 
 #endif /* KEYPAD_MAIN_H_ */

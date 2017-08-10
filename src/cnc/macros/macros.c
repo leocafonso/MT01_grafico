@@ -370,17 +370,15 @@ stat_t ZerarMaquina_Macro(void)
 	zero_flags = ZERO_MAQ_FLAG;
 	switch (state)
 	{
+	case 0: 	SET_NON_MODAL_MACRO (absolute_override, true);
+				SET_MODAL_MACRO(MODAL_GROUP_G12, coord_system, G54);
+				state++; break;
 
-//		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
-//					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
-//					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-//					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
-//					state++; break;
-	case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SEARCH_HOME);
+	case 1: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SEARCH_HOME);
 				SET_NON_MODAL_MACRO(target[AXIS_X], 0);
 				SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
 				state++; break;
-	case 1: SET_MODAL_MACRO (MODAL_GROUP_M4, program_flow, PROGRAM_END);
+	case 2: SET_MODAL_MACRO (MODAL_GROUP_M4, program_flow, PROGRAM_END);
 			state++; break;
 
 		default:state = 0; 	intepreterRunning = false; macro_func_ptr = command_idle; return (STAT_OK);
@@ -397,17 +395,21 @@ stat_t ZerarPeca_Macro(void)
 	memset(&cm.gn, 0, sizeof(GCodeInput_t));		// clear all next-state values
 	cm.gn.motion_mode = cm_get_motion_mode(MODEL);	// get motion mode from previous block
 	intepreterRunning = true;
-	zero_flags |= ZERO_PECA_FLAG;
+	zero_flags = ZERO_PECA_FLAG;
 	switch (state)
 	{
-		case 0: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
-					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
-					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-					SET_NON_MODAL_MACRO(target[AXIS_Z], 0);
+		case 0:
+					cm.offset[G55][AXIS_X] = mp_get_runtime_absolute_position(AXIS_X);
+					cm.offset[G55][AXIS_Y] = mp_get_runtime_absolute_position(AXIS_Y);
+					nv_save_parameter_flt(&cm.offset[G55][AXIS_X]);
+					nv_save_parameter_flt(&cm.offset[G55][AXIS_Y]);
+					SET_MODAL_MACRO(MODAL_GROUP_G12, coord_system, G55);
+					cm.coord_system = G55;
 					state++; break;
 		default:state = 0; 	intepreterRunning = false; macro_func_ptr = command_idle; return (STAT_OK);
 	}
 	_execute_gcode_block();
+
 	return (STAT_OK);
 }
 
@@ -446,7 +448,8 @@ stat_t homming_Macro(void)
 		case 1: SET_MODAL_MACRO (MODAL_GROUP_G3, distance_mode, ABSOLUTE_MODE);
 				state++; break;
 
-		case 2: SET_NON_MODAL_MACRO (absolute_override, true);
+		case 2: SET_MODAL_MACRO(MODAL_GROUP_G12, coord_system, G55);
+				cm.coord_system = G55;
 				state++; break;
 
 		case 3: SET_MODAL_MACRO (MODAL_GROUP_G1, motion_mode, MOTION_MODE_STRAIGHT_TRAVERSE);
@@ -455,27 +458,11 @@ stat_t homming_Macro(void)
 
 		case 4:
 				SET_MODAL_MACRO (MODAL_GROUP_G1, motion_mode, MOTION_MODE_STRAIGHT_TRAVERSE);
-				if ((zero_flags & ZERO_PECA_FLAG) ==  ZERO_PECA_FLAG)
-				{
-					SET_NON_MODAL_MACRO(target[AXIS_X], 0);
-					SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-				}
-				else
-				{
-					zero_flags |= ZERO_PECA_FLAG;
-					eepromReadConfig(ZEROPIECE);
-					SET_NON_MODAL_MACRO(target[AXIS_X], zeroPiece[AXIS_X]);
-					SET_NON_MODAL_MACRO(target[AXIS_Y], zeroPiece[AXIS_Y]);
-				}
-				state++; break;
-
-		case 5: SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SET_ABSOLUTE_ORIGIN);
 				SET_NON_MODAL_MACRO(target[AXIS_X], 0);
 				SET_NON_MODAL_MACRO(target[AXIS_Y], 0);
-//				SET_NON_MODAL_MACRO(target[AXIS_Z], zeroPiece[AXIS_Z]);
 				state++; break;
 
-		case 6: SET_MODAL_MACRO (MODAL_GROUP_M4, program_flow, PROGRAM_END);
+		case 5: SET_MODAL_MACRO (MODAL_GROUP_M4, program_flow, PROGRAM_END);
 				state++; break;
 
 		default:state = 0; macro_func_ptr = command_idle; return (STAT_OK);
@@ -542,8 +529,9 @@ stat_t RunningInicial_Macro(void)
 		case 0: SET_MODAL_MACRO (MODAL_GROUP_G6, units_mode, MILLIMETERS);
 				state++; break;
 
-		case 1: SET_NON_MODAL_MACRO (absolute_override, true);
-				state++; break;
+		case 1:
+			SET_NON_MODAL_MACRO (absolute_override, true);
+			state++; break;
 
 		case 2: SET_MODAL_MACRO (MODAL_GROUP_G3, distance_mode, ABSOLUTE_MODE);
 				state++; break;
@@ -661,7 +649,7 @@ stat_t limit_test(void)
 		case 1: SET_MODAL_MACRO (MODAL_GROUP_G3, distance_mode, ABSOLUTE_MODE);
 				state++; break;
 
-		case 2: SET_NON_MODAL_MACRO (absolute_override, true);
+		case 2:	SET_NON_MODAL_MACRO (absolute_override, true);
 				state++; break;
 
 		case 3: SET_MODAL_MACRO (MODAL_GROUP_G1, motion_mode, MOTION_MODE_STRAIGHT_TRAVERSE);

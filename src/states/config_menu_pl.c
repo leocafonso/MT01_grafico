@@ -13,6 +13,10 @@
 #include <stdio.h>
 #include <string.h>
 
+
+
+
+
 ut_config_var configsPl[PL_CONFIG_MAX];
 /* Initial values for each config variable */
 ut_config_type pl_init_types[PL_CONFIG_MAX] =
@@ -77,6 +81,8 @@ char* pl_init_unit[PL_CONFIG_MAX] =
 	"s",                                    //!< Tempo de Perfuração     //!< Tempo de Perfuração
 	"V"                                     //!< Tensao do THC           //!< Tensao do THC
 };
+
+
 
 void initPl(void)
 {

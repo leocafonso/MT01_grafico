@@ -344,24 +344,24 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zpeca.id,EVENT_CLICK))
 	{
-		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
-		{
+//		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+//		{
 			warning_page.p_args = &warn_zerarpeca_args;
-		}
-		else
-		{
-			warning_page.p_args = &warn_semzeromaquina_args;
-		}
+//		}
+//		else
+//		{
+//			warning_page.p_args = &warn_semzeromaquina_args;
+//		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(vel_txt.id,EVENT_CLICK))
 	{
 		jog_keypad_args.p_var = &configVarJog[JOG_RAPIDO];
-		jog_keypad_args.key_var = KEY_CONFIG_JOG;
 		jog_keypad_args.step = 1;
 		jog_keypad_args.min = 10;
 		jog_keypad_args.max = 10000;
 		jog_keypad_args.p_ret_page = page;
+		jog_keypad_args.p_next_page = page;
 		keypad_page.p_args = &jog_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}

@@ -137,6 +137,7 @@ static void _application_init(void)
 //	gpio_init();					// parallel IO
 	pwm_init();						// pulse width modulation drivers	- must follow gpio_init()
 	macroInitVar();
+	controller_init(CNC_MEDIA,0,0);
 //RXMOD	controller_init(STD_IN, STD_OUT, STD_ERR);// must be first app init; reqs xio_init()
 	config_init();					// config records from eeprom 		- must be next app init
 	network_init();					// reset std devices if required	- must follow config_init()

@@ -31,14 +31,14 @@
 #include "config.h"						// needed for nvObj_t definition
 
 #define NVM_VALUE_LEN 4					// NVM value length (float, fixed length)
-#define NVM_BASE_ADDR 0x0000			// base address of usable NVM
+#define NVM_BASE_ADDR 0x00104000			// base address of usable NVM
 
 //**** persistence singleton ****
 
 typedef struct nvmSingleton {
-	uint16_t base_addr;					// NVM base address
-	uint16_t profile_base;				// NVM base address of current profile]
-	uint16_t address;
+	uint32_t base_addr;					// NVM base address
+	uint32_t profile_base;				// NVM base address of current profile]
+	uint32_t address;
 	float tmp_value;
 	int8_t byte_array[NVM_VALUE_LEN];
 } nvmSingleton_t;

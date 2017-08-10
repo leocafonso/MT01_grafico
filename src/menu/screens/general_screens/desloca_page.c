@@ -275,6 +275,6 @@ static void warning_callback(warn_btn_t btn_type)
 {
 	if (event_args == PROGRAM_FINISHED_EVENT)
 	{
-		mn_screen_change(&auto_page,EVENT_SHOW);
+		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
 }

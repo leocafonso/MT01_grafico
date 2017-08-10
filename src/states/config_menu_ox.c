@@ -78,6 +78,7 @@ char* ox_init_unit[OX_CONFIG_MAX] =
 	"s",                                  //!< Tempo de Perfuração
 };
 
+
 void initOx(void)
 {
 	uint8_t i;

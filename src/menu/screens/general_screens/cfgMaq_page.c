@@ -138,11 +138,11 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_alt_desloc.id,EVENT_CLICK))
 	{
 		cfgMaq_keypad_args.p_var = &configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO];
-		cfgMaq_keypad_args.key_var = KEY_CONFIG_MAQ;
 		cfgMaq_keypad_args.step = mq_init_step[CFG_MAQUINA_ALT_DESLOCAMENTO];
 		cfgMaq_keypad_args.min = mq_init_min[CFG_MAQUINA_ALT_DESLOCAMENTO];
 		cfgMaq_keypad_args.max = mq_init_max[CFG_MAQUINA_ALT_DESLOCAMENTO];
 		cfgMaq_keypad_args.p_ret_page = page;
+		cfgMaq_keypad_args.p_next_page = page;
 		keypad_page.p_args = &cfgMaq_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}

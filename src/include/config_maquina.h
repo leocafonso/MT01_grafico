@@ -10,6 +10,8 @@
 
 #include "ut_state_config_var.h"
 
+#define MAQ_ALTURA_DESLOCAMENTO		25                               //!< Altura de deslocamento
+
 extern ut_config_var configsMaq[CFG_MAQUINA_MAX];
 extern ut_config_type mq_init_types[CFG_MAQUINA_MAX];
 extern char* mq_init_names[CFG_MAQUINA_MAX];

@@ -137,29 +137,29 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_vel_manual.id,EVENT_CLICK))
 	{
 		vel_keypad_args.p_var = &configVarJog[JOG_RAPIDO];
-		vel_keypad_args.key_var = KEY_CONFIG_JOG;
 		vel_keypad_args.step = 1;
 		vel_keypad_args.min = 10;
 		vel_keypad_args.max = 10000;
 		vel_keypad_args.p_ret_page = page;
+		vel_keypad_args.p_next_page = page;
 		keypad_page.p_args = &vel_keypad_args;
 		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_deslocar.id,EVENT_CLICK))
 	{
-		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
-		{
+//		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+//		{
 			xio_close(cs.primary_src);
 			warn_args.buttonUseInit = BTN_ASK;
 			warn_args.img_txt[0] = IMG_CONTINUAR;
 			warn_args.msg_count = 1;
 			warn_args.func_callback = warning_desloca_callback;
 			warning_page.p_args = &warn_args;
-		}
-		else
-		{
-			warning_page.p_args = &warn_semzeromaquina_args;
-		}
+//		}
+//		else
+//		{
+//			warning_page.p_args = &warn_semzeromaquina_args;
+//		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zerar_maq.id,EVENT_CLICK))
@@ -169,14 +169,14 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zerar_peca.id,EVENT_CLICK))
 	{
-		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
-		{
+//		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
+//		{
 			warning_page.p_args = &warn_zerarpeca_args;
-		}
-		else
-		{
-			warning_page.p_args = &warn_semzeromaquina_args;
-		}
+//		}
+//		else
+//		{
+//			warning_page.p_args = &warn_semzeromaquina_args;
+//		}
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))

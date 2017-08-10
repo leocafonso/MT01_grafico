@@ -13,6 +13,7 @@
 #include "semphr.h"
 
 #include "pages_includes.h"
+#include "config.h"
 /* Defines */
 
 #define TIMER_NUM 0
@@ -273,7 +274,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_cancel.id,EVENT_CLICK))
 	{
-		mn_screen_change(p_back_page,EVENT_SHOW);
+		mn_screen_change(p_keypad->p_ret_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_enter.id,EVENT_CLICK))
 	{
@@ -282,35 +283,8 @@ void page_handler (void *p_arg)
 			*p_keypad->p_var = atof(result_str);
 			if (*p_keypad->p_var <= p_keypad->min)
 				*p_keypad->p_var = p_keypad->min;
-			switch (p_keypad->key_var)
-			{
-				case KEY_CONFIG_PL:
-					eepromWriteConfig(CONFIGVAR_PL);
-					mn_screen_change(p_back_page,EVENT_SHOW);
-					break;
-				case KEY_CONFIG_OX:
-					eepromWriteConfig(CONFIGVAR_OX);
-					mn_screen_change(p_back_page,EVENT_SHOW);
-					break;
-				case KEY_CONFIG_JOG:
-					eepromWriteConfig(CONFIGVAR_JOG);
-					mn_screen_change(p_back_page,EVENT_SHOW);
-					break;
-				case KEY_CONFIG_MAQ:
-					eepromWriteConfig(CONFIGVAR_MAQ);
-					mn_screen_change(p_back_page,EVENT_SHOW);
-					break;
-				case KEY_CONFIG_PAR_MAQ:
-					if (var_initial != *p_keypad->p_var)
-					{
-						eepromWriteConfig(CONFIGVAR_PAR_MAQ);
-					}
-					mn_screen_change(p_back_page,KEYBACK_RET_EVENT);
-					break;
-				case KEY_LINES:
-					mn_screen_change(&selLines_page,EVENT_SHOW);
-				break;
-			}
+			nv_save_parameter_flt(p_keypad->p_var);
+			mn_screen_change(p_keypad->p_next_page,EVENT_SHOW);
 		}
 	}
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)

@@ -45,6 +45,11 @@
 #include "network.h"
 #include "xio.h"
 
+#include "eeprom.h"
+#include "config_maquina.h"
+#include "config_menu_pl.h"
+#include "config_menu_ox.h"
+
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -126,6 +131,27 @@ const cfgItem_t cfgArray[] PROGMEM = {
 	{ "",   "frmo",_f0, 0, cm_print_frmo, cm_get_frmo, set_nul,(float *)&cs.null, 0 },			// feed rate mode
 	{ "",   "tool",_f0, 0, cm_print_tool, cm_get_toolv,set_nul,(float *)&cs.null, 0 },			// active tool
 //	{ "",   "tick",_f0, 0, tx_print_int,  get_int,     set_int,(float *)&rtc.sys_ticks, 0 },	// tick count
+
+	{ "cfl","mm", _fip, 0, tx_print_nul, get_int, set_01,(float *)&configFlags[MODOMAQUINA],MODO_PLASMA},	// user data group
+	{ "cfl","vthc", _fip, 0, tx_print_nul, get_int, set_01,(float *)&configFlags[VEL_THC],1},				// user data group
+	{ "cfl","kerf", _fip, 0, tx_print_nul, get_int, set_01,(float *)&configFlags[KERF],DESABILITADO},		// user data group
+	{ "cfl","merg", _fip, 0, tx_print_nul, get_int, set_01,(float *)&configFlags[MERGULHO],HABILITADO},		// user data group
+
+	{ "cfm","ad", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO],MAQ_ALTURA_DESLOCAMENTO},		// user data group
+
+	{ "cfp","ap", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_ALTURA_PERFURACAO],PL_ALTURA_PERFURACAO},	// user data group
+	{ "cfp","ac", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_ALTURA_CORTE],PL_ALTURA_CORTE},				// user data group
+	{ "cfp","vc", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_VELOC_CORTE],PL_VEL_CORTE},		// user data group
+	{ "cfp","tp", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_TEMPO_PERFURACAO],PL_TEMPO_PERFURACAO},		// user data group
+	{ "cfp","tt", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_TENSAO_THC],PL_TENSAO_THC},		// user data group
+
+	{ "cfo","ap", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarOx[OX_CONFIG_ALTURA_PERFURACAO],OX_ALTURA_PERFURACAO},	// user data group
+	{ "cfo","ac", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarOx[OX_CONFIG_ALTURA_CORTE],OX_ALTURA_CORTE},				// user data group
+	{ "cfo","vc", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarOx[OX_CONFIG_VELOC_CORTE],OX_VEL_CORTE},		// user data group
+	{ "cfo","ta", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarOx[OX_CONFIG_TEMPO_AQUECIMENTO],OX_TEMPO_AQUECIMENTO},		// user data group
+	{ "cfo","tp", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarOx[OX_CONFIG_TEMPO_PERFURACAO],OX_TEMPO_PERFURACAO},		// user data group
+
+	{ "","vjg", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarJog[JOG_RAPIDO],6000},		// user data group
 
 	{ "mpo","mpox",_f0, 3, cm_print_mpo, cm_get_mpo, set_nul,(float *)&cs.null, 0 },			// X machine position
 	{ "mpo","mpoy",_f0, 3, cm_print_mpo, cm_get_mpo, set_nul,(float *)&cs.null, 0 },			// Y machine position
@@ -696,7 +722,6 @@ const cfgItem_t cfgArray[] PROGMEM = {
 	{ "", "o", _f0, 0, tx_print_nul, _do_offsets,set_nul,(float *)&cs.null,0 },
 	{ "", "$", _f0, 0, tx_print_nul, _do_all,    set_nul,(float *)&cs.null,0 }
 };
-
 /***** Make sure these defines line up with any changes in the above table *****/
 
 #define NV_COUNT_UBER_GROUPS 	4 		// count of uber-groups, above

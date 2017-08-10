@@ -10,6 +10,12 @@
 
 #include "ut_state_config_var.h"
 
+#define PL_ALTURA_PERFURACAO	4.8                               //!< Altura de perfuração
+#define PL_ALTURA_CORTE			2.8                               //!< Altura de corte
+#define PL_VEL_CORTE			2500                             //!< Velocidade de corte
+#define PL_TEMPO_PERFURACAO		0.1                               //!< Tempo de Perfuração
+#define PL_TENSAO_THC			120                              //!< Tensao do THC
+
 extern ut_config_var configsPl[PL_CONFIG_MAX];
 extern ut_config_type pl_init_types[PL_CONFIG_MAX];
 extern char* pl_init_names[PL_CONFIG_MAX];

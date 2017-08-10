@@ -153,11 +153,11 @@ void page_handler (void *p_arg)
 		if (p_page_hdl->event == EVENT_SIGNAL(btn_par[index].id,EVENT_CLICK))
 		{
 			cfgPar_keypad_args.p_var = &configVarParMaq[index];
-			cfgPar_keypad_args.key_var = KEY_CONFIG_PAR_MAQ;
 			cfgPar_keypad_args.step = pm_init_step[index];
 			cfgPar_keypad_args.min = pm_init_min[index];
 			cfgPar_keypad_args.max = pm_init_max[index];
 			cfgPar_keypad_args.p_ret_page = page;
+			cfgPar_keypad_args.p_next_page = page;
 			keypad_page.p_args = &cfgPar_keypad_args;
 			mn_screen_change(&keypad_page,EVENT_SHOW);
 		}
