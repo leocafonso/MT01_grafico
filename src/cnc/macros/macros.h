@@ -24,7 +24,6 @@ extern float *velocidadeJog;
 extern ut_config_name_ox tempoDwell;
 extern bool xMacroArcoOkSync;
 extern float Xcord,Ycord;
-extern uint32_t zero_flags;
 
 stat_t M5_Macro(void);
 stat_t M4_Macro(void);

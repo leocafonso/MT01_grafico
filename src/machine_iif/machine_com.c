@@ -16,6 +16,7 @@
 #include "platform.h"
 #include "machine_com.h"
 #include "keyboard.h"
+
 #include "tinyg.h"				// #1
 #include "config.h"				// #2
 #include "controller.h"
@@ -43,10 +44,10 @@ static uint32_t arco = 0;
 
 /* extern variables */
 extern TaskHandle_t xCncTaskHandle;
-extern bool lstop;
+bool lstop;
 extern bool intepreterRunning;
 extern bool zinhibitor;
-extern bool sim;
+bool sim;
 extern bool simTorch;
 extern float zeroPiecebuffer[3];
 

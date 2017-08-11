@@ -16,7 +16,34 @@
 
 #include "config_menu_ox.h"
 #include "state_functions.h"
+
+#include "tinyg.h"				// #1
+#include "config.h"				// #2
+#include "controller.h"
+#include "hardware.h"
+#include "json_parser.h"
+#include "text_parser.h"
+#include "gcode_parser.h"
+#include "canonical_machine.h"
+#include "plan_arc.h"
+#include "planner.h"
+#include "stepper.h"
+#include "macros.h"
+#include "plasma.h"
+#include "xio.h"
 /* Defines */
+
+#define	MMREV_MAX		200
+#define	JERK_MAX		10000
+#define	VEL_MAX			20000
+#define	JUNCDEV_MAX		10
+#define	JUNCACEL_MAX	2000000
+#define	CHODAL_MAX		10
+
+#define POINT_3 0.001
+#define POINT_2 0.01
+#define POINT_1 0.1
+#define POINT_0 1
 
 #define TIMER_NUM 0
 
@@ -119,48 +146,72 @@ void page_handler (void *p_arg)
 		p_page_hdl->event == EMERGENCIA_EVENT ||
 		p_page_hdl->event == KEYBACK_RET_EVENT)
 	{
-		uint32_t decNum;
-		uint16_t decCount;
-		uint16_t decimalCount;
-		uint16_t digits;
-		if (p_page_hdl->event == EVENT_SHOW)
-		{
-			memcpy(configVarParMaq_buffer, configVarParMaq, sizeof (configVarParMaq));
-		}
-		for (uint8_t index = 0; index < 5; index++)
-		{
-			decNum = 1;
-			decCount = 0;
-			decimalCount = 0;
-			decCount = get_dec_digits(configVarParMaq[index]);
-			decimalCount = get_decimal_digits(pm_init_step[index]);
+		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_4].travel_rev);
+		changeTxt(&cfg_txt[0],result_str);
+		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_3].travel_rev);
+		changeTxt(&cfg_txt[1],result_str);
+		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_2].travel_rev);
+		changeTxt(&cfg_txt[2],result_str);
+		sprintf(result_str, "%0.0f", cm.a[AXIS_X].jerk_max);
+		changeTxt(&cfg_txt[3],result_str);
+		sprintf(result_str, "%0.0f", cm.a[AXIS_Y].jerk_max);
+		changeTxt(&cfg_txt[4],result_str);
 
-			if(decimalCount > 0)
-				digits = decCount + decimalCount + 1;
-			else
-				digits = decCount;
-
-			for (uint8_t i = 1; i<decCount; i++)
-			{
-				decNum = decNum*10;
-			}
-			sprintf(result_str, "%0*.*f", digits , decimalCount,configVarParMaq[index]);
-			changeTxt(&cfg_txt[index],result_str);
-		}
 	}
-	for (uint8_t index = 0; index < 5; index++)
+	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[0].id,EVENT_CLICK))
 	{
-		if (p_page_hdl->event == EVENT_SIGNAL(btn_par[index].id,EVENT_CLICK))
-		{
-			cfgPar_keypad_args.p_var = &configVarParMaq[index];
-			cfgPar_keypad_args.step = pm_init_step[index];
-			cfgPar_keypad_args.min = pm_init_min[index];
-			cfgPar_keypad_args.max = pm_init_max[index];
-			cfgPar_keypad_args.p_ret_page = page;
-			cfgPar_keypad_args.p_next_page = page;
-			keypad_page.p_args = &cfgPar_keypad_args;
-			mn_screen_change(&keypad_page,EVENT_SHOW);
-		}
+		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_4].travel_rev;
+		cfgPar_keypad_args.step = POINT_3;
+		cfgPar_keypad_args.min = 0;
+		cfgPar_keypad_args.max = MMREV_MAX;
+		cfgPar_keypad_args.p_ret_page = page;
+		cfgPar_keypad_args.p_next_page = page;
+		keypad_page.p_args = &cfgPar_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
+	}
+	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[1].id,EVENT_CLICK))
+	{
+		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
+		cfgPar_keypad_args.step = POINT_3;
+		cfgPar_keypad_args.min = 0;
+		cfgPar_keypad_args.max = MMREV_MAX;
+		cfgPar_keypad_args.p_ret_page = page;
+		cfgPar_keypad_args.p_next_page = page;
+		keypad_page.p_args = &cfgPar_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
+	}
+	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[2].id,EVENT_CLICK))
+	{
+		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
+		cfgPar_keypad_args.step = POINT_3;
+		cfgPar_keypad_args.min = 0;
+		cfgPar_keypad_args.max = MMREV_MAX;
+		cfgPar_keypad_args.p_ret_page = page;
+		cfgPar_keypad_args.p_next_page = page;
+		keypad_page.p_args = &cfgPar_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
+	}
+	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[3].id,EVENT_CLICK))
+	{
+		cfgPar_keypad_args.p_var = &cm.a[AXIS_X].jerk_max;
+		cfgPar_keypad_args.step = POINT_0;
+		cfgPar_keypad_args.min = 0;
+		cfgPar_keypad_args.max = JERK_MAX;
+		cfgPar_keypad_args.p_ret_page = page;
+		cfgPar_keypad_args.p_next_page = page;
+		keypad_page.p_args = &cfgPar_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
+	}
+	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[4].id,EVENT_CLICK))
+	{
+		cfgPar_keypad_args.p_var = &cm.a[AXIS_Y].jerk_max;
+		cfgPar_keypad_args.step = POINT_0;
+		cfgPar_keypad_args.min = 0;
+		cfgPar_keypad_args.max = JERK_MAX;
+		cfgPar_keypad_args.p_ret_page = page;
+		cfgPar_keypad_args.p_next_page = page;
+		keypad_page.p_args = &cfgPar_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{

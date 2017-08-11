@@ -29,8 +29,6 @@ static float vel_corte;
 static float tempo_perfuracao;
 static float tempo_aquecimento;
 
-uint32_t zero_flags = 0;
-
 float *velocidadeJog;
 float Xcord,Ycord;
 ut_config_name_ox tempoDwell;
@@ -367,7 +365,6 @@ stat_t ZerarMaquina_Macro(void)
 	memset(&cm.gn, 0, sizeof(GCodeInput_t));		// clear all next-state values
 	cm.gn.motion_mode = cm_get_motion_mode(MODEL);	// get motion mode from previous block
 	intepreterRunning = true;
-	zero_flags = ZERO_MAQ_FLAG;
 	switch (state)
 	{
 	case 0: 	SET_NON_MODAL_MACRO (absolute_override, true);
@@ -395,7 +392,6 @@ stat_t ZerarPeca_Macro(void)
 	memset(&cm.gn, 0, sizeof(GCodeInput_t));		// clear all next-state values
 	cm.gn.motion_mode = cm_get_motion_mode(MODEL);	// get motion mode from previous block
 	intepreterRunning = true;
-	zero_flags = ZERO_PECA_FLAG;
 	switch (state)
 	{
 		case 0:

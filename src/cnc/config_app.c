@@ -139,6 +139,19 @@ const cfgItem_t cfgArray[] PROGMEM = {
 
 	{ "cfm","ad", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO],MAQ_ALTURA_DESLOCAMENTO},		// user data group
 
+//	{ "cfp","ex1", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_EIXO_X1],M4_TRAVEL_PER_REV_HELI_EM},		// user data group
+//	{ "cfp","ex2", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_EIXO_X2],M3_TRAVEL_PER_REV_HELI_EM},		// user data group
+//	{ "cfp","ey", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_EIXO_Y],M2_TRAVEL_PER_REV_HELI_EM},		// user data group
+//	{ "cfp","jx", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_JERK_X],X_JERK_MAX_EM},		// user data group
+//	{ "cfp","jy", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_JERK_Y],Y_JERK_MAX_EM},		// user data group
+//	{ "cfp","vx", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_VEL_X],X_VELOCITY_MAX_EM},		// user data group
+//	{ "cfp","vy", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_VEL_Y],Y_VELOCITY_MAX_EM},		// user data group
+//	{ "cfp","vz", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_VEL_Z],Z_VELOCITY_MAX_EM},		// user data group
+//	{ "cfp","jd", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_JUNCTION_DEV],JUNCTION_DEVIATION_EM},		// user data group
+//	{ "cfp","ex1", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_JUNCTION_ACEL],JUNCTION_ACCELERATION_EM},		// user data group
+//	{ "cfp","ex1", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarParMaq[CFG_PAR_MAQ_CHORDAL_TOL],CHORDAL_TOLERANCE},		// user data group
+
+
 	{ "cfp","ap", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_ALTURA_PERFURACAO],PL_ALTURA_PERFURACAO},	// user data group
 	{ "cfp","ac", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_ALTURA_CORTE],PL_ALTURA_CORTE},				// user data group
 	{ "cfp","vc", _fip, 0, tx_print_nul, get_flt, set_flt,(float *)&configVarPl[PL_CONFIG_VELOC_CORTE],PL_VEL_CORTE},		// user data group

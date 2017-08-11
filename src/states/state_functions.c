@@ -46,6 +46,10 @@ uint32_t currentLineSel = 0;
 static char strLinhas[2][20];
 char** pstrLinhas;
 
+ut_config_var* configsVar;
+char gszCurFile[MAX_FILE_PATH_SIZE];
+FATFS  st_usb_fatfs;
+
 float zeroPiecebuffer[3] = {0,0,0};
 
 uint32_t selecionarlinhasMax(void)
@@ -303,24 +307,24 @@ void mem_format(void *var)
 		mem_ret = eepromIntegrityCheck();
 		if(mem_ret == MEM_FAIL)
 		{
-			ut_lcd_output_warning("ERRO 001\n");
+		//	ut_lcd_output_warning("ERRO 001\n");
 			vTaskDelay(4000 / portTICK_PERIOD_MS);
 		}
 		else
 		{
-			ut_lcd_output_warning("MEMORIA INTERNA\nINTEGRA\n");
+		//	ut_lcd_output_warning("MEMORIA INTERNA\nINTEGRA\n");
 			vTaskDelay(4000 / portTICK_PERIOD_MS);
 		}
-		ut_lcd_output_warning("FORMATANDO\nMEMÓRIA EXTERNA...\n");
+		//ut_lcd_output_warning("FORMATANDO\nMEMÓRIA EXTERNA...\n");
 		res_ext = spiffs_format();
 		if (res_ext != SPIFFS_OK)
 		{
-			ut_lcd_output_warning("ERRO 002\n");
+		//	ut_lcd_output_warning("ERRO 002\n");
 			vTaskDelay(4000 / portTICK_PERIOD_MS);
 		}
 		else
 		{
-			ut_lcd_output_warning("MEMORIA EXTERNA\nINTEGRA\n");
+		//	ut_lcd_output_warning("MEMORIA EXTERNA\nINTEGRA\n");
 			vTaskDelay(4000 / portTICK_PERIOD_MS);
 		}
 		RESET

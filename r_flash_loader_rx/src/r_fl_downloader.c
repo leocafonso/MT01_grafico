@@ -159,74 +159,7 @@ uint8_t     chargeIndex = 0;
 * Arguments    : none
 * Return value : none
 ******************************************************************************/
-void R_FL_StateMachine(void)
-{
-    FIL         file;
-    FRESULT     res;
-    uint16_t    file_rw_cnt;
-	uint8_t     uiMsgRow = 0;
 
-	uint32_t    keyEntry = 0;
-
-
-    R_FL_DownloaderInit();
-
-	/* Open a text file */
-	if(drivemountFlag){
-		res = f_open(&file, proj_name, FA_READ | FA_WRITE);
-		if(FR_OK != res)
-		{
-			nop();
-		}
-		else
-		{
-			res = f_lseek(&file,CRC_ADDRESS);
-			f_read(&file, g_fl_load_image_headers, sizeof(g_fl_load_image_headers), (UINT *)&file_rw_cnt);
-			sprintf(StrBoot, "   Versão:%d.%d.%d.%03d", g_fl_load_image_headers[0].version_major,
-													 g_fl_load_image_headers[0].version_middle,
-					                                 g_fl_load_image_headers[0].version_minor,
-					                                 g_fl_load_image_headers[0].version_comp);
-			gszbootMsg[2] = StrBoot;
-			/* Write strings */
-			for(uiMsgRow = 0; uiMsgRow < MAX_ROW; uiMsgRow++)
-			{
-				ut_lcd_drawStr(uiMsgRow, 0, gszbootMsg[uiMsgRow], false,ITEM_NO_MARKED,u8g_font_6x10);
-			}
-			/* Output */
-			ut_lcd_output_str();
-
-			while(keyEntry != KEY_ENTER && keyEntry != KEY_ESC){
-				WDT_FEED
-				xQueueReceive( qKeyboard, &keyEntry, portMAX_DELAY );
-			}
-			if(keyEntry == KEY_ESC){
-				return;
-			}
-
-            res = f_lseek(&file,0);
-		    fl_mem_erase(0, FL_MEM_ERASE_BLOCK);
-		    chargeIndex = 0;
-			ut_lcd_output_warning(gszCarMsg[chargeIndex]);
-		   while(!f_eof(&file)){
-				f_read(&file, g_fl_rx_buffer, sizeof(g_fl_rx_buffer), (UINT *)&file_rw_cnt);
-				if(memcmp(g_fl_rx_buffer, 0xFF, sizeof(g_fl_rx_buffer)) != 0)
-					fl_mem_write(address, g_fl_rx_buffer, sizeof(g_fl_rx_buffer));
-				address += sizeof(g_fl_rx_buffer);
-				if((address % 0x10000) == 0){
-					chargeIndex++;
-					ut_lcd_output_warning(gszCarMsg[chargeIndex]);
-				    fl_mem_erase(address, FL_MEM_ERASE_BLOCK);
-				}
-				WDT_FEED
-		   }
-			res = f_close(&file);
-			res = f_open(&file, proj_name, FA_WRITE);
-		    f_rename(proj_name, proj_programmed);
-		    RESET
-		}
-	}
-    
-}
 FILINFO     finfo;
 bool R_IsFileLoaderAvailable(void)
 {

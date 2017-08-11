@@ -175,49 +175,39 @@ static void jog_key_esc (void *p_arg)
 
 static void jog_key_release (void *p_arg)
 {
-//	if (btn_tocha.click == NT_PRESS)
-//	{
-//		widgetClick(&btn_tocha, NT_RELEASE);
-//		jog.event = EVENT_SIGNAL(btn_tocha.id, EVENT_CLICK);
-//	}
+
 	if (btn_cima.click == NT_PRESS)
 	{
-		//widgetClick(&btn_cima, NT_RELEASE);
 		btn_cima.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_cima.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
 	}
 	if (btn_baixo.click == NT_PRESS)
 	{
-		//widgetClick(&btn_baixo, NT_RELEASE);
 		btn_baixo.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_baixo.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
 	}
 	if (btn_direita.click == NT_PRESS)
 	{
-		//widgetClick(&btn_direita, NT_RELEASE);
 		btn_direita.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_direita.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
 	}
 	if (btn_esquerda.click == NT_PRESS)
 	{
-		//widgetClick(&btn_esquerda, NT_RELEASE);
 		btn_esquerda.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_esquerda.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
 	}
 	if (btn_zup.click == NT_PRESS)
 	{
-		//widgetClick(&btn_zup, NT_RELEASE);
 		btn_zup.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_zup.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
 	}
 	if (btn_zdown.click == NT_PRESS)
 	{
-		//widgetClick(&btn_zdown, NT_RELEASE);
 		btn_zdown.click = NT_RELEASE;
 		jog.event = EVENT_SIGNAL(btn_zdown.id, EVENT_CLICK);
 		xQueueSend( menu.qEvent, &jog, 0 );
@@ -344,14 +334,7 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zpeca.id,EVENT_CLICK))
 	{
-//		if ((zero_flags & ZERO_MAQ_FLAG) ==  ZERO_MAQ_FLAG)
-//		{
-			warning_page.p_args = &warn_zerarpeca_args;
-//		}
-//		else
-//		{
-//			warning_page.p_args = &warn_semzeromaquina_args;
-//		}
+		warning_page.p_args = &warn_zerarpeca_args;
 		mn_screen_change(&warning_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(vel_txt.id,EVENT_CLICK))
