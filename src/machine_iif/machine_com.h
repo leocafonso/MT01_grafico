@@ -65,5 +65,7 @@ void machine_flag_set(flag_name flag,bool mod);
 void machine_oxi_timer_zero(void);
 void machine_oxi_timer_up(void);
 void machine_oxi_timer_down(void);
+void machine_read_oxi_parameter(void);
+void machine_read_pl_parameter(void);
 
 #endif /* MACHINE_IIF_MACHINE_COM_H_ */

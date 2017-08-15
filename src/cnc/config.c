@@ -167,6 +167,7 @@ void config_init()
 		}
 		sr_init_status_report();
 	}
+	z_step_pulse = (M1_TRAVEL_PER_REV*M1_STEP_ANGLE)/(360*M1_MICROSTEPS);
 #endif
 }
 
@@ -723,6 +724,39 @@ void nv_save_parameter_int(uint32_t* val)
 	nv_set(nv);
 	nv_persist(nv);
 }
+
+void nv_read_parameter_flt(float* val)
+{
+	nvObj_t *nv = nv_reset_nv_list();
+	for (uint16_t i = 0; i < nv_index_max(); i++)
+	{
+		if (cfgArray[i].target == val)
+		{
+			nv->index = i;
+			break;
+		}
+	}
+	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+	read_persistent_value(nv);
+	nv_set(nv);
+}
+
+void nv_read_parameter_int(uint32_t* val)
+{
+	nvObj_t *nv = nv_reset_nv_list();
+	for (uint16_t i = 0; i < nv_index_max(); i++)
+	{
+		if (cfgArray[i].target == val)
+		{
+			nv->index = i;
+			break;
+		}
+	}
+	strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);
+	read_persistent_value(nv);
+	nv_set(nv);
+}
+
 
 /*
  * cm_conditional_message() - queue a RAM string as a message in the response (conditionally)

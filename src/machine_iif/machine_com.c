@@ -431,3 +431,19 @@ void machine_flag_set(flag_name flag,bool mod)
 	nv_save_parameter_int(&configFlags[flag]);
 //	eepromWriteConfig(CONFIGFLAG);
 }
+
+void machine_read_oxi_parameter(void)
+{
+	for (uint8_t i = 0; i < OX_CONFIG_MAX; i++)
+		nv_read_parameter_flt(&configVarOx[i]);
+	nv_read_parameter_flt(&configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO]);
+}
+
+void machine_read_pl_parameter(void)
+{
+	for (uint8_t i = 0; i < PL_CONFIG_MAX; i++)
+		nv_read_parameter_flt(&configVarPl[i]);
+	nv_read_parameter_flt(&configVarMaq[CFG_MAQUINA_ALT_DESLOCAMENTO]);
+}
+
+

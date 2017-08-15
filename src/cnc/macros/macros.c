@@ -369,6 +369,7 @@ stat_t ZerarMaquina_Macro(void)
 	{
 	case 0: 	SET_NON_MODAL_MACRO (absolute_override, true);
 				SET_MODAL_MACRO(MODAL_GROUP_G12, coord_system, G54);
+				cm.coord_system = G54;
 				state++; break;
 
 	case 1: 	SET_NON_MODAL_MACRO(next_action, NEXT_ACTION_SEARCH_HOME);

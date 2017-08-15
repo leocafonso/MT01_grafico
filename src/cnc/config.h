@@ -362,6 +362,8 @@ nvObj_t *nv_add_conditional_message(const char_t *string);
 void nv_print_list(stat_t status, uint8_t text_flags, uint8_t json_flags);
 void nv_save_parameter_flt(float* val);
 void nv_save_parameter_int(uint32_t* val);
+void nv_read_parameter_int(uint32_t* val);
+void nv_read_parameter_flt(float* val);
 
 // application specific helpers and functions (config_app.c)
 stat_t set_flu(nvObj_t *nv);				// set floating point number with G20/G21 units conversion

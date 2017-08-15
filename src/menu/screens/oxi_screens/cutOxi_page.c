@@ -397,7 +397,7 @@ static void warning_callback(warn_btn_t btn_type)
 {
 	if (event_args == PROGRAM_FINISHED_EVENT)
 	{
-
+		machine_read_oxi_parameter();
 		mn_screen_change(&jog_page,EVENT_SHOW);
 	}
 	else if (event_args == ARCO_OK_INIT_FAILED_EVENT ||
@@ -415,6 +415,7 @@ static void warning_esc_callback(warn_btn_t btn_type)
 		case BTN_PRESSED_SIM:
 			if (!programEnd)
 			{
+				machine_read_oxi_parameter();
 				machine_pause();
 				machine_stop(programEnd);
 			}

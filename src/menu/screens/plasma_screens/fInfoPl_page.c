@@ -79,7 +79,6 @@ extern uint32_t choosedLine;
 /************************** Static functions *********************************************/
 static void fileInfo_key_esc (void *p_arg)
 {
-	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	widgetClick(&btn_voltar, NT_PRESS);
 }
 
@@ -104,6 +103,7 @@ static void fileInfo_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	fInfoPl_page.iif_func[SC_KEY_ESC] = fileInfo_key_esc;
 	fInfoPl_page.iif_func[SC_KEY_RELEASE] = fileInfo_key_release;
 }
@@ -131,9 +131,9 @@ void page_handler (void *p_arg)
 		changeTxt(&cfg_txt[1],result_str);
 		sprintf(result_str, "%4.0f", configVarPl[PL_CONFIG_VELOC_CORTE]);
 		changeTxt(&cfg_txt[2],result_str);
-		sprintf(result_str, "%s", configFlags[KERF] ? "DESABILITADO":"HABILITADO");
+		sprintf(result_str, "%s", configFlags[KERF] ? "HABILITADO":"DESABILITADO");
 		changeTxt(&cfg_txt[3],result_str);
-		sprintf(result_str, "%s", configFlags[MERGULHO] ? "DESABILITADO":"HABILITADO");
+		sprintf(result_str, "%s", configFlags[MERGULHO] ? "HABILITADO":"DESABILITADO");
 		changeTxt(&cfg_txt[4],result_str);
 
 	}

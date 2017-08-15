@@ -59,7 +59,22 @@ mn_screen_t emergencia_page = {.id 		 = SC_PAGE1,
 /* extern variables */
 extern TaskHandle_t xEmergenciaTaskHandle;
 /************************** Static functions *********************************************/
+static void emergencia_key_enter (void *p_arg)
+{
+	widgetClick(&btn_ok, NT_PRESS);
+}
 
+static void emergencia_key_release (void *p_arg)
+{
+	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
+	if (*key_pressed == KEY_ENTER)
+	{
+		widgetClick(&btn_ok, NT_RELEASE);
+		touch.event = EVENT_SIGNAL(btn_ok.id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+}
 /************************** Public functions *********************************************/
 
 void page_attach (void *p_arg)
@@ -68,6 +83,15 @@ void page_attach (void *p_arg)
 	mn_emergencia_t *p_emg_arg = p_page_hdl->p_args;
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	p_previous_page = p_emg_arg->p_ret_page;
+	emergencia_page.iif_func[SC_KEY_ENTER] = emergencia_key_enter;
+	emergencia_page.iif_func[SC_KEY_ESC] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_DOWN] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_UP] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_RIGHT] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_LEFT] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_ZDOWN] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_ZUP] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_RELEASE] = emergencia_key_release;
 }
 
 void page_detach (void *p_arg)
@@ -84,8 +108,8 @@ void page_handler (void *p_arg)
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-		widgetVisible(&msg_pic, NT_SHOW);
 		widgetChangePic(&msg_pic, IMG_EMERGENCIA,NO_IMG);
+		widgetVisible(&msg_pic, NT_SHOW);
 		widgetTouchable(&btn_sim, NT_DISABLE);
 		widgetTouchable(&btn_nao, NT_DISABLE);
 		widgetTouchable(&btn_ok, NT_ENABLE);

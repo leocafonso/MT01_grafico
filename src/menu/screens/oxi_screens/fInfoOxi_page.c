@@ -73,7 +73,6 @@ extern uint32_t choosedLine;
 /************************** Static functions *********************************************/
 static void fileInfo_key_esc (void *p_arg)
 {
-	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	widgetClick(&btn_voltar, NT_PRESS);
 }
 
@@ -98,6 +97,7 @@ static void fileInfo_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
+	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	fInfoOX_page.iif_func[SC_KEY_ESC] = fileInfo_key_esc;
 	fInfoOX_page.iif_func[SC_KEY_RELEASE] = fileInfo_key_release;
 }
