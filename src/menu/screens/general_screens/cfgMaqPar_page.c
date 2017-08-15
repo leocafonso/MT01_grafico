@@ -182,7 +182,7 @@ void page_handler (void *p_arg)
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[2].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
+		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_2].travel_rev;
 		cfgPar_keypad_args.step = POINT_3;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = MMREV_MAX;

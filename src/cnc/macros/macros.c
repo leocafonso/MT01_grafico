@@ -397,8 +397,10 @@ stat_t ZerarPeca_Macro(void)
 		case 0:
 					cm.offset[G55][AXIS_X] = mp_get_runtime_absolute_position(AXIS_X);
 					cm.offset[G55][AXIS_Y] = mp_get_runtime_absolute_position(AXIS_Y);
+					cm.offset[G55][AXIS_Z] = mp_get_runtime_absolute_position(AXIS_Z);
 					nv_save_parameter_flt(&cm.offset[G55][AXIS_X]);
 					nv_save_parameter_flt(&cm.offset[G55][AXIS_Y]);
+					nv_save_parameter_flt(&cm.offset[G55][AXIS_Z]);
 					SET_MODAL_MACRO(MODAL_GROUP_G12, coord_system, G55);
 					cm.coord_system = G55;
 					state++; break;
