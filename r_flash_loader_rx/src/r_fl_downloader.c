@@ -62,6 +62,9 @@ Includes   <System Includes> , "Project Includes"
 #include "lcd.h"
 #include "lcd_menu.h"
 
+#include "spiffs_hw.h"
+#include "spiflash.h"
+
 #include <string.h>
 #include <stdio.h>
 
@@ -141,7 +144,7 @@ void R_FL_DownloaderInit(void)
     g_pfl_cur_app_header = (fl_image_header_t *)__sectop("APPHEADER_1");
     
     /* Initialize resources needed for using external memory */
-    fl_mem_init();
+  //  fl_mem_init();
 
     /* Initialize CRC. */
     R_CRC_Init();
@@ -219,13 +222,24 @@ uint8_t R_loader_progress(void)
 	{
 		return 0xFF;
 	}
+	/**
+	 * Writes data to the spi flash.
+	 *
+	 * @param spi   the spi flash struct.
+	 * @param addr  the address of the spi flash to write to.
+	 * @param len   number of bytes to write.
+	 * @param buf   the data to write.
+	 * @return error code or SPIFLASH_OK
+	 */
+	int SPIFLASH_write(spiflash_t *spi, uint32_t addr, uint32_t len, const uint8_t *buf);
+
 
 	res = f_lseek(&file,address);
-	fl_mem_erase(address, FL_MEM_ERASE_BLOCK);
+	SPIFLASH_erase(&spif, address, FL_MEM_ERASE_BLOCK);
 	while(!f_eof(&file)){
 		f_read(&file, g_fl_rx_buffer, sizeof(g_fl_rx_buffer), (UINT *)&file_rw_cnt);
 		if(memcmp(g_fl_rx_buffer, 0xFF, sizeof(g_fl_rx_buffer)) != 0)
-			fl_mem_write(address, g_fl_rx_buffer, sizeof(g_fl_rx_buffer));
+			SPIFLASH_write(&spif,address, sizeof(g_fl_rx_buffer),g_fl_rx_buffer);
 		address += sizeof(g_fl_rx_buffer);
 		if((address % 0x10000) == 0){
 			break;

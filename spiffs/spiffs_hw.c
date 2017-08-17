@@ -23,7 +23,7 @@ static u8_t spiffs_cache_buf[(LOG_PAGE_SIZE+32)*4];
 static spiffs *fs = (spiffs *)&uspiffs[0].gSPIFFS;
 static spiffs_config cfg;
 
-static spiflash_t spif;
+
 
 static void SPI_init(void);
 static bool RSPI1_Write( const uint8_t *pSrc, uint16_t usBytes);
@@ -43,9 +43,9 @@ static const spiflash_hal_t my_spiflash_hal = {
   ._spiflash_wait = impl_spiflash_wait
 };
 
-static s32_t my_spiffs_read(u32_t addr, u32_t size, u8_t *dst) ;
-static s32_t my_spiffs_write(u32_t addr, u32_t size, u8_t *src);
-static s32_t my_spiffs_erase(u32_t addr, u32_t size);
+//static s32_t my_spiffs_read(u32_t addr, u32_t size, u8_t *dst) ;
+//static s32_t my_spiffs_write(u32_t addr, u32_t size, u8_t *src);
+//static s32_t my_spiffs_erase(u32_t addr, u32_t size);
 
 const spiflash_cmd_tbl_t my_spiflash_cmds = { \
 	    .write_disable = 0x04, \
@@ -55,6 +55,7 @@ const spiflash_cmd_tbl_t my_spiflash_cmds = { \
 	    .read_data_fast = 0x0b, \
 	    .write_sr = 0x01, \
 	    .read_sr = 0x05, \
+		.clear_sr = 0x30, \
 	    .block_erase_4 = 0x20, \
 	    .block_erase_8 = 0x00, \
 	    .block_erase_16 = 0x00, \
@@ -73,7 +74,7 @@ const spiflash_config_t my_spiflash_config = {
   .addr_dummy_sz = 0, // using single line data, not quad or something
   .addr_endian = SPIFLASH_ENDIANNESS_BIG, // normally big endianess on addressing
   .sr_write_ms = 10,
-  .page_program_ms = 1,
+  .page_program_ms = 2,
   .block_erase_4_ms = 0,
   .block_erase_8_ms = 0, // not supported
   .block_erase_16_ms = 0, // not supported
@@ -81,6 +82,8 @@ const spiflash_config_t my_spiflash_config = {
   .block_erase_64_ms = 130,
   .chip_erase_ms = 35000
 };
+
+spiflash_t spif;
 
 s32_t spiffs_init(void)
 {
@@ -96,9 +99,9 @@ s32_t spiffs_init(void)
 			NULL);
 
 
-	cfg.hal_read_f = my_spiffs_read;
-	cfg.hal_write_f = my_spiffs_write;
-	cfg.hal_erase_f = my_spiffs_erase;
+	cfg.hal_read_f = spi_mem_read;
+	cfg.hal_write_f = spi_mem_write;
+	cfg.hal_erase_f = spi_mem_erase;
 
 	res = SPIFFS_mount(fs,
 			&cfg,
@@ -126,7 +129,6 @@ s32_t spiffs_format(void)
 			0);
 
 	SPIFFS_unmount(fs);
-
 	res = SPIFFS_format(fs);
 	if (res != SPIFFS_OK)
 	{
@@ -144,17 +146,17 @@ s32_t spiffs_format(void)
 	return res;
 }
 
-static s32_t my_spiffs_read(u32_t addr, u32_t size, u8_t *dst) {
+s32_t spi_mem_read(u32_t addr, u32_t size, u8_t *dst) {
 	SPIFLASH_read(&spif,addr, size, dst);
   return SPIFFS_OK;
 }
 
-static s32_t my_spiffs_write(u32_t addr, u32_t size, u8_t *src) {
+s32_t spi_mem_write(u32_t addr, u32_t size, u8_t *src) {
 	SPIFLASH_write(&spif,addr, size, src);
   return SPIFFS_OK;
 }
 
-static s32_t my_spiffs_erase(u32_t addr, u32_t size) {
+s32_t spi_mem_erase(u32_t addr, u32_t size) {
 	SPIFLASH_erase(&spif,addr, size);
   return SPIFFS_OK;
 }

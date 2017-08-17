@@ -210,7 +210,7 @@ static uint8_t _probing_init()
 	pb.saved_coord_system = cm_get_coord_system(ACTIVE_MODEL);     //cm.gm.coord_system;
 	pb.saved_distance_mode = cm_get_distance_mode(ACTIVE_MODEL);   //cm.gm.distance_mode;
 	cm_set_distance_mode(ABSOLUTE_MODE);
-	cm_set_coord_system(ABSOLUTE_COORDS);
+	//cm_set_coord_system(ABSOLUTE_COORDS);
 
 	cm_spindle_control(SPINDLE_OFF);
 	return (_set_pb_func(_probing_start));							// start the move
@@ -259,10 +259,12 @@ static stat_t _probing_finish()
 	int8_t probe = read_switch(pb.probe_switch_axis, pb.probe_switch_position);
 #endif
 	cm.probe_state = (probe==SW_CLOSED) ? PROBE_SUCCEEDED : PROBE_FAILED;
-
+	//cm_set_position(AXIS_Z, cm_get_active_coord_offset(AXIS_Z));
+	mr.gm.work_offset[AXIS_Z] = mp_get_runtime_absolute_position(AXIS_Z);
+	cm.offset[pb.saved_coord_system][AXIS_Z] = 0;
 	for( uint8_t axis=0; axis<AXES; axis++ ) {
 		// if we got here because of a feed hold we need to keep the model position correct
-		cm_set_position(axis, mp_get_runtime_work_position(axis));
+	//	cm_set_position(axis, mp_get_runtime_work_position(axis));
 
 		// store the probe results
 		cm.probe_results[axis] = cm_get_absolute_position(ACTIVE_MODEL, axis);

@@ -96,6 +96,7 @@ typedef struct spiflash_cmd_tbl_s {
   
   uint8_t write_sr;
   uint8_t read_sr;
+  uint8_t clear_sr;
   
   uint8_t block_erase_4;
   uint8_t block_erase_8;
