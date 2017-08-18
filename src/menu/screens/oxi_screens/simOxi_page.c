@@ -111,16 +111,28 @@ static void sim_key_zup (void *p_arg)
 
 static void sim_key_right (void *p_arg)
 {
-	mn_screen_event_t touch;
-	touch.event = EVENT_SIGNAL(btn_timeup.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &touch, 0 );
+	if (machine_is_paused == true)
+	{
+		if (page->wt_selected == mn_screen_select_widget(page,&btn_play))
+		{
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+			page->wt_selected = mn_screen_select_widget(page,&btn_auto);
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
+		}
+	}
 }
 
 static void sim_key_left (void *p_arg)
 {
-	mn_screen_event_t touch;
-	touch.event = EVENT_SIGNAL(btn_timedown.id, EVENT_PRESSED);
-	xQueueSend( menu.qEvent, &touch, 0 );
+	if (machine_is_paused == true)
+	{
+		if (page->wt_selected == mn_screen_select_widget(page,&btn_auto))
+		{
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+			page->wt_selected = mn_screen_select_widget(page,&btn_play);
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
+		}
+	}
 }
 
 static void sim_key_release (void *p_arg)
@@ -131,7 +143,7 @@ static void sim_key_release (void *p_arg)
 	{
 		if (machine_is_paused == true)
 		{
-			touch.event = EVENT_SIGNAL(btn_play.id,EVENT_CLICK);
+			touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id, EVENT_CLICK);
 		}
 		else
 		{
@@ -224,9 +236,11 @@ void page_handler (void *p_arg)
 	{
 		if (machine_is_paused == false)
 		{
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, DESELECT_COLOR);
+			page->wt_selected = mn_screen_select_widget(page,&btn_play);
+			widgetSelRec(page->p_widget[page->wt_selected],SELECT_WIDTH, SELECT_COLOR);
 			machine_pause();
 			widgetChangePic(&btn_play, IMG_BTN_PLAY,IMG_BTN_PLAY_PRESS);
-
 			machine_is_paused = true;
 		}
 		else
@@ -238,16 +252,12 @@ void page_handler (void *p_arg)
 
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zup.id,EVENT_PRESSED) ||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_PRESSED)||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_timeup.id,EVENT_PRESSED)||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_timedown.id,EVENT_PRESSED))
+			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_PRESSED))
 	{
 		btn_id = GET_ID(p_page_hdl->event);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zup.id,EVENT_CLICK) ||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_CLICK)||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_timeup.id,EVENT_CLICK)||
-			 p_page_hdl->event == EVENT_SIGNAL(btn_timedown.id,EVENT_CLICK))
+			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_CLICK))
 	{
 		zmove = 0;
 		btn_id = 0;
@@ -326,15 +336,6 @@ void page_handler (void *p_arg)
 		else
 			widgetChangePic(&tocha_Led, IMG_LED_OFF,NO_IMG);
 
-//		if (machine_alarms_get(MATERIAL_INFO))
-//			widgetChangePic(&ohm_Led, IMG_LED_ON,NO_IMG);
-//		else
-//			widgetChangePic(&ohm_Led, IMG_LED_OFF,NO_IMG);
-//
-//		if (machine_alarms_get(ARCOOK_INFO))
-//			widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
-//		else
-//			widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
 
 		if (btn_id == btn_zup.id)
 		{
@@ -344,14 +345,14 @@ void page_handler (void *p_arg)
 		{
 			zmove = -0.005;
 		}
-		else if (btn_id == btn_timeup.id)
-		{
-			machine_oxi_timer_up();
-		}
-		else if (btn_id == btn_timedown.id)
-		{
-			machine_oxi_timer_down();
-		}
+//		else if (btn_id == btn_timeup.id)
+//		{
+//			machine_oxi_timer_up();
+//		}
+//		else if (btn_id == btn_timedown.id)
+//		{
+//			machine_oxi_timer_down();
+//		}
 	}
 }
 

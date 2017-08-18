@@ -135,6 +135,7 @@ void page_handler (void *p_arg)
 		changeTxt(&cfg_txt[3],result_str);
 		sprintf(result_str, "%s", configFlags[MERGULHO] ? "HABILITADO":"DESABILITADO");
 		changeTxt(&cfg_txt[4],result_str);
+		page->wt_selected = mn_screen_select_widget(page,&btn_ok);
 
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_ok.id,EVENT_CLICK))

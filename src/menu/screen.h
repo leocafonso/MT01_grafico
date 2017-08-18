@@ -104,6 +104,7 @@ void screenGetWidgetsInfo(mn_screen_t *p_screen);
 void mn_screen_bind_keyboard(mn_screen_t *p_screen);
 void mn_screen_change (mn_screen_t *p_screen, uint32_t event_in_change);
 void mn_screen_change_image(mn_screen_t *p_screen, uint16_t pic);
+uint8_t mn_screen_select_widget(mn_screen_t *p_screen, mn_widget_t *widget);
 void mn_screen_idle(void *p_arg);
 
 #endif /* MENU_SCREEN_H_ */

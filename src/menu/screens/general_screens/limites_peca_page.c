@@ -51,7 +51,7 @@ static mn_widget_t tocha_Led = {.name = "p0", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p2", .selectable = false};
 static mn_warning_t warn_args;
 static mn_warning_t warn_wrongfile_args = { .buttonUseInit = BTN_OK,
-											.img_txt[0] = IMG_FINALIZADO,
+											.img_txt[0] = IMG_SEM_INFO_LINHA,
 											.msg_count = 1,
 											.func_callback = warning_wrongfile_callback
 										   };

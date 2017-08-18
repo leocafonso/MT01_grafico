@@ -25,6 +25,7 @@
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
 static void page_detach (void *p_arg);
+static void warning_file_callback(warn_btn_t btn_type);
 
 /* Static variables and const */
 static mn_widget_t bvolta = {.name = "b0", .selectable = true};
@@ -44,6 +45,8 @@ static uint16_t new_index = 0;
 static mn_screen_event_t selFiles;
 static mn_file_t *gcode_file;
 static mn_load_t load_arg;
+
+
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -65,6 +68,13 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 #if (TIMER_NUM > 0)
 static mn_timer_t *p_timer[TIMER_NUM] = {&timer0};
 #endif
+
+static mn_warning_t warn_files_args = { .buttonUseInit = BTN_OK,
+											.img_txt[0] = IMG_SEM_ARQUIVO,
+											.msg_count = 1,
+											.func_callback = warning_file_callback
+										   };
+
 /* Global variables and const */
 mn_screen_t selFiles_page = {.id 		 = SC_PAGE5,
 					.wt_selected = 0,
@@ -93,18 +103,21 @@ static bool showFileDir(mn_file_t *p_file, const char *path)
 			changeTxt(selFiles_page.p_widget[i],"");
 
 		find_files(p_file,path);
-		if (p_file->filesNum  < FILE_IN_SCREEN )
+		if(p_file->filesNum > 0)
 		{
-			selFiles_page.widgetSize = p_file->filesNum;
-		}
-		else
-		{
-			selFiles_page.widgetSize = FILE_IN_SCREEN;
-		}
+			if (p_file->filesNum  < FILE_IN_SCREEN )
+			{
+				selFiles_page.widgetSize = p_file->filesNum;
+			}
+			else
+			{
+				selFiles_page.widgetSize = FILE_IN_SCREEN;
+			}
 
-		for (uint8_t i = 0; i < selFiles_page.widgetSize; i++)
-			changeTxt(selFiles_page.p_widget[i],p_file->buffer[i]);
-		ret = true;
+			for (uint8_t i = 0; i < selFiles_page.widgetSize; i++)
+				changeTxt(selFiles_page.p_widget[i],p_file->buffer[i]);
+			ret = true;
+		}
 	}
 	return ret;
 }
@@ -252,7 +265,6 @@ void page_handler (void *p_arg)
 			}
 			else
 			{
-
 				mn_screen_change(&main_page,EVENT_SHOW);
 				return;
 			}
@@ -274,7 +286,13 @@ void page_handler (void *p_arg)
 			}
 		}
 		f_chdir("/");
-		showFileDir(gcode_file, "/");
+		if (showFileDir(gcode_file, "/") == false)
+		{
+			vPortFree(gcode_file);
+			gcode_file = NULL;
+			warning_page.p_args = &warn_files_args;
+			mn_screen_change(&warning_page,EVENT_SHOW);
+		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(t0.id,EVENT_CLICK) ||
 			 p_page_hdl->event == EVENT_SIGNAL(t1.id,EVENT_CLICK) ||
@@ -387,4 +405,9 @@ void page_handler (void *p_arg)
 		mn_screen_change(&emergencia_page,EVENT_SHOW);
 	}
 
+}
+
+static void warning_file_callback(warn_btn_t btn_type)
+{
+	mn_screen_change(&main_page,EVENT_SHOW);
 }

@@ -125,6 +125,7 @@ void page_handler (void *p_arg)
 		changeTxt(&cfg_txt[1],result_str);
 		sprintf(result_str, "%4.0f", configVarOx[OX_CONFIG_VELOC_CORTE]);
 		changeTxt(&cfg_txt[2],result_str);
+		page->wt_selected = mn_screen_select_widget(page,&btn_ok);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_ok.id,EVENT_CLICK))
 	{

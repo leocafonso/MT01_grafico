@@ -116,6 +116,9 @@ void page_handler (void *p_arg)
 		uint16_t decCount;
 		uint16_t decimalCount;
 		uint16_t digits;
+
+		page->wt_selected = mn_screen_select_widget(page,&btn_alt_desloc);
+
 		decNum = 1;
 		decCount = 0;
 		decimalCount = 0;

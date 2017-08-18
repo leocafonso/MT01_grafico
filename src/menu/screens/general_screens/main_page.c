@@ -88,6 +88,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SHOW ||
 		p_page_hdl->event == EMERGENCIA_EVENT)
 	{
+		page->wt_selected = mn_screen_select_widget(page,&btn_loadfile);
 		SPIFFS_opendir(fs, "/", &sf_dir);
 		pe = SPIFFS_readdir(&sf_dir, pe);
 		if(pe != NULL)

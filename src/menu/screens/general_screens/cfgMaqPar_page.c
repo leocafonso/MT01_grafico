@@ -146,6 +146,7 @@ void page_handler (void *p_arg)
 		p_page_hdl->event == EMERGENCIA_EVENT ||
 		p_page_hdl->event == KEYBACK_RET_EVENT)
 	{
+		page->wt_selected = mn_screen_select_widget(page,&btn_par[0]);
 		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_4].travel_rev);
 		changeTxt(&cfg_txt[0],result_str);
 		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_3].travel_rev);

@@ -264,5 +264,18 @@ void mn_screen_bind_keyboard(mn_screen_t *p_screen)
 	}
 }
 
+uint8_t mn_screen_select_widget(mn_screen_t *p_screen, mn_widget_t *widget)
+{
+	uint8_t ret = 255;
+	for (uint8_t i = 0; i < p_screen->widgetSize; i++)
+	{
+		if (p_screen->p_widget[i] == widget)
+		{
+			ret = i;
+		}
+	}
+	return ret;
+}
+
 
 void mn_screen_idle(void *p_arg) {}

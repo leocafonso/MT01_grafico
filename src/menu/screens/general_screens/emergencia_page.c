@@ -64,6 +64,11 @@ static void emergencia_key_enter (void *p_arg)
 	widgetClick(&btn_ok, NT_PRESS);
 }
 
+static void emergencia_key_esc (void *p_arg)
+{
+	widgetClick(&btn_ok, NT_PRESS);
+}
+
 static void emergencia_key_release (void *p_arg)
 {
 	uint32_t *key_pressed = p_arg;
@@ -74,6 +79,13 @@ static void emergencia_key_release (void *p_arg)
 		touch.event = EVENT_SIGNAL(btn_ok.id,EVENT_CLICK);
 		xQueueSend( menu.qEvent, &touch, 0 );
 	}
+	else if (*key_pressed == KEY_ESC)
+	{
+		widgetClick(&btn_ok, NT_RELEASE);
+		touch.event = EVENT_SIGNAL(btn_ok.id,EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
+	}
+
 }
 /************************** Public functions *********************************************/
 
@@ -84,7 +96,7 @@ void page_attach (void *p_arg)
 	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	p_previous_page = p_emg_arg->p_ret_page;
 	emergencia_page.iif_func[SC_KEY_ENTER] = emergencia_key_enter;
-	emergencia_page.iif_func[SC_KEY_ESC] = mn_screen_idle;
+	emergencia_page.iif_func[SC_KEY_ESC] = emergencia_key_esc;
 	emergencia_page.iif_func[SC_KEY_DOWN] = mn_screen_idle;
 	emergencia_page.iif_func[SC_KEY_UP] = mn_screen_idle;
 	emergencia_page.iif_func[SC_KEY_RIGHT] = mn_screen_idle;

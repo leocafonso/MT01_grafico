@@ -66,6 +66,12 @@ mn_screen_t warning_page = {.id 		 = SC_PAGE1,
 /* extern variables */
 
 /************************** Static functions *********************************************/
+static void warning_key_esc (void *p_arg)
+{
+	warning_page.wt_selected = 2;
+	widgetClick(&btn_nao, NT_PRESS);
+}
+
 static void warning_key_right (void *p_arg)
 {
 	if (warning_page.wt_selected == 0)
@@ -75,6 +81,7 @@ static void warning_key_right (void *p_arg)
 		widgetSelRec(warning_page.p_widget[2], 3, SELECT_COLOR);
 	}
 }
+
 static void warning_key_left (void *p_arg)
 {
 	if (warning_page.wt_selected == 2)
@@ -99,28 +106,50 @@ static void warning_key_enter (void *p_arg)
 		widgetClick(&btn_nao, NT_PRESS);
 	}
 }
+
 static void warning_key_release (void *p_arg)
 {
-	if (btn_sim.click == NT_PRESS)
+	uint32_t *key_pressed = p_arg;
+	mn_screen_event_t touch;
+	if (*key_pressed == KEY_ENTER)
 	{
-		widgetClick(&btn_sim, NT_RELEASE);
-		warning.event = EVENT_SIGNAL(btn_sim.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &warning, 0 );
+		widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
+		touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id, EVENT_CLICK);
+		xQueueSend( menu.qEvent, &touch, 0 );
 	}
-	else if (btn_ok.click == NT_PRESS)
+	if (*key_pressed == KEY_ESC)
 	{
-		widgetClick(&btn_ok, NT_RELEASE);
-		warning.event = EVENT_SIGNAL(btn_ok.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &warning, 0 );
+		if (warning_page.wt_selected == 2)
+		{
+			widgetClick(&btn_nao, NT_RELEASE);
+			touch.event = EVENT_SIGNAL(btn_nao.id, EVENT_CLICK);
+			xQueueSend( menu.qEvent, &touch, 0 );
+		}
 	}
-	else if (btn_nao.click == NT_PRESS)
-	{
-		widgetClick(&btn_nao, NT_RELEASE);
-		warning.event = EVENT_SIGNAL(btn_nao.id, EVENT_CLICK);
-		xQueueSend( menu.qEvent, &warning, 0 );
-	}
-
 }
+
+//static void warning_key_release (void *p_arg)
+//{
+//	if (btn_sim.click == NT_PRESS)
+//	{
+//		widgetClick(&btn_sim, NT_RELEASE);
+//		warning.event = EVENT_SIGNAL(btn_sim.id, EVENT_CLICK);
+//		xQueueSend( menu.qEvent, &warning, 0 );
+//	}
+//	else if (btn_ok.click == NT_PRESS)
+//	{
+//		widgetClick(&btn_ok, NT_RELEASE);
+//		warning.event = EVENT_SIGNAL(btn_ok.id, EVENT_CLICK);
+//		xQueueSend( menu.qEvent, &warning, 0 );
+//	}
+//	else if (btn_nao.click == NT_PRESS)
+//	{
+//		widgetClick(&btn_nao, NT_RELEASE);
+//		warning.event = EVENT_SIGNAL(btn_nao.id, EVENT_CLICK);
+//		xQueueSend( menu.qEvent, &warning, 0 );
+//	}
+//
+//}
 
 static void warning_key_keyborad_bind (uint8_t buttonUsage)
 {
@@ -147,6 +176,7 @@ static void warning_key_keyborad_bind (uint8_t buttonUsage)
 					case SC_KEY_RIGHT: warning_page.iif_func[i] = &warning_key_right; 	break;
 					case SC_KEY_LEFT:  warning_page.iif_func[i] = &warning_key_left; 	break;
 					case SC_KEY_ENTER: warning_page.iif_func[i] = &warning_key_enter; 	break;
+					case SC_KEY_ESC: warning_page.iif_func[i] = &warning_key_esc;
 					case SC_KEY_RELEASE: warning_page.iif_func[i] = &warning_key_release; 	break;
 					default: warning_page.iif_func[i] = &mn_screen_idle;
 				}

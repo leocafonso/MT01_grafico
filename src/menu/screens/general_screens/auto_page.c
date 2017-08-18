@@ -119,8 +119,7 @@ void page_handler (void *p_arg)
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
-
-
+		page->wt_selected = mn_screen_select_widget(page,&btn_rodar);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_rodar.id,EVENT_CLICK))
 	{
