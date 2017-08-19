@@ -222,20 +222,9 @@ uint8_t R_loader_progress(void)
 	{
 		return 0xFF;
 	}
-	/**
-	 * Writes data to the spi flash.
-	 *
-	 * @param spi   the spi flash struct.
-	 * @param addr  the address of the spi flash to write to.
-	 * @param len   number of bytes to write.
-	 * @param buf   the data to write.
-	 * @return error code or SPIFLASH_OK
-	 */
-	int SPIFLASH_write(spiflash_t *spi, uint32_t addr, uint32_t len, const uint8_t *buf);
-
 
 	res = f_lseek(&file,address);
-	SPIFLASH_erase(&spif, address, FL_MEM_ERASE_BLOCK);
+	SPIFLASH_erase(&spif, address, SPIFFS_CFG_PHYS_ERASE_SZ(0));
 	while(!f_eof(&file)){
 		f_read(&file, g_fl_rx_buffer, sizeof(g_fl_rx_buffer), (UINT *)&file_rw_cnt);
 		if(memcmp(g_fl_rx_buffer, 0xFF, sizeof(g_fl_rx_buffer)) != 0)
