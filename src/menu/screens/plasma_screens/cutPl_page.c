@@ -184,6 +184,7 @@ void page_handler (void *p_arg)
 		machine_is_paused = false;
 		programEnd = 0;
 		machine_start();
+		btn_id_tch = 0;
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);

@@ -38,7 +38,7 @@
 #include "hardware.h"
 #include "text_parser.h"
 #include "util.h"
-#include "lcd.h"
+
 #include "plasma.h"
 #include "switch.h"
 #include "settings.h"

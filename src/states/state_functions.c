@@ -24,8 +24,6 @@
 
 #include "keyboard.h"
 
-#include "lcd_menu.h"
-#include "lcd.h"
 #include "util.h"
 
 #include <string.h>

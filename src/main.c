@@ -48,7 +48,7 @@ Includes   <System Includes> , "Project Includes"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "semphr.h"
-#include "lcd.h"
+
 
 #ifdef RELEASE
 

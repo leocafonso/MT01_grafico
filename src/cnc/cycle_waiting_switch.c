@@ -41,7 +41,7 @@
 #include "controller.h"
 #include "keyboard.h"
 #include "config_SwTimers.h"
-#include "lcd.h"
+
 #include "menu.h"
 
 

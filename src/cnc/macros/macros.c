@@ -17,7 +17,6 @@
 #include "interpreter_if.h"
 #include "menu.h"
 
-#include "lcd.h"
 #include "keyboard.h"
 
 #define FEEDRATE_Z 900

@@ -59,8 +59,8 @@ Includes   <System Includes> , "Project Includes"
 
 #include "ff.h"
 
-#include "lcd.h"
-#include "lcd_menu.h"
+//#include "lcd.h"
+//#include "lcd_menu.h"
 
 #include "spiffs_hw.h"
 #include "spiflash.h"
@@ -88,41 +88,41 @@ uint8_t g_fl_rx_buffer[FL_CFG_DATA_BLOCK_MAX_BYTES];
 
 /* Data structure to hold load image headers */
 fl_image_header_t   g_fl_load_image_headers[FL_CFG_MEM_NUM_LOAD_IMAGES];
-static const char* gszbootMsg[MAX_ROW] =
-{
-		/* "12345678901234567890" */
-		   "    DETECTADO NOVO  ",
-		   "       FIRMWARE     ",
-		   "                    ",
-		   "                    ",
-		   " ENTER: CONTINUA    ",
-		   " ESC  : PULA        ",
-};
-
-static const char* gszCarMsg[17] =
-{
-		/* "12345678901234567890" */
-		   "CARREGANDO\n[                ]\n",
-		   "CARREGANDO\n[*               ]\n",
-		   "CARREGANDO\n[**              ]\n",
-		   "CARREGANDO\n[***             ]\n",
-		   "CARREGANDO\n[****            ]\n",
-		   "CARREGANDO\n[*****           ]\n",
-		   "CARREGANDO\n[******          ]\n",
-		   "CARREGANDO\n[*******         ]\n",
-		   "CARREGANDO\n[********        ]\n",
-		   "CARREGANDO\n[*********       ]\n",
-		   "CARREGANDO\n[**********      ]\n",
-		   "CARREGANDO\n[***********     ]\n",
-		   "CARREGANDO\n[************    ]\n",
-		   "CARREGANDO\n[*************   ]\n",
-		   "CARREGANDO\n[**************  ]\n",
-		   "CARREGANDO\n[*************** ]\n",
-		   "CARREGANDO\n[****************]\n",
-};
-
-
-char StrBoot[MAX_COLUMN];
+//static const char* gszbootMsg[MAX_ROW] =
+//{
+//		/* "12345678901234567890" */
+//		   "    DETECTADO NOVO  ",
+//		   "       FIRMWARE     ",
+//		   "                    ",
+//		   "                    ",
+//		   " ENTER: CONTINUA    ",
+//		   " ESC  : PULA        ",
+//};
+//
+//static const char* gszCarMsg[17] =
+//{
+//		/* "12345678901234567890" */
+//		   "CARREGANDO\n[                ]\n",
+//		   "CARREGANDO\n[*               ]\n",
+//		   "CARREGANDO\n[**              ]\n",
+//		   "CARREGANDO\n[***             ]\n",
+//		   "CARREGANDO\n[****            ]\n",
+//		   "CARREGANDO\n[*****           ]\n",
+//		   "CARREGANDO\n[******          ]\n",
+//		   "CARREGANDO\n[*******         ]\n",
+//		   "CARREGANDO\n[********        ]\n",
+//		   "CARREGANDO\n[*********       ]\n",
+//		   "CARREGANDO\n[**********      ]\n",
+//		   "CARREGANDO\n[***********     ]\n",
+//		   "CARREGANDO\n[************    ]\n",
+//		   "CARREGANDO\n[*************   ]\n",
+//		   "CARREGANDO\n[**************  ]\n",
+//		   "CARREGANDO\n[*************** ]\n",
+//		   "CARREGANDO\n[****************]\n",
+//};
+//
+//
+//char StrBoot[MAX_COLUMN];
 
 /******************************************************************************
 Private global variables and functions
@@ -172,10 +172,6 @@ bool R_IsFileLoaderAvailable(void)
 
     FRESULT     res;
     uint16_t    file_rw_cnt;
-	uint8_t     uiMsgRow = 0;
-
-	uint32_t    keyEntry = 0;
-
 
     R_FL_DownloaderInit();
 
@@ -222,20 +218,9 @@ uint8_t R_loader_progress(void)
 	{
 		return 0xFF;
 	}
-	/**
-	 * Writes data to the spi flash.
-	 *
-	 * @param spi   the spi flash struct.
-	 * @param addr  the address of the spi flash to write to.
-	 * @param len   number of bytes to write.
-	 * @param buf   the data to write.
-	 * @return error code or SPIFLASH_OK
-	 */
-	int SPIFLASH_write(spiflash_t *spi, uint32_t addr, uint32_t len, const uint8_t *buf);
-
 
 	res = f_lseek(&file,address);
-	SPIFLASH_erase(&spif, address, FL_MEM_ERASE_BLOCK);
+	SPIFLASH_erase(&spif, address, SPIFFS_CFG_PHYS_ERASE_SZ(0));
 	while(!f_eof(&file)){
 		f_read(&file, g_fl_rx_buffer, sizeof(g_fl_rx_buffer), (UINT *)&file_rw_cnt);
 		if(memcmp(g_fl_rx_buffer, 0xFF, sizeof(g_fl_rx_buffer)) != 0)

@@ -10,7 +10,7 @@ Includes   <System Includes> , "Project Includes"
  ******************************************************************************/
 #include "platform.h"
 #include "keyboard.h"
-#include "lcd_menu.h"
+//#include "lcd_menu.h"
 //#include "hardware.h"
 #include "tinyg.h"
 #include "config.h"

@@ -18,7 +18,7 @@
 #include "canonical_machine.h"
 #include "text_parser.h"
 #include "keyboard.h"
-#include "lcd.h"
+
 #include "eeprom.h"
 #include "config_SwTimers.h"
 #include "macros.h"
