@@ -5,4 +5,17 @@
  *      Author: LAfonso01
  */
 
+void displayInit(void)
+{
 
+}
+
+void displayText(const char *str)
+{
+
+}
+
+void displayLine(const char *str)
+{
+
+}

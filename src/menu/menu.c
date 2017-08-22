@@ -70,31 +70,34 @@ void menu_task(void)
 	mn_screen_bind_keyboard(&zerarmaq_page);
 	mn_screen_bind_keyboard(&cfgMaqPar_page);
 
-	screenGetWidgetsInfo(&splash_page);
-	screenGetWidgetsInfo(&warning_page);
-	screenGetWidgetsInfo(&emergencia_page);
-	screenGetWidgetsInfo(&selFiles_page);
-	screenGetWidgetsInfo(&main_page);
-	screenGetWidgetsInfo(&auto_page);
-	screenGetWidgetsInfo(&cutPl_page);
-	screenGetWidgetsInfo(&cutOxi_page);
-	screenGetWidgetsInfo(&jog_page);
-	screenGetWidgetsInfo(&desloca_page);
-	screenGetWidgetsInfo(&simPl_page);
-	screenGetWidgetsInfo(&simOxi_page);
-	screenGetWidgetsInfo(&keypad_page);
-	screenGetWidgetsInfo(&cfgCutPl_page);
-	screenGetWidgetsInfo(&cfgCutOx_page);
-	screenGetWidgetsInfo(&load_page);
-	screenGetWidgetsInfo(&selLines_page);
-	screenGetWidgetsInfo(&limite_page);
-	screenGetWidgetsInfo(&fInfoPl_page);
-	screenGetWidgetsInfo(&fInfoOX_page);
-	screenGetWidgetsInfo(&cfgMaq_page);
-	screenGetWidgetsInfo(&manual_page);
-	screenGetWidgetsInfo(&cfgParTHC_page);
-	screenGetWidgetsInfo(&zerarmaq_page);
-	screenGetWidgetsInfo(&cfgMaqPar_page);
+	if (screenGetWidgetsInfo(&warning_page) == true)
+	{
+		screenGetWidgetsInfo(&splash_page);
+		screenGetWidgetsInfo(&warning_page);
+		screenGetWidgetsInfo(&emergencia_page);
+		screenGetWidgetsInfo(&selFiles_page);
+		screenGetWidgetsInfo(&main_page);
+		screenGetWidgetsInfo(&auto_page);
+		screenGetWidgetsInfo(&cutPl_page);
+		screenGetWidgetsInfo(&cutOxi_page);
+		screenGetWidgetsInfo(&jog_page);
+		screenGetWidgetsInfo(&desloca_page);
+		screenGetWidgetsInfo(&simPl_page);
+		screenGetWidgetsInfo(&simOxi_page);
+		screenGetWidgetsInfo(&keypad_page);
+		screenGetWidgetsInfo(&cfgCutPl_page);
+		screenGetWidgetsInfo(&cfgCutOx_page);
+		screenGetWidgetsInfo(&load_page);
+		screenGetWidgetsInfo(&selLines_page);
+		screenGetWidgetsInfo(&limite_page);
+		screenGetWidgetsInfo(&fInfoPl_page);
+		screenGetWidgetsInfo(&fInfoOX_page);
+		screenGetWidgetsInfo(&cfgMaq_page);
+		screenGetWidgetsInfo(&manual_page);
+		screenGetWidgetsInfo(&cfgParTHC_page);
+		screenGetWidgetsInfo(&zerarmaq_page);
+		screenGetWidgetsInfo(&cfgMaqPar_page);
+	}
 
 	vTaskDelay(500/portTICK_PERIOD_MS);
     xTaskCreate( (pdTASK_CODE)keyboard_task,     "keyboard_task    ",  512, NULL, 3, NULL); /* keyboard_task      */

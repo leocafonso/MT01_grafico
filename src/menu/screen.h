@@ -100,7 +100,7 @@ extern mn_screen_t cfgMaqPar_page;
 extern void (*mn_func[SC_KEY_TOTAL])(void *p_arg);
 
 void mn_screen_init (void);
-void screenGetWidgetsInfo(mn_screen_t *p_screen);
+bool screenGetWidgetsInfo(mn_screen_t *p_screen);
 void mn_screen_bind_keyboard(mn_screen_t *p_screen);
 void mn_screen_change (mn_screen_t *p_screen, uint32_t event_in_change);
 void mn_screen_change_image(mn_screen_t *p_screen, uint16_t pic);

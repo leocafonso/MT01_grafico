@@ -34,6 +34,8 @@ static void page_key_zup (void *p_arg);
 static void page_key_enter (void *p_arg);
 static void page_key_esc (void *p_arg);
 static void page_key_release (void *p_arg);
+
+
 /* Static variables and const */
 
 /* Global variables and const */
@@ -206,8 +208,9 @@ void mn_screen_change (mn_screen_t *p_screen, uint32_t event_in_change)
 	xQueueSend(menu.qEvent, &changePage, 0 );
 }
 
-void screenGetWidgetsInfo(mn_screen_t *p_screen)
+bool screenGetWidgetsInfo(mn_screen_t *p_screen)
 {
+	bool ret = false;
 	char temp[20];
 	uint8_t i;
 	for (i = 0; i < p_screen->widgetSize; i++)
@@ -216,7 +219,8 @@ void screenGetWidgetsInfo(mn_screen_t *p_screen)
 		if (p_screen->p_widget[i]->selectable == true)
 		{
 			sprintf(temp,"%s.%s.x",p_screen->name,p_screen->p_widget[i]->name);
-			NexGet_num(temp,&p_screen->p_widget[i]->position.x);
+			if(NexGet_num(temp,&p_screen->p_widget[i]->position.x) == false)
+				break;
 			sprintf(temp,"%s.%s.y",p_screen->name,p_screen->p_widget[i]->name);
 			NexGet_num(temp,&p_screen->p_widget[i]->position.y);
 			sprintf(temp,"%s.%s.h",p_screen->name,p_screen->p_widget[i]->name);
@@ -227,8 +231,10 @@ void screenGetWidgetsInfo(mn_screen_t *p_screen)
 			NexGet_num(temp,&p_screen->p_widget[i]->id);
 			sprintf(temp,"%s.%s.type",p_screen->name,p_screen->p_widget[i]->name);
 			NexGet_num(temp,(uint32_t *)&p_screen->p_widget[i]->wtType);
+			ret = true;
 		}
 	}
+	return ret;
 }
 
 void mn_screen_change_image(mn_screen_t *p_screen, uint16_t pic)
@@ -275,6 +281,11 @@ uint8_t mn_screen_select_widget(mn_screen_t *p_screen, mn_widget_t *widget)
 		}
 	}
 	return ret;
+}
+
+uint8_t mn_screen_draw(mn_screen_t *p_screen)
+{
+	return 1;
 }
 
 

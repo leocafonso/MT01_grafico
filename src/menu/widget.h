@@ -61,6 +61,8 @@ enum{
  *
  */
 typedef enum{
+	U8_TEXT = 0UL,  /*!<Button widget */
+	U8_LINE = 1UL,  /*!<Button widget */
 	WT_BUTTON = 98UL,  /*!<Button widget */
 	WT_TEXTBOX = 116UL,    /*!<Textbox widget */
 }mn_wt_type_t;
