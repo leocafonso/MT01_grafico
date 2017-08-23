@@ -53,15 +53,9 @@ Exported global variables (to be accessed by other files)
 const fl_image_header_t g_fl_cur_app_header = {
     /* To confirm valid header */
 	FL_LI_VALID_MASK,
-    /* Version major  */
-    1,
-    /* Version middle */
-    1,
-    /* Version minor */
-    0,
-    /* Version compilation mmi*/
-    5,
+    /* Version */
+	1,1,0,6
     /* CRC-16 CCITT of image as in MCU flash */
-    0xFFFF
+    ,0xFFFF
 };
 
