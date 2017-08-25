@@ -45,6 +45,10 @@
 #define POINT_1 0.1
 #define POINT_0 1
 
+#define RESET_ENTRY 1
+#define RESET_SET 2
+#define RESET_CLEAR 0
+
 #define TIMER_NUM 0
 
 #define WIDGET_NUM 6
@@ -74,7 +78,8 @@ static mn_widget_t *p_widget[WIDGET_NUM] =
 		&btn_par[0],&btn_par[1],&btn_par[2],&btn_par[3],&btn_par[4],&btn_voltar
 };
 
-static float configVarParMaq_buffer[CFG_PAR_MAQ_MAX];
+static float var_buffer;
+static uint8_t reset_flag = RESET_CLEAR;
 static mn_keypad_t cfgPar_keypad_args;
 
 #if (TIMER_NUM > 0)
@@ -143,9 +148,16 @@ void page_handler (void *p_arg)
 	static char result_str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW ||
-		p_page_hdl->event == EMERGENCIA_EVENT ||
-		p_page_hdl->event == KEYBACK_RET_EVENT)
+		p_page_hdl->event == EMERGENCIA_EVENT)
 	{
+		if ((reset_flag & RESET_ENTRY) == RESET_ENTRY)
+		{
+			if (var_buffer != *cfgPar_keypad_args.p_var)
+			{
+				reset_flag |= RESET_SET;
+			}
+		}
+		reset_flag |= RESET_ENTRY;
 		page->wt_selected = mn_screen_select_widget(page,&btn_par[0]);
 		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_4].travel_rev);
 		changeTxt(&cfg_txt[0],result_str);
@@ -162,6 +174,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[0].id,EVENT_CLICK))
 	{
 		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_4].travel_rev;
+		var_buffer   = *cfgPar_keypad_args.p_var;
 		cfgPar_keypad_args.step = POINT_3;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = MMREV_MAX;
@@ -173,6 +186,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[1].id,EVENT_CLICK))
 	{
 		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
+		var_buffer   = *cfgPar_keypad_args.p_var;
 		cfgPar_keypad_args.step = POINT_3;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = MMREV_MAX;
@@ -184,6 +198,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[2].id,EVENT_CLICK))
 	{
 		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_2].travel_rev;
+		var_buffer   = *cfgPar_keypad_args.p_var;
 		cfgPar_keypad_args.step = POINT_3;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = MMREV_MAX;
@@ -195,6 +210,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[3].id,EVENT_CLICK))
 	{
 		cfgPar_keypad_args.p_var = &cm.a[AXIS_X].jerk_max;
+		var_buffer   = *cfgPar_keypad_args.p_var;
 		cfgPar_keypad_args.step = POINT_0;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = JERK_MAX;
@@ -206,6 +222,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[4].id,EVENT_CLICK))
 	{
 		cfgPar_keypad_args.p_var = &cm.a[AXIS_Y].jerk_max;
+		var_buffer   = *cfgPar_keypad_args.p_var;
 		cfgPar_keypad_args.step = POINT_0;
 		cfgPar_keypad_args.min = 0;
 		cfgPar_keypad_args.max = JERK_MAX;
@@ -217,7 +234,7 @@ void page_handler (void *p_arg)
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 
-		if (memcmp(configVarParMaq_buffer,configVarParMaq, sizeof(configVarParMaq)) != 0)
+		if ((reset_flag & RESET_SET) == RESET_SET)
 		{
 			NexPage_show(load_page.name);
 			NexWidget_visible("p0",NT_HIDE);
@@ -228,7 +245,7 @@ void page_handler (void *p_arg)
 			vTaskDelay(500 / portTICK_PERIOD_MS);
 			RESET;
 		}
-
+		reset_flag = RESET_CLEAR;
 		mn_screen_change(&cfgMaq_page, EVENT_SHOW);
 	}
 	if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)

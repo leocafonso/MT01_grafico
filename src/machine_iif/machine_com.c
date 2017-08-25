@@ -31,6 +31,7 @@
 #include "macros.h"
 #include "plasma.h"
 #include "xio.h"
+#include "interpreter_if.h"
 
 /* Defines */
 
@@ -121,6 +122,8 @@ void machine_pause(void)
 		vTaskDelay(1/portTICK_PERIOD_MS);
 		WDT_FEED
 	}
+	zmove = 0;
+	//zmoved = false;
 	ltorchBuffer = TORCH;
 	TORCH = FALSE;
 }
@@ -253,6 +256,9 @@ void machine_stop(uint8_t programEnd)
 		sim = false;
 		currentLine = 0;
 		zinhibitor = false;
+		if (st_pre.mot[MOTOR_1].direction == DIRECTION_CW)
+			MOTOR1_DIR = MOTOR_REVERSE; else
+		MOTOR1_DIR = MOTOR_FOWARD;
 }
 
 void machine_oxi_timer_zero(void)

@@ -42,6 +42,7 @@ extern void iif_idle(void);
 extern void iif_bind_filerunning_stop(bool stop);
 
 extern float zmove;
+extern bool zmoved;
 extern uint32_t JogkeyPressed;
 
 #endif /* INCLUDE_INTERPRETER_IF_H_ */
