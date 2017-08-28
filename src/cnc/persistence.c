@@ -169,86 +169,138 @@ stat_t write_persistent_value(nvObj_t *nv)
 #endif // __ARM
 
 
+//uint8_t DF_ReadBytes(uint32_t address, uint8_t * array, uint8_t size)
+//{
+//	uint8_t flashRet;
+//	uint32_t offset;
+//	uint8_t buffer[3][4];
+//
+//	offset = ((nv_index_max()*4)/32)*32;
+//	for (uint8_t i = 0; i < 3; i++)
+//	{
+//		flashRet = R_FlashDataAreaBlankCheck((address + offset*i),BLANK_CHECK_2_BYTE);
+//		flashRet |= R_FlashDataAreaBlankCheck((address + offset*i) + 2,BLANK_CHECK_2_BYTE);
+//
+//		if (flashRet == FLASH_NOT_BLANK)
+//		{
+//			memcpy(buffer[i],(void *)(address + offset*i),size);
+//		}
+//		else if (flashRet == FLASH_BLANK)
+//		{
+//			buffer[i][0] = 0;
+//			buffer[i][1] = 0;
+//			buffer[i][2] = 0;
+//			buffer[i][3] = 0;
+//		}
+//		else
+//		{
+//			return (STAT_ERROR);
+//		}
+//	}
+//	if (!memcmp(buffer[0], buffer[1], size) && !memcmp(buffer[0], buffer[2], size))
+//	{
+//		memcpy(array,(void *)buffer[0],size);
+//	}
+//	else if (!memcmp(buffer[0], buffer[1], size))
+//	{
+//		memcpy(array,(void *)buffer[0],size);
+//	}
+//	else if (!memcmp(buffer[1], buffer[2], size))
+//	{
+//		memcpy(array,(void *)buffer[1],size);
+//	}
+//	else
+//	{
+//		return (STAT_ERROR);
+//	}
+//	return (STAT_OK);
+//}
+
+//uint8_t DF_WriteBytes(uint32_t address, uint8_t * array, uint8_t size)
+//{
+//	uint8_t flashRet = FLASH_FAILURE;
+//	uint8_t buffer[32];
+//	uint32_t blockStart;
+//	uint32_t blockOffsetAddress;
+//	uint32_t offset;
+//
+//	offset = ((nv_index_max()*4)/32)*32;
+//
+//	for (uint8_t i = 0; i < 3; i++)
+//	{
+//		flashRet = R_FlashDataAreaBlankCheck((address + offset*i),BLANK_CHECK_2_BYTE);
+//		flashRet |= R_FlashDataAreaBlankCheck((address + offset*i) + 2,BLANK_CHECK_2_BYTE);
+//
+//		if (flashRet == FLASH_NOT_BLANK)
+//		{
+//			blockStart = ((address + offset*i) / 32)*32;
+//			memcpy(buffer, (void *)blockStart,32);
+//			blockOffsetAddress = ((address + offset*i) % 32);
+//			memcpy((buffer + blockOffsetAddress), (uint8_t *)array,size);
+//			flashRet = R_FlashEraseRange(blockStart,sizeof(buffer));
+//			flashRet = R_FlashWrite(blockStart,(uint32_t)buffer,sizeof(buffer));
+//		}
+//		else if (flashRet == FLASH_BLANK)
+//		{
+//			memcpy(buffer, (uint8_t *)array,size);
+//			flashRet = R_FlashWrite((address + offset*i),(uint32_t)buffer,size);
+//		}
+//		else
+//		{
+//			return (STAT_ERROR);
+//		}
+//	}
+//	return (STAT_OK);
+//}
+
 uint8_t DF_ReadBytes(uint32_t address, uint8_t * array, uint8_t size)
 {
 	uint8_t flashRet;
-	uint32_t offset;
-	uint8_t buffer[3][4];
 
-	offset = ((nv_index_max()*4)/32)*32;
-	for (uint8_t i = 0; i < 3; i++)
-	{
-		flashRet = R_FlashDataAreaBlankCheck((address + offset*i),BLANK_CHECK_2_BYTE);
-		flashRet |= R_FlashDataAreaBlankCheck((address + offset*i) + 2,BLANK_CHECK_2_BYTE);
+	address = ((address - NVM_BASE_ADDR)/4)*32 + NVM_BASE_ADDR;
+	flashRet = R_FlashDataAreaBlankCheck(address,BLANK_CHECK_2_BYTE);
+	flashRet |= R_FlashDataAreaBlankCheck(address + 2,BLANK_CHECK_2_BYTE);
 
-		if (flashRet == FLASH_NOT_BLANK)
-		{
-			memcpy(buffer[i],(void *)(address + offset*i),size);
-		}
-		else if (flashRet == FLASH_BLANK)
-		{
-			buffer[i][0] = 0;
-			buffer[i][1] = 0;
-			buffer[i][2] = 0;
-			buffer[i][3] = 0;
-		}
-		else
-		{
-			return (STAT_ERROR);
-		}
-	}
-	if (!memcmp(buffer[0], buffer[1], size) && !memcmp(buffer[0], buffer[2], size))
+	if (flashRet == FLASH_NOT_BLANK)
 	{
-		memcpy(array,(void *)buffer[0],size);
+		memcpy(array,(void *)(address),size);
 	}
-	else if (!memcmp(buffer[0], buffer[1], size))
+	else if (flashRet == FLASH_BLANK)
 	{
-		memcpy(array,(void *)buffer[0],size);
-	}
-	else if (!memcmp(buffer[1], buffer[2], size))
-	{
-		memcpy(array,(void *)buffer[1],size);
+		array[0] = 0;
+		array[1] = 0;
+		array[2] = 0;
+		array[3] = 0;
 	}
 	else
 	{
 		return (STAT_ERROR);
 	}
+
 	return (STAT_OK);
 }
 
 uint8_t DF_WriteBytes(uint32_t address, uint8_t * array, uint8_t size)
 {
 	uint8_t flashRet = FLASH_FAILURE;
-	uint8_t buffer[32];
-	uint32_t blockStart;
-	uint32_t blockOffsetAddress;
-	uint32_t offset;
 
-	offset = ((nv_index_max()*4)/32)*32;
+	address = ((address - NVM_BASE_ADDR)/4)*32 + NVM_BASE_ADDR;
 
-	for (uint8_t i = 0; i < 3; i++)
+	flashRet = R_FlashDataAreaBlankCheck(address,BLANK_CHECK_2_BYTE);
+	flashRet |= R_FlashDataAreaBlankCheck(address + 2,BLANK_CHECK_2_BYTE);
+
+	if (flashRet == FLASH_NOT_BLANK)
 	{
-		flashRet = R_FlashDataAreaBlankCheck((address + offset*i),BLANK_CHECK_2_BYTE);
-		flashRet |= R_FlashDataAreaBlankCheck((address + offset*i) + 2,BLANK_CHECK_2_BYTE);
-
-		if (flashRet == FLASH_NOT_BLANK)
-		{
-			blockStart = ((address + offset*i) / 32)*32;
-			memcpy(buffer, (void *)blockStart,32);
-			blockOffsetAddress = ((address + offset*i) % 32);
-			memcpy((buffer + blockOffsetAddress), (uint8_t *)array,size);
-			flashRet = R_FlashEraseRange(blockStart,sizeof(buffer));
-			flashRet = R_FlashWrite(blockStart,(uint32_t)buffer,sizeof(buffer));
-		}
-		else if (flashRet == FLASH_BLANK)
-		{
-			memcpy(buffer, (uint8_t *)array,size);
-			flashRet = R_FlashWrite((address + offset*i),(uint32_t)buffer,size);
-		}
-		else
-		{
-			return (STAT_ERROR);
-		}
+		flashRet = R_FlashEraseRange(address,32);
+		flashRet = R_FlashWrite(address,(uint32_t)array,size);
+	}
+	else if (flashRet == FLASH_BLANK)
+	{
+		flashRet = R_FlashWrite(address,(uint32_t)array,size);
+	}
+	else
+	{
+		return (STAT_ERROR);
 	}
 	return (STAT_OK);
 }

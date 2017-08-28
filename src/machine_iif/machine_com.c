@@ -123,7 +123,7 @@ void machine_pause(void)
 		WDT_FEED
 	}
 	zmove = 0;
-	//zmoved = false;
+	zmoved = false;
 	ltorchBuffer = TORCH;
 	TORCH = FALSE;
 }
