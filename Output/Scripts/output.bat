@@ -22,3 +22,5 @@ del /q "%OUTPUTPATH%\bin\*.*"
 %OUTPUTPATH%\Scripts\srec_cat %WORKSPACEPATH%\MT01_Bootloader\Debug\MT01_Bootloader.mot -exclude -within %PROJPATHNAME% %PROJPATHNAME% -o %OUTPUTPATH%\bin\%PROJNAME%v%VERSION%_ba.mot
 
 copy "%GRAPHICPATH%\%PROJNAME%.tft" "%GRAPHICOUTPUT%" 
+
+for /d %%X in (%OUTPUTPATH%\bin) do (for /d %%a in (%%X) do ( "C:\Program Files\7-Zip\7z.exe" a -tzip "%OUTPUTPATH%\bin\%PROJNAME%v%VERSION%.zip" "%OUTPUTPATH%\bin" ))

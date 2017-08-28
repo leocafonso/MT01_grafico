@@ -101,8 +101,95 @@ mn_screen_t cfgMaqPar_page = {.id 		 = SC_PAGE9,
 										[SC_DETACH] = page_detach
 									}};
 /* extern variables */
-
+static void (*p_fn_btn[7])(void *p_args);
 /************************** Static functions *********************************************/
+void fn_eixoX1(void *p_args)
+{
+	cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_4].travel_rev;
+	var_buffer   = *cfgPar_keypad_args.p_var;
+	cfgPar_keypad_args.step = POINT_3;
+	cfgPar_keypad_args.min = 0;
+	cfgPar_keypad_args.max = MMREV_MAX;
+	cfgPar_keypad_args.p_ret_page = page;
+	cfgPar_keypad_args.p_next_page = page;
+	keypad_page.p_args = &cfgPar_keypad_args;
+	mn_screen_change(&keypad_page,EVENT_SHOW);
+}
+
+void fn_eixoX2(void *p_args)
+{
+	cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
+	var_buffer   = *cfgPar_keypad_args.p_var;
+	cfgPar_keypad_args.step = POINT_3;
+	cfgPar_keypad_args.min = 0;
+	cfgPar_keypad_args.max = MMREV_MAX;
+	cfgPar_keypad_args.p_ret_page = page;
+	cfgPar_keypad_args.p_next_page = page;
+	keypad_page.p_args = &cfgPar_keypad_args;
+	mn_screen_change(&keypad_page,EVENT_SHOW);
+}
+
+void fn_eixoY(void *p_args)
+{
+	cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_2].travel_rev;
+	var_buffer   = *cfgPar_keypad_args.p_var;
+	cfgPar_keypad_args.step = POINT_3;
+	cfgPar_keypad_args.min = 0;
+	cfgPar_keypad_args.max = MMREV_MAX;
+	cfgPar_keypad_args.p_ret_page = page;
+	cfgPar_keypad_args.p_next_page = page;
+	keypad_page.p_args = &cfgPar_keypad_args;
+	mn_screen_change(&keypad_page,EVENT_SHOW);
+}
+
+void fn_jerkX(void *p_args)
+{
+	cfgPar_keypad_args.p_var = &cm.a[AXIS_X].jerk_max;
+	var_buffer   = *cfgPar_keypad_args.p_var;
+	cfgPar_keypad_args.step = POINT_0;
+	cfgPar_keypad_args.min = 0;
+	cfgPar_keypad_args.max = JERK_MAX;
+	cfgPar_keypad_args.p_ret_page = page;
+	cfgPar_keypad_args.p_next_page = page;
+	keypad_page.p_args = &cfgPar_keypad_args;
+	mn_screen_change(&keypad_page,EVENT_SHOW);
+}
+
+void fn_jerkY(void *p_args)
+{
+	cfgPar_keypad_args.p_var = &cm.a[AXIS_X].jerk_max;
+	var_buffer   = *cfgPar_keypad_args.p_var;
+	cfgPar_keypad_args.step = POINT_0;
+	cfgPar_keypad_args.min = 0;
+	cfgPar_keypad_args.max = JERK_MAX;
+	cfgPar_keypad_args.p_ret_page = page;
+	cfgPar_keypad_args.p_next_page = page;
+	keypad_page.p_args = &cfgPar_keypad_args;
+	mn_screen_change(&keypad_page,EVENT_SHOW);
+}
+
+
+void cfgMaqInit(void)
+{
+	char result_str[20];
+	p_fn_btn[0] = fn_eixoX1;
+	p_fn_btn[1] = fn_eixoX2;
+	p_fn_btn[2] = fn_eixoY;
+	p_fn_btn[3] = fn_jerkX;
+	p_fn_btn[4] = fn_jerkY;
+
+	sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_4].travel_rev);
+	changeTxt(&cfg_txt[0],result_str);
+	sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_3].travel_rev);
+	changeTxt(&cfg_txt[1],result_str);
+	sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_2].travel_rev);
+	changeTxt(&cfg_txt[2],result_str);
+	sprintf(result_str, "%0.0f", cm.a[AXIS_X].jerk_max);
+	changeTxt(&cfg_txt[3],result_str);
+	sprintf(result_str, "%0.0f", cm.a[AXIS_Y].jerk_max);
+	changeTxt(&cfg_txt[4],result_str);
+}
+
 static void cfgMaqPar_key_esc (void *p_arg)
 {
 	widgetClick(&btn_voltar, NT_PRESS);
@@ -145,7 +232,6 @@ void page_detach (void *p_arg)
 
 void page_handler (void *p_arg)
 {
-	static char result_str[20];
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW ||
 		p_page_hdl->event == EMERGENCIA_EVENT)
@@ -159,77 +245,27 @@ void page_handler (void *p_arg)
 		}
 		reset_flag |= RESET_ENTRY;
 		page->wt_selected = mn_screen_select_widget(page,&btn_par[0]);
-		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_4].travel_rev);
-		changeTxt(&cfg_txt[0],result_str);
-		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_3].travel_rev);
-		changeTxt(&cfg_txt[1],result_str);
-		sprintf(result_str, "%0.3f", st_cfg.mot[MOTOR_2].travel_rev);
-		changeTxt(&cfg_txt[2],result_str);
-		sprintf(result_str, "%0.0f", cm.a[AXIS_X].jerk_max);
-		changeTxt(&cfg_txt[3],result_str);
-		sprintf(result_str, "%0.0f", cm.a[AXIS_Y].jerk_max);
-		changeTxt(&cfg_txt[4],result_str);
-
+		cfgMaqInit();
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[0].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_4].travel_rev;
-		var_buffer   = *cfgPar_keypad_args.p_var;
-		cfgPar_keypad_args.step = POINT_3;
-		cfgPar_keypad_args.min = 0;
-		cfgPar_keypad_args.max = MMREV_MAX;
-		cfgPar_keypad_args.p_ret_page = page;
-		cfgPar_keypad_args.p_next_page = page;
-		keypad_page.p_args = &cfgPar_keypad_args;
-		mn_screen_change(&keypad_page,EVENT_SHOW);
+		p_fn_btn[0](NULL);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[1].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_3].travel_rev;
-		var_buffer   = *cfgPar_keypad_args.p_var;
-		cfgPar_keypad_args.step = POINT_3;
-		cfgPar_keypad_args.min = 0;
-		cfgPar_keypad_args.max = MMREV_MAX;
-		cfgPar_keypad_args.p_ret_page = page;
-		cfgPar_keypad_args.p_next_page = page;
-		keypad_page.p_args = &cfgPar_keypad_args;
-		mn_screen_change(&keypad_page,EVENT_SHOW);
+		p_fn_btn[1](NULL);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[2].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &st_cfg.mot[MOTOR_2].travel_rev;
-		var_buffer   = *cfgPar_keypad_args.p_var;
-		cfgPar_keypad_args.step = POINT_3;
-		cfgPar_keypad_args.min = 0;
-		cfgPar_keypad_args.max = MMREV_MAX;
-		cfgPar_keypad_args.p_ret_page = page;
-		cfgPar_keypad_args.p_next_page = page;
-		keypad_page.p_args = &cfgPar_keypad_args;
-		mn_screen_change(&keypad_page,EVENT_SHOW);
+		p_fn_btn[2](NULL);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[3].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &cm.a[AXIS_X].jerk_max;
-		var_buffer   = *cfgPar_keypad_args.p_var;
-		cfgPar_keypad_args.step = POINT_0;
-		cfgPar_keypad_args.min = 0;
-		cfgPar_keypad_args.max = JERK_MAX;
-		cfgPar_keypad_args.p_ret_page = page;
-		cfgPar_keypad_args.p_next_page = page;
-		keypad_page.p_args = &cfgPar_keypad_args;
-		mn_screen_change(&keypad_page,EVENT_SHOW);
+		p_fn_btn[3](NULL);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_par[4].id,EVENT_CLICK))
 	{
-		cfgPar_keypad_args.p_var = &cm.a[AXIS_Y].jerk_max;
-		var_buffer   = *cfgPar_keypad_args.p_var;
-		cfgPar_keypad_args.step = POINT_0;
-		cfgPar_keypad_args.min = 0;
-		cfgPar_keypad_args.max = JERK_MAX;
-		cfgPar_keypad_args.p_ret_page = page;
-		cfgPar_keypad_args.p_next_page = page;
-		keypad_page.p_args = &cfgPar_keypad_args;
-		mn_screen_change(&keypad_page,EVENT_SHOW);
+		p_fn_btn[4](NULL);
 	}
 	if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{

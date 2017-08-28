@@ -54,7 +54,7 @@ const fl_image_header_t g_fl_cur_app_header = {
     /* To confirm valid header */
 	FL_LI_VALID_MASK,
     /* Version */
-	1,1,0,6
+	1,1,0,7
     /* CRC-16 CCITT of image as in MCU flash */
     ,0xFFFF
 };
