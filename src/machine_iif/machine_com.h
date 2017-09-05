@@ -39,6 +39,7 @@ typedef enum{
 	MC_TORCH_OFF
 }mc_torch_state_t;
 
+void machine_init(void);
 void machine_enable(void);
 void machine_start(void);
 void machine_start_sim(void);

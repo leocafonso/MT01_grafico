@@ -45,6 +45,7 @@ static uint32_t arco = 0;
 
 /* extern variables */
 extern TaskHandle_t xCncTaskHandle;
+extern void main_cnc_task(void);
 bool lstop;
 extern bool intepreterRunning;
 extern bool zinhibitor;
@@ -61,6 +62,12 @@ void machine_enable(void)
 {
 	pl_emergencia_init();
 }
+
+void machine_init(void)
+{
+    xTaskCreate( (pdTASK_CODE)main_cnc_task,     "CNC_task   ",  2048, NULL, 1, &xCncTaskHandle); /* CNC_task      */
+}
+
 
 void machine_start(void)
 {

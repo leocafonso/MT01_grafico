@@ -128,7 +128,6 @@ void main(void)
 	/* Initialize USB */
 	usb_main();
 
-
 	/* Initialize RTOS */
 	FreeRTOSConfig();
 

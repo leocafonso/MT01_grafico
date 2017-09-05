@@ -126,7 +126,7 @@ static void _application_init(void)
 	hardware_init();				// system hardware setup 			- must be first
 	persistence_init();				// set up EEPROM or other NVM		- must be second
 //RXMOD	rtc_init();						// real time counter
-//	xio_init();						// eXtended IO subsystem
+	xio_init();						// eXtended IO subsystem
 
 	// do these next
 	stepper_init(); 				// stepper subsystem 				- must precede gpio_init()

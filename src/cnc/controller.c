@@ -158,7 +158,7 @@ stat_t controller_test_assertions()
 
 void controller_run()
 {
-	xio_init();
+//	xio_init();
 
 	while (true) {
 	    /* Block to wait for prvTask1() to notify this task. */

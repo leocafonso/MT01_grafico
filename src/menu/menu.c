@@ -110,6 +110,7 @@ void menu_task(void)
     }
 	else
 	{
+		machine_init();
 		mn_screen_change(&splash_page,EVENT_SHOW);
 	}
 	while(1)

@@ -110,7 +110,10 @@ FILE * xio_open_spiffs(const uint8_t dev, const char *addr, const flags_t flags)
 //	f_close(&dx->f);
 //    /* Open a text file */
 	SPIFFS_opendir(&dx->gSPIFFS, "/", &sf_dir);
-	pe = SPIFFS_readdir(&sf_dir, pe);
+	do{
+		pe = SPIFFS_readdir(&sf_dir, pe);
+	}while(strcmp((const char *)pe->name,"config.met") == 0);
+	//pe = SPIFFS_readdir(&sf_dir, pe);
     dx->f = SPIFFS_open_by_dirent(&dx->gSPIFFS, pe, SPIFFS_RDONLY, 0);
     if (choosedLinePosition > 0 && flags == 1)
     {

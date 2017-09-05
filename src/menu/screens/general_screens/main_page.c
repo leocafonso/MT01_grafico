@@ -90,7 +90,9 @@ void page_handler (void *p_arg)
 	{
 		page->wt_selected = mn_screen_select_widget(page,&btn_loadfile);
 		SPIFFS_opendir(fs, "/", &sf_dir);
-		pe = SPIFFS_readdir(&sf_dir, pe);
+		do{
+			pe = SPIFFS_readdir(&sf_dir, pe);
+		}while(strcmp((const char *)pe->name,"config.met") == 0);
 		if(pe != NULL)
 		{
 			changeTxt(&filename_txt,pe->name);

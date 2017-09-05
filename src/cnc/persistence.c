@@ -29,6 +29,7 @@
 #include "report.h"
 #include "canonical_machine.h"
 #include "util.h"
+#include "xio.h"
 
 #ifdef __AVR
 #include "xmega/xmega_eeprom.h"
@@ -60,9 +61,10 @@ void persistence_init()
 {
 	uint32_t address1;
 	uint32_t address2;
-	R_FlashDataAreaAccess(0xFFFF, 0xFFFF);
+//	R_FlashDataAreaAccess(0xFFFF, 0xFFFF);
 	nvm.base_addr = NVM_BASE_ADDR;
 	nvm.profile_base = NVM_BASE_ADDR;
+
 	return;
 }
 
@@ -255,54 +257,55 @@ stat_t write_persistent_value(nvObj_t *nv)
 
 uint8_t DF_ReadBytes(uint32_t address, uint8_t * array, uint8_t size)
 {
-	uint8_t flashRet;
+	s32_t err;
+	uint8_t ret = STAT_ERROR;
+	spiffs_file *fd = &uspiffs[0].f;
+	spiffs *fs = &uspiffs[0].gSPIFFS;
 
-	address = ((address - NVM_BASE_ADDR)/4)*32 + NVM_BASE_ADDR;
-	flashRet = R_FlashDataAreaBlankCheck(address,BLANK_CHECK_2_BYTE);
-	flashRet |= R_FlashDataAreaBlankCheck(address + 2,BLANK_CHECK_2_BYTE);
-
-	if (flashRet == FLASH_NOT_BLANK)
+	*fd = SPIFFS_open(fs, "config.met", SPIFFS_RDWR | SPIFFS_DIRECT, 0);
+	err = SPIFFS_lseek(fs, *fd,address,SPIFFS_SEEK_SET);
+	if (err >= SPIFFS_OK)
 	{
-		memcpy(array,(void *)(address),size);
+		err = SPIFFS_read(fs, *fd, (u8_t *)array, size);
+		if (err < SPIFFS_OK)
+		{
+			if(fs->err_code == SPIFFS_ERR_END_OF_OBJECT)
+			{
+				u8_t buf[4] = {0};
+				SPIFFS_lseek(fs, *fd,0,SPIFFS_SEEK_SET);
+				for (uint16_t i = 0; i < nv_index_max(); i++)
+				{
+					SPIFFS_write(fs, *fd, buf, sizeof(buf));
+				}
+			}
+		}
+		else
+		{
+			ret = STAT_OK;
+		}
 	}
-	else if (flashRet == FLASH_BLANK)
-	{
-		array[0] = 0;
-		array[1] = 0;
-		array[2] = 0;
-		array[3] = 0;
-	}
-	else
-	{
-		return (STAT_ERROR);
-	}
-
-	return (STAT_OK);
+	SPIFFS_close(fs, *fd);
+	return ret;
 }
 
 uint8_t DF_WriteBytes(uint32_t address, uint8_t * array, uint8_t size)
 {
-	uint8_t flashRet = FLASH_FAILURE;
-
-	address = ((address - NVM_BASE_ADDR)/4)*32 + NVM_BASE_ADDR;
-
-	flashRet = R_FlashDataAreaBlankCheck(address,BLANK_CHECK_2_BYTE);
-	flashRet |= R_FlashDataAreaBlankCheck(address + 2,BLANK_CHECK_2_BYTE);
-
-	if (flashRet == FLASH_NOT_BLANK)
+	s32_t err;
+	uint8_t ret = STAT_ERROR;
+	spiffs_file *fd = &uspiffs[0].f;
+	spiffs *fs = &uspiffs[0].gSPIFFS;
+	*fd = SPIFFS_open(fs, "config.met", SPIFFS_RDWR | SPIFFS_DIRECT, 0);
+	err = SPIFFS_lseek(fs, *fd,address,SPIFFS_SEEK_SET);
+	if (err >= SPIFFS_OK)
 	{
-		flashRet = R_FlashEraseRange(address,32);
-		flashRet = R_FlashWrite(address,(uint32_t)array,size);
+		err = SPIFFS_write(fs, *fd, (u8_t *)array, size);
+		if (err > SPIFFS_OK)
+		{
+			ret = STAT_OK;
+		}
 	}
-	else if (flashRet == FLASH_BLANK)
-	{
-		flashRet = R_FlashWrite(address,(uint32_t)array,size);
-	}
-	else
-	{
-		return (STAT_ERROR);
-	}
-	return (STAT_OK);
+	SPIFFS_close(fs, *fd);
+	return ret;
 }
 
 #ifdef __cplusplus

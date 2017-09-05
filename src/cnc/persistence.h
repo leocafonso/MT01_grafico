@@ -31,7 +31,7 @@
 #include "config.h"						// needed for nvObj_t definition
 
 #define NVM_VALUE_LEN 4					// NVM value length (float, fixed length)
-#define NVM_BASE_ADDR 0x00100000			// base address of usable NVM
+#define NVM_BASE_ADDR 0			// base address of usable NVM
 
 //**** persistence singleton ****
 

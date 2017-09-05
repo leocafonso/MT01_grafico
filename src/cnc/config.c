@@ -152,9 +152,20 @@ void config_init()
 	cm_set_units_mode(MILLIMETERS);				// must do inits in millimeter mode
 	nv->index = 0;								// this will read the first record in NVM
 
-	read_persistent_value(nv);
-	if (nv->value != cs.fw_build) {				// case (1) NVM is not setup or not in revision
-//	if (fp_NE(nv->value, cs.fw_build)) {
+	spiffs_DIR sf_dir;
+	struct spiffs_dirent e;
+	struct spiffs_dirent *pe = &e;
+
+	spiffs_file *fd = &uspiffs[0].f;
+	spiffs *fs = &uspiffs[0].gSPIFFS;
+
+	SPIFFS_opendir(fs, "/", &sf_dir);
+	pe = SPIFFS_readdir(&sf_dir, pe);
+	*fd = SPIFFS_open(fs, "config.met", SPIFFS_RDWR | SPIFFS_DIRECT, 0);
+	SPIFFS_close(fs, *fd);
+	if (*fd == SPIFFS_ERR_NOT_FOUND) {				// case (1) NVM is not setup or not in revision
+		*fd = SPIFFS_open(fs, "config.met", SPIFFS_CREAT | SPIFFS_RDWR | SPIFFS_DIRECT, 0);
+		SPIFFS_close(fs, *fd);
 		_set_defa(nv);
 	} else {									// case (2) NVM is setup and in revision
 		rpt_print_loading_configs_message();
@@ -178,6 +189,7 @@ void config_init()
 
 static void _set_defa(nvObj_t *nv)
 {
+
 	cm_set_units_mode(MILLIMETERS);				// must do inits in MM mode
 	for (nv->index=0; nv_index_is_single(nv->index); nv->index++) {
 		if (GET_TABLE_BYTE(flags) & F_INITIALIZE) {

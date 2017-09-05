@@ -96,10 +96,14 @@ static void copy_file_task( void * pvParameters )
 	spiffs *fs = &uspiffs[0].gSPIFFS;
 
 	SPIFFS_opendir(fs, "/", &sf_dir);
-	pe = SPIFFS_readdir(&sf_dir, pe);
+
+	do{
+		pe = SPIFFS_readdir(&sf_dir, pe);
+	}while(strcmp((const char *)pe->name,"config.met") == 0);
+
 
 	*fd = SPIFFS_open_by_dirent(fs, pe, SPIFFS_RDWR, 0);
-	if(*fd != SPIFFS_ERR_IS_FREE)
+	if(*fd >= SPIFFS_OK)
 	{
 		err = SPIFFS_fremove(fs, *fd);
 	}
