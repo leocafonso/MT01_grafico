@@ -331,6 +331,8 @@ void machine_jog_stop(void)
 		{
 			vTaskDelay(1/portTICK_PERIOD_MS);
 		}
+		macro_func_ptr = command_idle;
+		intepreterRunning = false;
 	}
 
 	macro_func_ptr = command_idle;

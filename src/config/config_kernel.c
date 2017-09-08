@@ -59,6 +59,7 @@
 #include "plasma.h"
 
 extern TaskHandle_t xCncTaskHandle;
+uint32_t heap_amount;
 
 /******************************************************************************
 Private global variables and functions
@@ -201,7 +202,7 @@ volatile unsigned long ul = 0;
 
 void vApplicationIdleHook( void )
 {
-
+	heap_amount = xPortGetFreeHeapSize();
 }
 
 void vApplicationTickHook( void )
