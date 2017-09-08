@@ -125,6 +125,12 @@ static void warning_key_release (void *p_arg)
 			touch.event = EVENT_SIGNAL(btn_nao.id, EVENT_CLICK);
 			xQueueSend( menu.qEvent, &touch, 0 );
 		}
+		if (warning_page.wt_selected == 1)
+		{
+			widgetClick(page->p_widget[page->wt_selected], NT_RELEASE);
+			touch.event = EVENT_SIGNAL(page->p_widget[page->wt_selected]->id, EVENT_CLICK);
+			xQueueSend( menu.qEvent, &touch, 0 );
+		}
 	}
 }
 
@@ -162,6 +168,7 @@ static void warning_key_keyborad_bind (uint8_t buttonUsage)
 				switch (i)
 				{
 					case SC_KEY_ENTER: warning_page.iif_func[i] = &warning_key_enter; 	break;
+					case SC_KEY_ESC: warning_page.iif_func[i] = &warning_key_enter; break;
 					case SC_KEY_RELEASE: warning_page.iif_func[i] = &warning_key_release; 	break;
 					default: warning_page.iif_func[i] = &mn_screen_idle;
 				}

@@ -429,6 +429,9 @@ bool machine_alarms_get(uint8_t info)
 		case ARCOOK_MANUAL_INFO:    alarm = (ARCO_OK ? (0) : (1));		break;
 		case MATERIAL_INFO: alarm = (MATERIAL ? (1) : (0)); 		break;
 		case TORCH_INFO:   alarm = (TORCH ? (0) : (1));		   break;
+		case EMG_INFO:    alarm = (EMERGENCIA ? (0) : (1));		break;
+		case LIM1_INFO: alarm = (LIMIT_X1 ? (0) : (1)); 		break;
+		case LIM2_INFO:   alarm = (LIMIT_X2 ? (0) : (1));		   break;
 	}
 	return alarm;
 }

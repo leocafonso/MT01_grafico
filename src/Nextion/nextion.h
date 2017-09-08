@@ -93,6 +93,11 @@ typedef enum{
 	NT_ENABLE,
 }nt_enable_t;
 
+typedef struct{
+	uint16_t btn_released;
+	uint16_t btn_pressed;
+}nt_button_t;
+
 /** @brief Initialize Nextion display
  *
  * This function initialize Nextion display to return Success bytes (3 x 0xff) for every command.

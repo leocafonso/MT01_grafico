@@ -62,6 +62,9 @@ static mn_widget_t thcReal_txt = {.name = "t4", .selectable = false};
 static mn_widget_t tocha_Led = {.name = "p1", .selectable = false};
 static mn_widget_t arcook_Led = {.name = "p2", .selectable = false};
 static mn_widget_t ohm_Led = {.name = "p3", .selectable = false};
+static mn_widget_t emg_Led = {.name = "p8", .selectable = false};
+static mn_widget_t lim1_Led = {.name = "p17", .selectable = false};
+static mn_widget_t lim2_Led = {.name = "p19", .selectable = false};
 static mn_screen_event_t jog;
 
 static mn_keypad_t jog_keypad_args;
@@ -225,7 +228,7 @@ static void jog_key_release (void *p_arg)
 
 void page_attach (void *p_arg)
 {
-	widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
+	//widgetChangePic(&maq_mode_label,(machine_flag_get(MODOMAQUINA) ? (IMG_OXI_LABEL) : (IMG_PL_LABEL)),NO_IMG);
 	jog_page.iif_func[SC_KEY_ENTER] = jog_key_enter;
 	jog_page.iif_func[SC_KEY_ESC] = jog_key_esc;
 	jog_page.iif_func[SC_KEY_DOWN] = jog_key_down;
@@ -392,6 +395,21 @@ void page_handler (void *p_arg)
 				widgetChangePic(&arcook_Led, IMG_LED_ON,NO_IMG);
 			else
 				widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
+
+			if (machine_alarms_get(EMG_INFO))
+				widgetChangePic(&emg_Led, IMG_LED_ON,NO_IMG);
+			else
+				widgetChangePic(&emg_Led, IMG_LED_OFF,NO_IMG);
+
+			if (machine_alarms_get(LIM1_INFO))
+				widgetChangePic(&lim1_Led, IMG_LED_ON,NO_IMG);
+			else
+				widgetChangePic(&lim1_Led, IMG_LED_OFF,NO_IMG);
+
+			if (machine_alarms_get(LIM2_INFO))
+				widgetChangePic(&lim2_Led, IMG_LED_ON,NO_IMG);
+			else
+				widgetChangePic(&lim2_Led, IMG_LED_OFF,NO_IMG);
 		}
 }
 
