@@ -66,6 +66,8 @@ mn_screen_t load_page = {.id = SC_PAGE11,
 										[SC_DETACH] = page_detach
 									}};
 /* extern variables */
+extern uint32_t choosedLine;
+extern uint32_t choosedLinePosition;
 
 /************************** Static functions *********************************************/
 static void format_mem_task(void)
@@ -89,6 +91,9 @@ static void copy_file_task( void * pvParameters )
 	uint32_t remain;
 	char *p_path_file = pvParameters;
 	mn_screen_event_t fileLoad;
+
+    choosedLinePosition = 0;
+    choosedLine = 0;
 
 	f_open(&File,p_path_file,FA_READ);
 

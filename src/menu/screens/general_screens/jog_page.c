@@ -397,9 +397,9 @@ void page_handler (void *p_arg)
 				widgetChangePic(&arcook_Led, IMG_LED_OFF,NO_IMG);
 
 			if (machine_alarms_get(EMG_INFO))
-				widgetChangePic(&emg_Led, IMG_LED_ON,NO_IMG);
-			else
 				widgetChangePic(&emg_Led, IMG_LED_OFF,NO_IMG);
+			else
+				widgetChangePic(&emg_Led, IMG_LED_ON,NO_IMG);
 
 			if (machine_alarms_get(LIM1_INFO))
 				widgetChangePic(&lim1_Led, IMG_LED_ON,NO_IMG);
