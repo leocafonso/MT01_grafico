@@ -89,6 +89,7 @@ mn_screen_t zerarmaq_page = {.id 		 = SC_PAGE6,
 									}};
 
 bool homming_abort = false;
+bool zeromaq_flag = false;
 
 /* extern variables */
 
@@ -284,6 +285,7 @@ static void warning_callback(warn_btn_t btn_type)
 {
 	if (event_args == PROGRAM_FINISHED_EVENT)
 	{
+		zeromaq_flag = true;
 		mn_screen_change(&manual_page,EVENT_SHOW);
 	}
 }

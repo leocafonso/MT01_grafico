@@ -74,7 +74,7 @@ static mn_warning_t warn_zerarpeca_args = { .buttonUseInit = BTN_ASK,
 											.msg_count = 1,
 											.func_callback = warning_zerarpeca_callback
 										   };
-static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_OK,
+static mn_warning_t warn_semzeromaquina_args = { .buttonUseInit = BTN_ASK,
 											.img_txt[0] = IMG_SEM_ZERO_MAQ,
 											.msg_count = 1,
 											.func_callback = warning_semzeromaquina_callback
@@ -116,6 +116,7 @@ mn_screen_t jog_page = {.id 		 = SC_PAGE6,
 /* extern variables */
 extern uint32_t JogkeyPressed;
 extern float zmove;
+extern bool zeromaq_flag;
 /************************** Static functions *********************************************/
 static void jog_key_right (void *p_arg)
 {
@@ -358,8 +359,16 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zpeca.id,EVENT_CLICK))
 	{
-		warning_page.p_args = &warn_zerarpeca_args;
-		mn_screen_change(&warning_page,EVENT_SHOW);
+		if (zeromaq_flag == true)
+		{
+			warning_page.p_args = &warn_zerarpeca_args;
+			mn_screen_change(&warning_page,EVENT_SHOW);
+		}
+		else
+		{
+			warning_page.p_args = &warn_semzeromaquina_args;
+			mn_screen_change(&warning_page,EVENT_SHOW);
+		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(vel_txt.id,EVENT_CLICK))
 	{
@@ -447,7 +456,14 @@ static void warning_zerarpeca_callback(warn_btn_t btn_type)
 
 static void warning_semzeromaquina_callback(warn_btn_t btn_type)
 {
-	mn_screen_change(&jog_page,EVENT_SHOW);
+	switch (btn_type)
+	{
+		case BTN_PRESSED_SIM:
+				warning_page.p_args = &warn_zerarpeca_args;
+				mn_screen_change(&warning_page,EVENT_SHOW);
+			break;
+		case BTN_PRESSED_NAO: mn_screen_change(&jog_page,EVENT_SHOW); break;
+	}
 }
 
 static void warning_limites_callback(warn_btn_t btn_type)
