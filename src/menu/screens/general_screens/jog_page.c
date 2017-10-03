@@ -115,6 +115,7 @@ mn_screen_t jog_page = {.id 		 = SC_PAGE6,
 									}};
 /* extern variables */
 extern uint32_t JogkeyPressed;
+extern float zmove;
 /************************** Static functions *********************************************/
 static void jog_key_right (void *p_arg)
 {
@@ -283,33 +284,52 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_cima.id,EVENT_PRESSED))
 	{
+		zmove = 0;
 		JogkeyPressed = KEY_UP;
 		machine_jog(AXIS_Y, DIR_FORWARD);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_baixo.id,EVENT_PRESSED))
 	{
+		zmove = 0;
 		JogkeyPressed = KEY_DOWN;
 		machine_jog(AXIS_Y, DIR_REVERSE);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_direita.id,EVENT_PRESSED))
 	{
+		zmove = 0;
 		JogkeyPressed = KEY_RIGHT;
 		machine_jog(AXIS_X, DIR_FORWARD);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_esquerda.id,EVENT_PRESSED))
 	{
+		zmove = 0;
 		JogkeyPressed = KEY_LEFT;
 		machine_jog(AXIS_X, DIR_REVERSE);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zup.id,EVENT_PRESSED))
 	{
-		JogkeyPressed = KEY_Z_UP;
-		machine_jog(AXIS_Z, DIR_FORWARD);
+		if (JogkeyPressed == 0)
+		{
+			JogkeyPressed = KEY_Z_UP;
+			machine_jog(AXIS_Z, DIR_FORWARD);
+		}
+		else
+		{
+			zmove = 0.01;
+		}
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_PRESSED))
 	{
-		JogkeyPressed = KEY_Z_DOWN;
-		machine_jog(AXIS_Z, DIR_REVERSE);
+		if (JogkeyPressed == 0)
+		{
+			JogkeyPressed = KEY_Z_DOWN;
+			machine_jog(AXIS_Z, DIR_REVERSE);
+		}
+		else
+		{
+			zmove = -0.01;
+		}
+
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_cima.id,EVENT_CLICK)     ||
 			 p_page_hdl->event == EVENT_SIGNAL(btn_baixo.id,EVENT_CLICK)    ||
@@ -319,6 +339,7 @@ void page_handler (void *p_arg)
 			 p_page_hdl->event == EVENT_SIGNAL(btn_zdown.id,EVENT_CLICK))
 	{
 		JogkeyPressed = 0;
+		zmove = 0;
 		machine_jog_pause();
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_tocha.id,EVENT_CLICK))
@@ -354,6 +375,7 @@ void page_handler (void *p_arg)
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_voltar.id,EVENT_CLICK))
 	{
 		JogkeyPressed = 0;
+		zmove = 0;
 		machine_jog_stop();
 		machine_torch_state(MC_TORCH_OFF);
 		mn_screen_change(&manual_page,EVENT_SHOW);
