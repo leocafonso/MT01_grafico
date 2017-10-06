@@ -137,7 +137,7 @@ static stat_t _json_parser_kernal(char_t *str)
 		if (cm.machine_state == MACHINE_ALARM)
             return (STAT_MACHINE_ALARMED);
 		ritorno(nv_set(nv));						// set value or call a function (e.g. gcode)
-		nv_persist(nv);
+		//nv_persist(nv);
 	}
 	return (STAT_OK);								// only successful commands exit through this point
 }

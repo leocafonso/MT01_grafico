@@ -17,7 +17,7 @@
 
 #define TIMER_NUM 0
 
-#define WIDGET_NUM 5
+#define WIDGET_NUM 7
 /* Static functions */
 static void page_handler (void *p_arg);
 static void page_attach (void *p_arg);
@@ -29,12 +29,16 @@ static void warning_rodar_callback(warn_btn_t btn_type);
 static mn_widget_t btn_nome_arquivo = {.name = "b1", .selectable = true};
 static mn_widget_t btn_modo_maquina = {.name = "b2", .selectable = true};
 static mn_widget_t btn_vel_corte = {.name = "b3", .selectable = true};
+static mn_widget_t btn_tempo_aquecimento = {.name = "b4", .selectable = true};
+static mn_widget_t btn_tempo_perfuracao = {.name = "b5", .selectable = true};
 static mn_widget_t btn_ok = {.name = "b6", .selectable = true};
 static mn_widget_t btn_voltar = {.name = "b0", .selectable = true};
 
 static mn_widget_t cfg_txt[5] = { 				{.name = "t0", .selectable = false},
 												{.name = "t1", .selectable = false},
-												{.name = "t2", .selectable = false} };
+												{.name = "t2", .selectable = false},
+												{.name = "t3", .selectable = false},
+												{.name = "t4", .selectable = false} };
 
 static mn_warning_t warn_cutting_args = { .buttonUseInit = BTN_ASK,
 											.img_txt[0] = IMG_CONTINUAR,
@@ -44,7 +48,8 @@ static mn_warning_t warn_cutting_args = { .buttonUseInit = BTN_ASK,
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
-		&btn_nome_arquivo,&btn_modo_maquina,&btn_vel_corte,&btn_ok,&btn_voltar
+		&btn_nome_arquivo,&btn_modo_maquina,&btn_vel_corte,&btn_ok,&btn_voltar,
+		&btn_tempo_aquecimento,&btn_tempo_perfuracao
 };
 
 static mn_screen_event_t fileInfo;
@@ -125,6 +130,10 @@ void page_handler (void *p_arg)
 		changeTxt(&cfg_txt[1],result_str);
 		sprintf(result_str, "%4.0f", configVarOx[OX_CONFIG_VELOC_CORTE]);
 		changeTxt(&cfg_txt[2],result_str);
+		sprintf(result_str, "%4.0f", configVarOx[OX_CONFIG_TEMPO_AQUECIMENTO]);
+		changeTxt(&cfg_txt[3],result_str);
+		sprintf(result_str, "%4.0f", configVarOx[OX_CONFIG_TEMPO_PERFURACAO]);
+		changeTxt(&cfg_txt[4],result_str);
 		page->wt_selected = mn_screen_select_widget(page,&btn_ok);
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_ok.id,EVENT_CLICK))

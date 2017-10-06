@@ -94,7 +94,7 @@ stat_t text_parser(char_t *str)
             return (STAT_MACHINE_ALARMED);
 		status = nv_set(nv);						// set (or run) single value
 		if (status == STAT_OK) {
-			nv_persist(nv);							// conditionally persist depending on flags in array
+			//nv_persist(nv);							// conditionally persist depending on flags in array
 		}
 	}
 	nv_print_list(status, TEXT_MULTILINE_FORMATTED, JSON_RESPONSE_FORMAT); // print the results

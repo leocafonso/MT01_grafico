@@ -196,7 +196,7 @@ void sr_init_status_report()
 		if (_is_stat(nv) == true)
 			sr.stat_index = nv->value;						// identify index for 'stat' if status is in the report
 		nv_set(nv);
-		nv_persist(nv);										// conditionally persist - automatic by nv_persist()
+		//nv_persist(nv);										// conditionally persist - automatic by nv_persist()
 		nv->index++;										// increment SR NVM index
 	}
 }
@@ -641,7 +641,7 @@ stat_t job_set_job_report(nvObj_t *nv)
 		if (nv->valuetype == TYPE_INTEGER) {
 			cs.job_id[i] = nv->value;
 			nv->index = job_start + i;		// index of the SR persistence location
-			nv_persist(nv);
+		//	nv_persist(nv);
 		} else {
 			return (STAT_UNSUPPORTED_TYPE);
 		}

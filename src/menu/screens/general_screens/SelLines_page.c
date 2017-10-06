@@ -33,6 +33,10 @@ static void page_detach (void *p_arg);
 static mn_widget_t btn_volta = {.name = "b0", .selectable = true};
 static mn_widget_t btn_line1 = {.name = "b1", .selectable = true};
 static mn_widget_t btn_line2 = {.name =  "b2", .selectable = true};
+static mn_widget_t txt_Select = {.name =  "p0", .selectable = false};
+static mn_widget_t txt_info = {.name =  "t0", .selectable = false};
+
+static mn_keypad_t selLines_keypad_args;
 
 static mn_widget_t *p_widget[WIDGET_NUM] =
 {
@@ -84,12 +88,25 @@ void page_handler (void *p_arg)
 	mn_screen_event_t *p_page_hdl = p_arg;
 	if (p_page_hdl->event == EVENT_SHOW)
 	{
+		line_M5_num[0] = 0;
+		line_M5_num[1] = 0;
+		widgetVisible(&btn_line1, NT_HIDE);
+		widgetVisible(&btn_line2, NT_HIDE);
+		widgetVisible(&btn_volta, NT_HIDE);
+		widgetVisible(&txt_Select, NT_HIDE);
+		widgetVisible(&txt_info, NT_SHOW);
+		snprintf(str,sizeof(str), "Carregando linha...");
+		changeTxt(&txt_info,str);
 		selecionarlinhas(line_M5_num,linepos_M5_num);
+		widgetVisible(&btn_line1, NT_SHOW);
+		widgetVisible(&btn_line2, NT_SHOW);
+		widgetVisible(&btn_volta, NT_SHOW);
+		widgetVisible(&txt_Select, NT_SHOW);
+		widgetVisible(&txt_info, NT_HIDE);
 		sprintf(str, "ENTRADA LINHA %d", line_M5_num[0]);
 		changeTxt(&btn_line1,str);
 		sprintf(str, "ENTRADA LINHA %d", line_M5_num[1]);
 		changeTxt(&btn_line2,str);
-
 	}
 
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_line1.id, EVENT_CLICK))
@@ -106,7 +123,16 @@ void page_handler (void *p_arg)
 	}
 	else if (p_page_hdl->event == EVENT_SIGNAL(btn_volta.id, EVENT_CLICK))
 	{
-		mn_screen_change(&auto_page,EVENT_SHOW);
+		line_M5_num[0] = 0;
+		line_M5_num[1] = 0;
+		selLines_keypad_args.p_var = &selecionarLinhas;
+		selLines_keypad_args.step = 1;
+		selLines_keypad_args.min = 0;
+		selLines_keypad_args.max = selecionarlinhasMax();
+		selLines_keypad_args.p_ret_page = &auto_page;
+		selLines_keypad_args.p_next_page = &selLines_page;
+		keypad_page.p_args = &selLines_keypad_args;
+		mn_screen_change(&keypad_page,EVENT_SHOW);
 	}
 	else if (p_page_hdl->event == EMERGENCIA_SIGNAL_EVENT)
 	{

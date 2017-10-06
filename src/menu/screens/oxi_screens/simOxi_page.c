@@ -216,6 +216,8 @@ void page_handler (void *p_arg)
 		widgetChangePic(&btn_play, IMG_BTN_PAUSE,IMG_BTN_PAUSE_PRESS);
 		mn_screen_create_timer(&timer0,300);
 		mn_screen_start_timer(&timer0);
+		zmove = 0;
+		btn_id = 0;
 	}
 	else if (p_page_hdl->event == EMERGENCIA_EVENT)
 	{

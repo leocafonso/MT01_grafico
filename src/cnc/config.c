@@ -27,7 +27,8 @@
 /*
  *	See config.h for a Config system overview and a bunch of details.
  */
-
+#include "platform.h"
+#include "r_flash_api_rx_if.h"
 #include "tinyg.h"		// #1
 #include "config.h"		// #2
 #include "report.h"
@@ -49,6 +50,8 @@ extern "C"{
 #endif
 
 static void _set_defa(nvObj_t *nv);
+const char checkParPhrase[] = "Parametros gravados";
+char *checkifParFlashed;
 
 /***********************************************************************************
  **** STRUCTURE ALLOCATIONS ********************************************************
@@ -159,13 +162,20 @@ void config_init()
 	spiffs_file *fd = &uspiffs[0].f;
 	spiffs *fs = &uspiffs[0].gSPIFFS;
 
-	SPIFFS_opendir(fs, "/", &sf_dir);
+	R_FlashDataAreaAccess(0xFFFF,0xFFFF);
+	checkifParFlashed = (char *)(0x00100000);
+	if (SPIFFS_opendir(fs, "/", &sf_dir) == NULL)
+	{
+
+	}
 	pe = SPIFFS_readdir(&sf_dir, pe);
 	*fd = SPIFFS_open(fs, "config.met", SPIFFS_RDWR | SPIFFS_DIRECT, 0);
 	SPIFFS_close(fs, *fd);
-	if (*fd == SPIFFS_ERR_NOT_FOUND) {				// case (1) NVM is not setup or not in revision
+	if (*fd == SPIFFS_ERR_NOT_FOUND && strcmp(checkifParFlashed,checkParPhrase)) {				// case (1) NVM is not setup or not in revision
 		*fd = SPIFFS_open(fs, "config.met", SPIFFS_CREAT | SPIFFS_RDWR | SPIFFS_DIRECT, 0);
 		SPIFFS_close(fs, *fd);
+		R_FlashEraseRange(0x00100000,0x20);
+		R_FlashWrite(0x00100000,(uint32_t)checkParPhrase, 0x20);
 		_set_defa(nv);
 	} else {									// case (2) NVM is setup and in revision
 		rpt_print_loading_configs_message();
@@ -174,6 +184,8 @@ void config_init()
 				strncpy_P(nv->token, cfgArray[nv->index].token, TOKEN_LEN);	// read the token from the array
 				read_persistent_value(nv);
 				nv_set(nv);
+
+
 			}
 		}
 		sr_init_status_report();
